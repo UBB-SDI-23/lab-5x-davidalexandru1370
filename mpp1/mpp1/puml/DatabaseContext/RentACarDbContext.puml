@@ -1,0 +1,12 @@
+@startuml
+class RentACarDbContext {
+    + RentACarDbContext(options:DbContextOptions<RentACarDbContext>)
+}
+class "DbSet`1"<T> {
+}
+DbContext <|-- RentACarDbContext
+RentACarDbContext o-> "Clients<Client>" "DbSet`1"
+RentACarDbContext o-> "Incidents<Incident>" "DbSet`1"
+RentACarDbContext o-> "Vehicles<Vehicle>" "DbSet`1"
+RentACarDbContext o-> "VehicleRents<VehicleRent>" "DbSet`1"
+@enduml

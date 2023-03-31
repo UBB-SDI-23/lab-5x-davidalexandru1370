@@ -1,0 +1,15 @@
+@startuml
+class VehicleService {
+    + VehicleService(vehicleRepository:IVehicleRepository)
+    + <<async>> AddVehicle(vehicle:Vehicle) : Task
+    + <<async>> DeleteVehicle(id:Guid) : Task
+    + <<async>> UpdateVehicle(vehicle:Vehicle) : Task<Vehicle>
+    + GetAllVehicles() : Task<IEnumerable<Vehicle>>
+    + <<async>> GetVehicleById(vehicleId:Guid) : Task<Vehicle>
+    + GetAllVehiclesWithAllData() : Task<IEnumerable<Vehicle>>
+    + GetVehiclesWithCapacityGreaterThan(capacity:int) : Task<IEnumerable<Vehicle>>
+    + GetVehicleByIdWithAllData(vehicleId:Guid) : Task<Vehicle>
+    + <<async>> GetVehiclesOrderByNumberOfIncidents() : Task<IEnumerable<VehicleDTO>>
+}
+IVehicleService <|-- VehicleService
+@enduml

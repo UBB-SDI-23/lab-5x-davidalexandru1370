@@ -1,0 +1,12 @@
+@startuml
+class IncidentRepository {
+    + IncidentRepository(rentACarDbContext:RentACarDbContext)
+    + <<async>> AddIncident(incident:Incident) : Task
+    + <<async>> RemoveIncident(id:Guid) : Task
+    + <<async>> UpdateIncident(incident:Incident) : Task<Incident>
+    + GetAllIncidents() : Task<IEnumerable<Incident>>
+    + <<async>> GetIncidentById(id:Guid) : Task<Incident>
+    + GetIncidentsByVehicleId(vehicleId:Guid) : Task<IEnumerable<Incident>>
+}
+IIncidentsRepository <|-- IncidentRepository
+@enduml

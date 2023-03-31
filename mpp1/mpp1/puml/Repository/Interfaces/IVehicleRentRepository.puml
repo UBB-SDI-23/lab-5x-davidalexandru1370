@@ -1,0 +1,11 @@
+@startuml
+interface IVehicleRentRepository {
+    + AddVehicleRent(vehicleRent:VehicleRent) : Task
+    + DeleteVehicleRent(vehicleRentId:Guid) : Task
+    + UpdateVehicleRent(vehicleRent:VehicleRent) : Task<VehicleRent>
+    + GetAllRents() : Task<IEnumerable<VehicleRent>>
+    + GetVehiclesByClientId(clientId:Guid) : Task<IEnumerable<Vehicle>>
+    + GetClientsByVehicleId(vehicleId:Guid) : Task<IEnumerable<Client>>
+    + GetVehicleRentById(vehicleRentId:Guid) : Task<VehicleRent>
+}
+@enduml

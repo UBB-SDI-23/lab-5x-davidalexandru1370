@@ -1,0 +1,13 @@
+@startuml
+class VehicleRentRepository {
+    + VehicleRentRepository(rentACarDbContext:RentACarDbContext)
+    + <<async>> AddVehicleRent(vehicleRent:VehicleRent) : Task
+    + <<async>> DeleteVehicleRent(vehicleRentId:Guid) : Task
+    + <<async>> UpdateVehicleRent(vehicleRent:VehicleRent) : Task<VehicleRent>
+    + GetVehiclesByClientId(clientId:Guid) : Task<IEnumerable<Vehicle>>
+    + GetClientsByVehicleId(vehicleId:Guid) : Task<IEnumerable<Client>>
+    + GetAllRents() : Task<IEnumerable<VehicleRent>>
+    + <<async>> GetVehicleRentById(vehicleRentId:Guid) : Task<VehicleRent>
+}
+IVehicleRentRepository <|-- VehicleRentRepository
+@enduml

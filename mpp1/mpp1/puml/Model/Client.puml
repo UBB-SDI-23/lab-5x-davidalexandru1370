@@ -1,0 +1,10 @@
+@startuml
+class Client {
+    + Name : string <<get>> <<set>>
+    + CardNumber : string <<get>> <<set>>
+    + CNP : string <<get>> <<set>>
+    + Nationality : string <<get>> <<set>>
+}
+Client --> "Id" Guid
+Client --> "Birthday" DateOnly
+@enduml

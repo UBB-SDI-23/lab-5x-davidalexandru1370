@@ -1,0 +1,5 @@
+@startuml
+class AddedEngineCapacityFieldInVehicleModel <<partial>> {
+}
+Migration <|-- AddedEngineCapacityFieldInVehicleModel
+@enduml

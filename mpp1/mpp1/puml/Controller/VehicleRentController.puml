@@ -1,0 +1,13 @@
+@startuml
+class VehicleRentController {
+    + VehicleRentController(vehicleRentService:IVehicleRentService)
+    + GetAllRents() : ActionResult<IEnumerable<VehicleRent>>
+    + <<async>> AddRent(vehicleRent:VehicleRent) : Task<IActionResult>
+    + GetVehiclesByClientId(clientId:Guid) : ActionResult<IEnumerable<Vehicle>>
+    + GetClientsByVehicleId(vehicleId:Guid) : ActionResult<IEnumerable<Client>>
+    + <<async>> DeleteVehicleRent(vehicleRentId:Guid) : Task<IActionResult>
+    + <<async>> GetVehicleRentById(vehicleRentId:Guid) : Task<ActionResult<VehicleRent>>
+    + <<async>> UpdateVehicleRent(vehicleRent:VehicleRent) : Task<ActionResult<VehicleRent>>
+}
+ControllerBase <|-- VehicleRentController
+@enduml

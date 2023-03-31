@@ -1,0 +1,11 @@
+@startuml
+class ClientRepository {
+    + ClientRepository(rentACarDbContext:RentACarDbContext)
+    + <<async>> AddClient(client:Client) : Task
+    + <<async>> RemoveClient(id:Guid) : Task
+    + <<async>> UpdateClient(client:Client) : Task<Client>
+    + GetAllClients() : Task<IEnumerable<Client>>
+    + <<async>> GetClientById(id:Guid) : Task<Client>
+}
+IClientRepository <|-- ClientRepository
+@enduml

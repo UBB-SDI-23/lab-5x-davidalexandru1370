@@ -4,7 +4,7 @@ import styles from "./NavigationBar.module.css";
 import Link from "next/link";
 
 interface INavigationBar {
-  navigationItems: string[];
+  navigationItems: Route[];
 }
 
 export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
@@ -23,20 +23,21 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
         }}
       >
         <Toolbar>
-          {navigationItems.map((navigationItem: string, index) => {
+          {navigationItems.map((navigationItem: Route, index) => {
             return (
               <Link
                 className={`${styles.navigationItem} ${
-                  navigationItem === selectedNavigationItem
+                  navigationItem.name === selectedNavigationItem
                     ? styles.selectedNavigationItem
                     : ""
                 }`}
                 onClick={() => {
-                  setselectedNavigationItem(navigationItem);
+                  setselectedNavigationItem(navigationItem.name);
                 }}
-                key={navigationItem}
+                key={navigationItem.name}
+                href={`/${navigationItem.routeName}`}
               >
-                {navigationItem}
+                {navigationItem.name}
               </Link>
             );
           })}

@@ -6,7 +6,12 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <NavigationBar
-        navigationItems={["Clients", "Vehicles", "Rents", "Incidents"]}
+        navigationItems={[
+          { name: "Clients", routeName: "clients" },
+          { name: "Vehicles", routeName: "vehicles" },
+          { name: "Rents", routeName: "rents" },
+          { name: "Incidents", routeName: "incidents" },
+        ]}
       />
       <Component {...pageProps} />
     </>

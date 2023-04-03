@@ -3,14 +3,18 @@ import React, { FC, useState } from "react";
 import styles from "./NavigationBar.module.css";
 import Link from "next/link";
 import { Route } from "@/model/Route";
+import { useRouter } from "next/router";
 
 interface INavigationBar {
   navigationItems: Route[];
 }
 
 export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
-  const [selectedNavigationItem, setselectedNavigationItem] =
-    useState<string>("");
+  const router = useRouter();
+  const [selectedNavigationItem, setselectedNavigationItem] = useState<string>(
+    router.pathname.substring(1)
+  );
+  console.log(selectedNavigationItem === "clients");
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -24,16 +28,18 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
         }}
       >
         <Toolbar>
-          {navigationItems.map((navigationItem: Route, index) => {
+          {navigationItems.map((navigationItem: Route) => {
             return (
               <Link
                 className={`${styles.navigationItem} ${
-                  navigationItem.name === selectedNavigationItem
+                  navigationItem.routeName.localeCompare(
+                    selectedNavigationItem
+                  ) === 0
                     ? styles.selectedNavigationItem
                     : ""
                 }`}
                 onClick={() => {
-                  setselectedNavigationItem(navigationItem.name);
+                  setselectedNavigationItem(navigationItem.routeName);
                 }}
                 key={navigationItem.name}
                 href={`/${navigationItem.routeName}`}

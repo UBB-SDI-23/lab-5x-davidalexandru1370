@@ -19,7 +19,7 @@ interface ClientEndpoint {
 }
 
 export const ClientEndpoints: ClientEndpoint = {
-  getAllClients: clientController + "get-all",
+  getAllClients: clientController + "get-clients",
   addClient: clientController + "add-client",
   deleteClient: clientController + "delete-client",
   updateClient: clientController + "update-client",

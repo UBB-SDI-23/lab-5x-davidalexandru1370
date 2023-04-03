@@ -8,9 +8,19 @@ import {
   TableRow,
 } from "@mui/material";
 import { Inter } from "next/font/google";
+import { useEffect, useState } from "react";
+import { getAllClients } from "../api/ClientApi";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Clients() {
+  const [clients, setClients] = useState<Client[]>([]);
+
+  useEffect(() => {
+    getAllClients().then(async (x) => {
+      setClients(x);
+    });
+  }, []);
+
   return (
     <div>
       <TableContainer component={Paper}>

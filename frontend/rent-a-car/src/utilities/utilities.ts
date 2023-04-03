@@ -1,4 +1,4 @@
-import { Methods } from "@/Constants/ApiConstants";
+import { Methods } from "@/constants/ApiConstants";
 
 export const createHeader = (method: Methods, entity?: any) => {
   let headerOptions: RequestInit = {

@@ -1,4 +1,4 @@
-import { ClientEndpoints, Methods, baseUrl } from "@/Constants/ApiConstants";
+import { ClientEndpoints, Methods, baseUrl } from "@/constants/ApiConstants";
 import { Client } from "@/model/Client";
 import { createHeader } from "@/utilities/utilities";
 

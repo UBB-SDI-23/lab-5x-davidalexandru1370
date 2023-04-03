@@ -1,9 +1,9 @@
-import { AppBar, Box, Toolbar, Typography } from "@mui/material";
-import React, { FC, useState } from "react";
-import styles from "./NavigationBar.module.css";
-import Link from "next/link";
 import { Route } from "@/model/Route";
+import { AppBar, Box, Toolbar } from "@mui/material";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { FC, useState } from "react";
+import styles from "./NavigationBar.module.css";
 
 interface INavigationBar {
   navigationItems: Route[];
@@ -14,7 +14,6 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
   const [selectedNavigationItem, setselectedNavigationItem] = useState<string>(
     router.pathname.substring(1)
   );
-  console.log(selectedNavigationItem === "clients");
 
   return (
     <Box sx={{ flexGrow: 1 }}>

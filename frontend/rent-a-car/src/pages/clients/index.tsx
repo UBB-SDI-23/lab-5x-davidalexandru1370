@@ -17,9 +17,12 @@ export default function Clients() {
         <Table>
           <TableHead>
             <TableRow>
-              {Array<keyof Client>().map((key) => {
-                return <></>;
-              })}
+              <TableCell>Id</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Card Number</TableCell>
+              <TableCell>CNP</TableCell>
+              <TableCell>Birthday</TableCell>
+              <TableCell>Nationality</TableCell>
             </TableRow>
           </TableHead>
         </Table>

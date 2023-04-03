@@ -2,6 +2,7 @@ import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 import React, { FC, useState } from "react";
 import styles from "./NavigationBar.module.css";
 import Link from "next/link";
+import { Route } from "@/model/Route";
 
 interface INavigationBar {
   navigationItems: Route[];

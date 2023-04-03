@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "CvSMe6ZZb7h3cz0tJVUX/3JpQLMRwbWa9u2qvXAkHd3fhLctLd7fdSN1E6+CuKqnfeqdKqbUjvkbCKgA3IODPw==",
+  "dgSpecHash": "mhGlrdqUTmbkd2gqKTSDpjnR5nUKNOXWZgN1gF+U0zC+f7MUITz702rpk6xVusndmq6GR2PyM4OzNu9vtyf7kw==",
   "success": true,
-  "projectFilePath": "/home/david/Desktop/folders/UniversitySecondYear/mpp/lab1/mpp1/mpp1/mpp1.csproj",
+  "projectFilePath": "/home/david/Desktop/folders/lab-5x-davidalexandru1370/backend/mpp1/mpp1/mpp1.csproj",
   "expectedPackageFiles": [
     "/home/david/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/david/.nuget/packages/microsoft.entityframeworkcore/8.0.0-preview.1.23111.4/microsoft.entityframeworkcore.8.0.0-preview.1.23111.4.nupkg.sha512",

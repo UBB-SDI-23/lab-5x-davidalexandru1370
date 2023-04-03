@@ -1,4 +1,4 @@
-export const baseUrl = "http://localhost:5199/";
+export const baseUrl = "http://localhost:5191/";
 
 export const clientController = "api/client/";
 
@@ -11,7 +11,7 @@ export enum Methods {
 }
 
 interface ClientEndpoint {
-  getAll: string;
+  getAllClients: string;
   addClient: string;
   deleteClient: string;
   updateClient: string;
@@ -19,9 +19,9 @@ interface ClientEndpoint {
 }
 
 export const ClientEndpoints: ClientEndpoint = {
-  getAll: clientController + "get-all",
-  addClient: "",
-  deleteClient: "",
-  updateClient: "",
-  getClientById: "",
+  getAllClients: clientController + "get-all",
+  addClient: clientController + "add-client",
+  deleteClient: clientController + "delete-client",
+  updateClient: clientController + "update-client",
+  getClientById: clientController + "get-client",
 };

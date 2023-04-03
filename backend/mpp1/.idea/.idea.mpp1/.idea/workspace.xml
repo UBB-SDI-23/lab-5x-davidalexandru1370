@@ -4,7 +4,19 @@
     <projectFile profileName="mpp1">mpp1/mpp1.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="026196c8-73d9-45d2-b300-467feda1af90" name="Changes" comment="" />
+    <list default="true" id="026196c8-73d9-45d2-b300-467feda1af90" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.mpp1/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.mpp1/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RentAVehicleApi/obj/Debug/net6.0/RentAVehicleApi.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/RentAVehicleApi/obj/Debug/net6.0/RentAVehicleApi.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RentAVehicleApi/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/RentAVehicleApi/obj/project.packagespec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mpp1/bin/Debug/net6.0/mpp1.dll" beforeDir="false" afterPath="$PROJECT_DIR$/mpp1/bin/Debug/net6.0/mpp1.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mpp1/bin/Debug/net6.0/mpp1.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/mpp1/bin/Debug/net6.0/mpp1.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mpp1/obj/Debug/net6.0/mpp1.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/mpp1/obj/Debug/net6.0/mpp1.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mpp1/obj/Debug/net6.0/mpp1.dll" beforeDir="false" afterPath="$PROJECT_DIR$/mpp1/obj/Debug/net6.0/mpp1.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mpp1/obj/Debug/net6.0/mpp1.genruntimeconfig.cache" beforeDir="false" afterPath="$PROJECT_DIR$/mpp1/obj/Debug/net6.0/mpp1.genruntimeconfig.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mpp1/obj/Debug/net6.0/mpp1.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/mpp1/obj/Debug/net6.0/mpp1.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mpp1/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/mpp1/obj/project.packagespec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mpp1/obj/staticwebassets.pack.sentinel" beforeDir="false" afterPath="$PROJECT_DIR$/mpp1/obj/staticwebassets.pack.sentinel" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -106,6 +118,7 @@
       <workItem from="1679942234561" duration="3986000" />
       <workItem from="1680087975574" duration="4457000" />
       <workItem from="1680259482420" duration="150000" />
+      <workItem from="1680552642056" duration="305000" />
     </task>
     <servers />
   </component>

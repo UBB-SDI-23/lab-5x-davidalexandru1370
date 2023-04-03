@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/david/Desktop/folders/UniversitySecondYear/mpp/lab1/mpp1/mpp1/mpp1.csproj": {}
+    "/home/david/Desktop/folders/lab-5x-davidalexandru1370/backend/mpp1/mpp1/mpp1.csproj": {}
   },
   "projects": {
-    "/home/david/Desktop/folders/UniversitySecondYear/mpp/lab1/mpp1/mpp1/mpp1.csproj": {
+    "/home/david/Desktop/folders/lab-5x-davidalexandru1370/backend/mpp1/mpp1/mpp1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/david/Desktop/folders/UniversitySecondYear/mpp/lab1/mpp1/mpp1/mpp1.csproj",
+        "projectUniqueName": "/home/david/Desktop/folders/lab-5x-davidalexandru1370/backend/mpp1/mpp1/mpp1.csproj",
         "projectName": "mpp1",
-        "projectPath": "/home/david/Desktop/folders/UniversitySecondYear/mpp/lab1/mpp1/mpp1/mpp1.csproj",
+        "projectPath": "/home/david/Desktop/folders/lab-5x-davidalexandru1370/backend/mpp1/mpp1/mpp1.csproj",
         "packagesPath": "/home/david/.nuget/packages/",
-        "outputPath": "/home/david/Desktop/folders/UniversitySecondYear/mpp/lab1/mpp1/mpp1/obj/",
+        "outputPath": "/home/david/Desktop/folders/lab-5x-davidalexandru1370/backend/mpp1/mpp1/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/david/.nuget/NuGet/NuGet.Config"

@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Inter } from "next/font/google";
 import { useEffect, useReducer, useState } from "react";
-import { deleteClientById, getAllClients } from "../api/ClientApi";
+import { addClient, deleteClientById, getAllClients } from "../api/ClientApi";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
@@ -31,7 +31,7 @@ export default function Clients() {
   const [clientModalMethod, setClientModalMethod] =
     useState<ClientModalMethodsEnum>(ClientModalMethodsEnum.ADD);
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
-
+  const [_, forceRefresh] = useReducer((x) => x + 1, { x: 0 });
   useEffect(() => {
     getAllClients().then(async (x) => {
       setClients(x);
@@ -41,8 +41,10 @@ export default function Clients() {
   return (
     <div>
       <ClientModal
-        onSubmitClick={() => {
+        onSubmitClick={async (client: Client) => {
+          await addClient(client);
           setIsClientModalOpen(false);
+          forceRefresh();
         }}
         isOpen={isClientModalOpen}
         onClose={() => {

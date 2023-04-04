@@ -1,5 +1,4 @@
-export interface Client {
-  id: string;
+export interface ClientDto {
   name: string;
   cardNumber: string;
   cnp: string;

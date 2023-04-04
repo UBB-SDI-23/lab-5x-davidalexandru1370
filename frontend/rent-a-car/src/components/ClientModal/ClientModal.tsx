@@ -1,9 +1,10 @@
 import { Box, Button, Modal, TextField, Typography } from "@mui/material";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
+import { ClientDto } from "@/model/ClientDto";
 import { Client } from "@/model/Client";
 interface IClientModalProps {
-  onSubmitClick: () => void;
+  onSubmitClick: (client: ClientDto) => Promise<void>;
   onClose: () => void;
   client?: Client;
   method: ClientModalMethodsEnum;
@@ -25,6 +26,12 @@ export const ClientModal: FC<IClientModalProps> = ({
     onClose();
   };
 
+  const [name, setName] = useState<string>("");
+  const [cardNumber, setCardNumber] = useState<string>("");
+  const [cnp, setCNP] = useState<string>("");
+  const [birthday, setBirthday] = useState<string>("");
+  const [nationality, setNationality] = useState<string>("");
+
   return (
     <Modal open={isOpen} onClose={handleOnClose}>
       <Box sx={style}>
@@ -34,15 +41,51 @@ export const ClientModal: FC<IClientModalProps> = ({
             handleOnClose();
           }}
         />
-        <TextField label="Name" sx={textFieldStyle}></TextField>
-        <TextField label="Card Number" sx={textFieldStyle}></TextField>
-        <TextField label="CNP" sx={textFieldStyle}></TextField>
-        <TextField label="Birthday" sx={textFieldStyle}></TextField>
-        <TextField label="Nationality" sx={textFieldStyle}></TextField>
+        <TextField
+          label="Name"
+          sx={textFieldStyle}
+          onChange={(e) => {
+            setName(e.currentTarget.value || "");
+          }}
+        ></TextField>
+        <TextField
+          label="Card Number"
+          sx={textFieldStyle}
+          onChange={(e) => {
+            setCardNumber(e.currentTarget.value);
+          }}
+        ></TextField>
+        <TextField
+          label="CNP"
+          sx={textFieldStyle}
+          onChange={(e) => {
+            setCNP(e.currentTarget.value);
+          }}
+        ></TextField>
+        <TextField
+          label="Birthday"
+          sx={textFieldStyle}
+          onChange={(e) => {
+            setBirthday(e.currentTarget.value);
+          }}
+        ></TextField>
+        <TextField
+          label="Nationality"
+          sx={textFieldStyle}
+          onChange={(e) => {
+            setNationality(e.currentTarget.value);
+          }}
+        ></TextField>
         <Button
           variant="contained"
           onClick={() => {
-            onSubmitClick();
+            onSubmitClick({
+              name: name,
+              birthday: birthday,
+              cardNumber: cardNumber,
+              cnp: cnp,
+              nationality: nationality,
+            });
           }}
           sx={button}
         >

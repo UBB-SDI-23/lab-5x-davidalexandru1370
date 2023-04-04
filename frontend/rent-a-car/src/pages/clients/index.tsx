@@ -69,6 +69,9 @@ export default function Clients() {
         sx={{ padding: "32px", textAlign: "right" }}
         display="flex"
         justifyContent="end"
+        onClick={() => {
+          setIsClientModalOpen(true);
+        }}
       >
         <Box
           sx={{

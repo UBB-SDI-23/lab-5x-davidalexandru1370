@@ -1,10 +1,11 @@
 import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import React, { FC } from "react";
-import styles from "./ClientModal.module.css";
 import ClearIcon from "@mui/icons-material/Clear";
+import { Client } from "@/model/Client";
 interface IClientModalProps {
   onSubmitClick: () => void;
-  onClose?: () => void;
+  onClose: () => void;
+  client?: Client;
   method: ClientModalMethodsEnum;
   isOpen: boolean;
 }
@@ -21,18 +22,29 @@ export const ClientModal: FC<IClientModalProps> = ({
   isOpen,
 }) => {
   const handleOnClose = () => {
-    onClose && onClose();
+    onClose();
   };
 
   return (
     <Modal open={isOpen} onClose={handleOnClose}>
       <Box sx={style}>
-        <ClearIcon sx={clearIconStyle} />
-        <TextField label="Name"></TextField>
+        <ClearIcon
+          sx={clearIconStyle}
+          onClick={() => {
+            handleOnClose();
+          }}
+        />
+        <TextField label="Name" sx={textFieldStyle}></TextField>
+        <TextField label="Card Number" sx={textFieldStyle}></TextField>
+        <TextField label="CNP" sx={textFieldStyle}></TextField>
+        <TextField label="Birthday" sx={textFieldStyle}></TextField>
+        <TextField label="Nationality" sx={textFieldStyle}></TextField>
         <Button
+          variant="contained"
           onClick={() => {
             onSubmitClick();
           }}
+          sx={button}
         >
           {method === ClientModalMethodsEnum.ADD ? "Add" : "Update"}
         </Button>
@@ -44,6 +56,7 @@ export const ClientModal: FC<IClientModalProps> = ({
 const style = {
   position: "absolute",
   display: "flex",
+  gap: "20px",
   flexDirection: "column",
   justifyContent: "space-between",
   top: "50%",
@@ -58,8 +71,20 @@ const style = {
 };
 
 const clearIconStyle = {
+  cursor: "pointer",
   position: "absolute",
   top: 0,
   right: 0,
   color: "red",
+};
+
+const button = {
+  backgroundColor: "chocolate",
+  "&:hover": {
+    backgroundColor: "chocolate",
+  },
+};
+
+const textFieldStyle = {
+  border: "2px solid white",
 };

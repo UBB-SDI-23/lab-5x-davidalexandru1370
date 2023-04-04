@@ -27,11 +27,15 @@ export const ClientModal: FC<IClientModalProps> = ({
     onClose();
   };
 
-  const [name, setName] = useState<string>("");
-  const [cardNumber, setCardNumber] = useState<string>("");
-  const [cnp, setCNP] = useState<string>("");
-  const [birthday, setBirthday] = useState<string>("");
-  const [nationality, setNationality] = useState<string>("");
+  const [name, setName] = useState<string>(client?.name ?? "");
+  const [cardNumber, setCardNumber] = useState<string>(
+    client?.cardNumber ?? ""
+  );
+  const [cnp, setCNP] = useState<string>(client?.cnp ?? "");
+  const [birthday, setBirthday] = useState<string>(client?.birthday ?? "");
+  const [nationality, setNationality] = useState<string>(
+    client?.nationality ?? ""
+  );
 
   return (
     <Modal open={isOpen} onClose={handleOnClose}>
@@ -48,10 +52,12 @@ export const ClientModal: FC<IClientModalProps> = ({
           onChange={(e) => {
             setName(e.currentTarget.value || "");
           }}
+          defaultValue={client?.name ?? ""}
         ></TextField>
         <TextField
           label="Card Number"
           sx={textFieldStyle}
+          defaultValue={client?.cardNumber ?? ""}
           onChange={(e) => {
             setCardNumber(e.currentTarget.value);
           }}
@@ -59,7 +65,7 @@ export const ClientModal: FC<IClientModalProps> = ({
         <TextField
           label="CNP"
           sx={textFieldStyle}
-          value={client?.cnp ?? ""}
+          defaultValue={client?.cnp ?? ""}
           onChange={(e) => {
             setCNP(e.currentTarget.value);
           }}
@@ -67,6 +73,7 @@ export const ClientModal: FC<IClientModalProps> = ({
         <TextField
           label="Birthday"
           sx={textFieldStyle}
+          defaultValue={client?.birthday ?? ""}
           onChange={(e) => {
             setBirthday(e.currentTarget.value);
           }}
@@ -74,6 +81,7 @@ export const ClientModal: FC<IClientModalProps> = ({
         <TextField
           label="Nationality"
           sx={textFieldStyle}
+          defaultValue={client?.nationality ?? ""}
           onChange={(e) => {
             setNationality(e.currentTarget.value);
           }}

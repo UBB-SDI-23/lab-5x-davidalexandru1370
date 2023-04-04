@@ -12,7 +12,12 @@ import {
 } from "@mui/material";
 import { Inter } from "next/font/google";
 import { useEffect, useReducer, useState } from "react";
-import { addClient, deleteClientById, getAllClients } from "../api/ClientApi";
+import {
+  addClient,
+  deleteClientById,
+  getAllClients,
+  updateClient,
+} from "../api/ClientApi";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
@@ -43,9 +48,13 @@ export default function Clients() {
     <div>
       <ClientModal
         onSubmitClick={async (client: Client | ClientDto) => {
-          //await addClient(client);
           if (clientModalMethod === ClientModalMethodsEnum.ADD) {
             await addClient(client);
+          } else {
+            await updateClient({
+              ...client,
+              id: selectedClient!.id,
+            });
           }
           setIsClientModalOpen(false);
         }}

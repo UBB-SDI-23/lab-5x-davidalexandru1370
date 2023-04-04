@@ -47,3 +47,20 @@ export const addClient = async (client: ClientDto) => {
 
   return data;
 };
+
+export const updateClient = async (client: Client) => {
+  let url = baseUrl + ClientEndpoints.updateClient;
+  let header = createHeader(Methods.PUT, client);
+  let data = await fetch(url, header)
+    .then(async (response: Response) => {
+      return await response.json();
+    })
+    .then((c: Client) => {
+      return c;
+    })
+    .catch((error: Error) => {
+      throw new Error(error.message);
+    });
+
+  return data;
+};

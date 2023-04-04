@@ -42,14 +42,18 @@ export default function Clients() {
   return (
     <div>
       <ClientModal
-        onSubmitClick={async (client: ClientDto) => {
-          await addClient(client);
+        onSubmitClick={async (client: Client | ClientDto) => {
+          //await addClient(client);
+          if (clientModalMethod === ClientModalMethodsEnum.ADD) {
+            await addClient(client);
+          }
           setIsClientModalOpen(false);
         }}
         isOpen={isClientModalOpen}
         onClose={() => {
           setIsClientModalOpen(false);
         }}
+        client={selectedClient}
         method={clientModalMethod}
       />
       <AreYouSureModal
@@ -72,6 +76,8 @@ export default function Clients() {
         display="flex"
         justifyContent="end"
         onClick={() => {
+          setSelectedClient(undefined);
+          setClientModalMethod(ClientModalMethodsEnum.ADD);
           setIsClientModalOpen(true);
         }}
       >
@@ -126,6 +132,8 @@ export default function Clients() {
                     <EditIcon
                       sx={{ cursor: "pointer" }}
                       onClick={() => {
+                        setClientModalMethod(ClientModalMethodsEnum.UPDATE);
+                        setSelectedClient(client);
                         setIsClientModalOpen(true);
                       }}
                     />

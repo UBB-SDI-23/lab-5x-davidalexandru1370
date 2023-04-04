@@ -4,7 +4,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { ClientDto } from "@/model/ClientDto";
 import { Client } from "@/model/Client";
 interface IClientModalProps {
-  onSubmitClick: (client: ClientDto) => Promise<void>;
+  onSubmitClick: (client: Client | ClientDto) => Promise<void>;
   onClose: () => void;
   client?: Client;
   method: ClientModalMethodsEnum;
@@ -19,6 +19,7 @@ export enum ClientModalMethodsEnum {
 export const ClientModal: FC<IClientModalProps> = ({
   onSubmitClick,
   onClose,
+  client,
   method,
   isOpen,
 }) => {
@@ -58,6 +59,7 @@ export const ClientModal: FC<IClientModalProps> = ({
         <TextField
           label="CNP"
           sx={textFieldStyle}
+          value={client?.cnp ?? ""}
           onChange={(e) => {
             setCNP(e.currentTarget.value);
           }}
@@ -79,13 +81,24 @@ export const ClientModal: FC<IClientModalProps> = ({
         <Button
           variant="contained"
           onClick={() => {
-            onSubmitClick({
-              name: name,
-              cardNumber: cardNumber,
-              cnp: cnp,
-              birthday: birthday,
-              nationality: nationality,
-            });
+            if (client === undefined) {
+              onSubmitClick({
+                name: name,
+                cardNumber: cardNumber,
+                cnp: cnp,
+                birthday: birthday,
+                nationality: nationality,
+              });
+            } else {
+              onSubmitClick({
+                id: client.id,
+                name: name,
+                cardNumber: cardNumber,
+                cnp: cnp,
+                birthday: birthday,
+                nationality: nationality,
+              });
+            }
           }}
           sx={button}
         >

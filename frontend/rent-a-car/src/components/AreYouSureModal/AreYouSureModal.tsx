@@ -1,7 +1,6 @@
 import React, { FC, useState } from "react";
 import styles from "./AreYouSureModal.module.css";
 import { Box, Button, Modal, Typography } from "@mui/material";
-
 interface IAreYouSureModalProps {
   onOkClick: () => void;
   onCancelClick: () => void;
@@ -79,9 +78,15 @@ const buttonStyle = {
 const successButtonStyle = {
   ...buttonStyle,
   backgroundColor: "limegreen",
+  "&:hover": {
+    backgroundColor: "limegreen",
+  },
 };
 
 const cancelButtonStyle = {
   ...buttonStyle,
   backgroundColor: "red",
+  "&:hover": {
+    backgroundColor: "red",
+  },
 };

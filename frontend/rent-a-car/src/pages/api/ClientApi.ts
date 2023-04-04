@@ -15,3 +15,15 @@ export const getAllClients = async () => {
 
   return data;
 };
+
+export const deleteClientById = async (clientId: string) => {
+  let url = baseUrl + ClientEndpoints.deleteClient + "/" + clientId;
+  let header = createHeader(Methods.DELETE);
+  let data = await fetch(url)
+    .then(async (response: Response) => {
+      return await response.json();
+    })
+    .catch((error: Error) => {
+      throw new Error(error.message);
+    });
+};

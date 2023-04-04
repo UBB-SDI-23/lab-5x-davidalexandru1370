@@ -21,6 +21,7 @@ import {
   ClientModal,
   ClientModalMethodsEnum,
 } from "@/components/ClientModal/ClientModal";
+import { ClientDto } from "@/model/ClientDto";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Clients() {
@@ -31,7 +32,7 @@ export default function Clients() {
   const [clientModalMethod, setClientModalMethod] =
     useState<ClientModalMethodsEnum>(ClientModalMethodsEnum.ADD);
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
-  const [_, forceRefresh] = useReducer((x) => x + 1, { x: 0 });
+
   useEffect(() => {
     getAllClients().then(async (x) => {
       setClients(x);
@@ -41,10 +42,9 @@ export default function Clients() {
   return (
     <div>
       <ClientModal
-        onSubmitClick={async (client: Client) => {
+        onSubmitClick={async (client: ClientDto) => {
           await addClient(client);
           setIsClientModalOpen(false);
-          forceRefresh();
         }}
         isOpen={isClientModalOpen}
         onClose={() => {

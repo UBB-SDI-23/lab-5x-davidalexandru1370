@@ -81,9 +81,9 @@ export const ClientModal: FC<IClientModalProps> = ({
           onClick={() => {
             onSubmitClick({
               name: name,
-              birthday: birthday,
               cardNumber: cardNumber,
               cnp: cnp,
+              birthday: birthday,
               nationality: nationality,
             });
           }}

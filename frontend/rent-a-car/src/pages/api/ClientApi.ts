@@ -33,7 +33,7 @@ export const deleteClientById = async (clientId: string) => {
 
 export const addClient = async (client: ClientDto) => {
   let url = baseUrl + ClientEndpoints.addClient;
-  let header = createHeader(Methods.POST, JSON.stringify(client));
+  let header = createHeader(Methods.POST, client);
   let data = await fetch(url, header)
     .then(async (response: Response) => {
       return await response.json();

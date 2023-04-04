@@ -17,6 +17,10 @@ import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
+import {
+  ClientModal,
+  ClientModalMethodsEnum,
+} from "@/components/ClientModal/ClientModal";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Clients() {
@@ -24,6 +28,10 @@ export default function Clients() {
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
   const [selectedClient, setSelectedClient] = useState<Client>();
+  const [clientModalMethod, setClientModalMethod] =
+    useState<ClientModalMethodsEnum>(ClientModalMethodsEnum.ADD);
+  const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
+
   useEffect(() => {
     getAllClients().then(async (x) => {
       setClients(x);
@@ -32,6 +40,16 @@ export default function Clients() {
 
   return (
     <div>
+      <ClientModal
+        onSubmitClick={() => {
+          setIsClientModalOpen(false);
+        }}
+        isOpen={isClientModalOpen}
+        onClose={() => {
+          setIsClientModalOpen(false);
+        }}
+        method={clientModalMethod}
+      />
       <AreYouSureModal
         isOpen={isAreYouSureModalOpen}
         onCancelClick={() => {
@@ -100,7 +118,12 @@ export default function Clients() {
                     />
                   </TableCell>
                   <TableCell>
-                    <EditIcon sx={{ cursor: "pointer" }} />
+                    <EditIcon
+                      sx={{ cursor: "pointer" }}
+                      onClick={() => {
+                        setIsClientModalOpen(true);
+                      }}
+                    />
                   </TableCell>
                 </TableRow>
               );

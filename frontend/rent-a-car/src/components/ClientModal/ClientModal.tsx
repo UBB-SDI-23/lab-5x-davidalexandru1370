@@ -1,16 +1,15 @@
-import { Box, Button, Modal, Typography } from "@mui/material";
+import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import React, { FC } from "react";
 import styles from "./ClientModal.module.css";
-
+import ClearIcon from "@mui/icons-material/Clear";
 interface IClientModalProps {
   onSubmitClick: () => void;
   onClose?: () => void;
-  text?: string;
-  buttonText: clientModalMethodsEnum;
+  method: ClientModalMethodsEnum;
   isOpen: boolean;
 }
 
-export enum clientModalMethodsEnum {
+export enum ClientModalMethodsEnum {
   ADD,
   UPDATE,
 }
@@ -18,8 +17,7 @@ export enum clientModalMethodsEnum {
 export const ClientModal: FC<IClientModalProps> = ({
   onSubmitClick,
   onClose,
-  text,
-  buttonText,
+  method,
   isOpen,
 }) => {
   const handleOnClose = () => {
@@ -29,10 +27,15 @@ export const ClientModal: FC<IClientModalProps> = ({
   return (
     <Modal open={isOpen} onClose={handleOnClose}>
       <Box sx={style}>
-        <Typography sx={{ textAlign: "center" }}>
-          {text ?? "Are you sure you want to continue?"}
-        </Typography>
-        <div></div>
+        <ClearIcon sx={clearIconStyle} />
+        <TextField label="Name"></TextField>
+        <Button
+          onClick={() => {
+            onSubmitClick();
+          }}
+        >
+          {method === ClientModalMethodsEnum.ADD ? "Add" : "Update"}
+        </Button>
       </Box>
     </Modal>
   );
@@ -52,4 +55,11 @@ const style = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+};
+
+const clearIconStyle = {
+  position: "absolute",
+  top: 0,
+  right: 0,
+  color: "red",
 };

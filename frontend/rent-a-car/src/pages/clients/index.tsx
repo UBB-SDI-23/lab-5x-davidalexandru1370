@@ -12,6 +12,7 @@ import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 import { getAllClients } from "../api/ClientApi";
 import ClearIcon from "@mui/icons-material/Clear";
+import EditIcon from "@mui/icons-material/Edit";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Clients() {
@@ -26,7 +27,7 @@ export default function Clients() {
   return (
     <div>
       <TableContainer component={Paper}>
-        <Table sx={{ maxWidth: "1000px" }}>
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>
@@ -36,12 +37,13 @@ export default function Clients() {
               <TableCell>Birthday</TableCell>
               <TableCell>Nationality</TableCell>
               <TableCell></TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {clients.map((client) => {
               return (
-                <TableRow>
+                <TableRow key={client.id}>
                   <TableCell>{client.id}</TableCell>
                   <TableCell>{client.name}</TableCell>
                   <TableCell>{client.cardNumber}</TableCell>
@@ -49,7 +51,15 @@ export default function Clients() {
                   <TableCell>{client.birthday.toString()}</TableCell>
                   <TableCell>{client.nationality}</TableCell>
                   <TableCell>
-                    <ClearIcon sx={{ color: "red", cursor: "pointer" }} />
+                    <ClearIcon
+                      sx={{
+                        color: "red",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <EditIcon sx={{ cursor: "pointer" }} />
                   </TableCell>
                 </TableRow>
               );

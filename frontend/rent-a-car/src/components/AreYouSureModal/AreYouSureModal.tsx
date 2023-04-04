@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import styles from "./AreYouSureModal.module.css";
 import { Box, Button, Modal, Typography } from "@mui/material";
 interface IAreYouSureModalProps {

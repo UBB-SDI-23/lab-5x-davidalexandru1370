@@ -1,5 +1,6 @@
 import { Client } from "@/model/Client";
 import {
+  Box,
   Paper,
   Table,
   TableBody,
@@ -7,12 +8,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { Inter } from "next/font/google";
-import { useEffect, useState } from "react";
-import { getAllClients } from "../api/ClientApi";
+import { useEffect, useReducer, useState } from "react";
+import { deleteClientById, getAllClients } from "../api/ClientApi";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
 import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +23,7 @@ export default function Clients() {
   const [clients, setClients] = useState<Client[]>([]);
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
-
+  const [selectedClient, setSelectedClient] = useState<Client>();
   useEffect(() => {
     getAllClients().then(async (x) => {
       setClients(x);
@@ -34,11 +37,35 @@ export default function Clients() {
         onCancelClick={() => {
           setIsAreYouSureModalOpen(false);
         }}
-        onOkClick={() => {
+        onOkClick={async () => {
+          try {
+            selectedClient && (await deleteClientById(selectedClient.id));
+          } catch (error: unknown) {
+            console.log((error as Error).message);
+          }
           setIsAreYouSureModalOpen(false);
         }}
       />
-      <TableContainer component={Paper}>
+      <Box
+        component={Paper}
+        sx={{ padding: "32px", textAlign: "right" }}
+        display="flex"
+        justifyContent="end"
+      >
+        <Box
+          sx={{
+            backgroundColor: "blueviolet",
+            borderRadius: "10px",
+            padding: ".35em",
+            cursor: "pointer",
+            display: "flex",
+          }}
+        >
+          <AddIcon />
+          <Typography sx={{ marginTop: "3px" }}>Add client</Typography>
+        </Box>
+      </Box>
+      <TableContainer component={Paper} sx={{ paddingInline: "2rem" }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -67,6 +94,7 @@ export default function Clients() {
                         cursor: "pointer",
                       }}
                       onClick={() => {
+                        setSelectedClient(client);
                         setIsAreYouSureModalOpen(true);
                       }}
                     />

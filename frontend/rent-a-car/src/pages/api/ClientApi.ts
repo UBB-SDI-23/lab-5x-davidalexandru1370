@@ -19,7 +19,7 @@ export const getAllClients = async () => {
 export const deleteClientById = async (clientId: string) => {
   let url = baseUrl + ClientEndpoints.deleteClient + "/" + clientId;
   let header = createHeader(Methods.DELETE);
-  let data = await fetch(url)
+  let data = await fetch(url, header)
     .then(async (response: Response) => {
       return await response.json();
     })

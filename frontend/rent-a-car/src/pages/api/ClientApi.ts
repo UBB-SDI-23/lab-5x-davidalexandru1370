@@ -26,4 +26,6 @@ export const deleteClientById = async (clientId: string) => {
     .catch((error: Error) => {
       throw new Error(error.message);
     });
+
+  return data;
 };

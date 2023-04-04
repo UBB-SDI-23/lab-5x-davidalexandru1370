@@ -13,10 +13,13 @@ import { useEffect, useState } from "react";
 import { getAllClients } from "../api/ClientApi";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
+import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Clients() {
   const [clients, setClients] = useState<Client[]>([]);
+  const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
+    useState<boolean>(false);
 
   useEffect(() => {
     getAllClients().then(async (x) => {
@@ -26,11 +29,19 @@ export default function Clients() {
 
   return (
     <div>
+      <AreYouSureModal
+        isOpen={isAreYouSureModalOpen}
+        onCancelClick={() => {
+          setIsAreYouSureModalOpen(false);
+        }}
+        onOkClick={() => {
+          setIsAreYouSureModalOpen(false);
+        }}
+      />
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Id</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Card Number</TableCell>
               <TableCell>CNP</TableCell>
@@ -44,7 +55,6 @@ export default function Clients() {
             {clients.map((client) => {
               return (
                 <TableRow key={client.id}>
-                  <TableCell>{client.id}</TableCell>
                   <TableCell>{client.name}</TableCell>
                   <TableCell>{client.cardNumber}</TableCell>
                   <TableCell>{client.cnp}</TableCell>
@@ -55,6 +65,9 @@ export default function Clients() {
                       sx={{
                         color: "red",
                         cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        setIsAreYouSureModalOpen(true);
                       }}
                     />
                   </TableCell>

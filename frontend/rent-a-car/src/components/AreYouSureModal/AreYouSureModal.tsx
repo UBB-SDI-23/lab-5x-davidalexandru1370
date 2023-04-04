@@ -29,8 +29,20 @@ export const AreYouSureModal: FC<IAreYouSureModalProps> = ({
     <Modal open={isOpen} onClose={handleOnClose}>
       <Box sx={style}>
         <Typography>Are you sure you want to continue?</Typography>
-        <Button>Yes</Button>
-        <Button>Cancel</Button>
+        <Button
+          onClick={() => {
+            onOkClick();
+          }}
+        >
+          Yes
+        </Button>
+        <Button
+          onClick={() => {
+            onCancelClick();
+          }}
+        >
+          Cancel
+        </Button>
       </Box>
     </Modal>
   );

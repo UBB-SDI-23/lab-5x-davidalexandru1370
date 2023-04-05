@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Paper,
   Table,
   TableBody,
@@ -7,6 +8,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -14,10 +16,14 @@ import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { Vehicle } from "@/model/Vehicle";
-import { getAllVehicles } from "../api/VehicleApi";
+import {
+  filterVehiclesByEngineCapacity,
+  getAllVehicles,
+} from "../api/VehicleApi";
 
 export default function Vehicles() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [filteredCapacity, setFilteredCapacity] = useState<number>(0);
 
   useEffect(() => {
     getAllVehicles().then((v) => {
@@ -31,8 +37,32 @@ export default function Vehicles() {
         component={Paper}
         sx={{ padding: "32px", textAlign: "right" }}
         display="flex"
-        justifyContent="end"
+        justifyContent="space-between"
       >
+        <Box>
+          <TextField
+            label="Engine capacity"
+            size="small"
+            onChange={(e) => {
+              setFilteredCapacity(
+                parseInt(
+                  e.currentTarget.value.length === 0
+                    ? "0"
+                    : e.currentTarget.value
+                )
+              );
+            }}
+          ></TextField>
+          <Button
+            variant="contained"
+            onClick={async () => {
+              let data = await filterVehiclesByEngineCapacity(filteredCapacity);
+              setVehicles(data);
+            }}
+          >
+            Filter
+          </Button>
+        </Box>
         <Box
           sx={{
             backgroundColor: "blueviolet",

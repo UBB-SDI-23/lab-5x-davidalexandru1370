@@ -15,3 +15,19 @@ export const getAllVehicles = async () => {
 
   return data;
 };
+
+export const filterVehiclesByEngineCapacity = async (capacity: number) => {
+  let url =
+    baseUrl +
+    VehicleEndpoints.filterVehiclesByEngineCapacity(capacity.toString());
+  let header = createHeader(Methods.GET);
+  let data = await fetch(url, header)
+    .then(async (response: Response) => {
+      return await response.json();
+    })
+    .then((data: Vehicle[]) => {
+      return data;
+    });
+
+  return data;
+};

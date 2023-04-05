@@ -17,29 +17,47 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { Vehicle } from "@/model/Vehicle";
 import {
+  addVehicle,
   deleteVehicleById,
   filterVehiclesByEngineCapacity,
   getAllVehicles,
 } from "../api/VehicleApi";
 import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
+import {
+  VehicleModal,
+  VehicleModalMethodsEnum,
+} from "@/components/VehicleModal/VehicleModal";
+import { VehicleDto } from "@/model/VehicleDto";
 
 export default function Vehicles() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [filteredCapacity, setFilteredCapacity] = useState<number>(0);
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
+  const [isVehicleModalOpen, setIsVehicleModalOpen] = useState<boolean>(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle>();
   useEffect(() => {
-    if (isAreYouSureModalOpen === true) {
+    if (isAreYouSureModalOpen === true || isVehicleModalOpen === true) {
       return;
     }
     getAllVehicles().then((v) => {
       setVehicles(v);
     });
-  }, [isAreYouSureModalOpen]);
+  }, [isAreYouSureModalOpen, isVehicleModalOpen]);
 
   return (
     <div>
+      <VehicleModal
+        isOpen={isVehicleModalOpen}
+        method={VehicleModalMethodsEnum.ADD}
+        onSubmitClick={async (vehicle: VehicleDto) => {
+          await addVehicle(vehicle);
+          setIsVehicleModalOpen(false);
+        }}
+        onClose={() => {
+          setIsVehicleModalOpen(false);
+        }}
+      />
       <AreYouSureModal
         isOpen={isAreYouSureModalOpen}
         onCancelClick={() => {
@@ -91,7 +109,9 @@ export default function Vehicles() {
             cursor: "pointer",
             display: "flex",
           }}
-          onClick={() => {}}
+          onClick={() => {
+            setIsVehicleModalOpen(true);
+          }}
         >
           <AddIcon />
           <Typography sx={{ marginTop: "3px" }}>Add vehicle</Typography>
@@ -120,7 +140,7 @@ export default function Vehicles() {
                   <TableCell>{vehicle.carPlate}</TableCell>
                   <TableCell>{vehicle.numberOfSeats}</TableCell>
                   <TableCell>{vehicle.engineCapacity}</TableCell>
-                  <TableCell>{vehicle.fabricationDate}</TableCell>
+                  <TableCell>{vehicle.fabricationDate.toString()}</TableCell>
                   <TableCell>
                     <ClearIcon
                       sx={{

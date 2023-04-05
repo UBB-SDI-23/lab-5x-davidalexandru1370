@@ -5,5 +5,5 @@ export interface Vehicle {
   carPlate: string;
   numberOfSeats: number;
   engineCapacity: number;
-  fabricationDate: string;
+  fabricationDate: Date;
 }

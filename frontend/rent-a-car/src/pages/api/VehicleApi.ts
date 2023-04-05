@@ -1,5 +1,6 @@
 import { Methods, VehicleEndpoints, baseUrl } from "@/constants/ApiConstants";
 import { Vehicle } from "@/model/Vehicle";
+import { VehicleDto } from "@/model/VehicleDto";
 import { createHeader } from "@/utilities/utilities";
 
 export const getAllVehicles = async () => {
@@ -45,5 +46,19 @@ export const deleteVehicleById = async (vehicleId: string) => {
     .then((x) => {
       return x;
     });
+  return data;
+};
+
+export const addVehicle = async (vehicle: VehicleDto) => {
+  let url: string = baseUrl + VehicleEndpoints.addVehicle;
+  let header = createHeader(Methods.POST, vehicle);
+  let data: Vehicle = await fetch(url, header)
+    .then(async (response: Response) => {
+      return await response.json();
+    })
+    .then((v) => {
+      return v;
+    });
+
   return data;
 };

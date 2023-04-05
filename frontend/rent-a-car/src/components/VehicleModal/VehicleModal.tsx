@@ -7,7 +7,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 
 interface IVehicleModalProps {
-  onSubmitClick: (client: VehicleDto) => Promise<void>;
+  onSubmitClick: (vehicle: VehicleDto) => Promise<void>;
   onClose: () => void;
   vehicle?: Vehicle;
   method: VehicleModalMethodsEnum;
@@ -31,7 +31,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
   const [carPlate, setCarPlate] = useState<string>("");
   const [numberOfSeats, setNumberOfSeats] = useState<number>(0);
   const [engineCapacity, setEngineCapacity] = useState<number>(0);
-  const [fabricationDate, setFabricationDate] = useState<string>("");
+  const [fabricationDate, setFabricationDate] = useState<Date>();
 
   const handleOnClose = () => {
     onClose();
@@ -84,7 +84,14 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
           label="Fabrication date"
           sx={textFieldStyle}
           onChange={(e) => {
-            setFabricationDate(e.currentTarget.value);
+            const dates = e.currentTarget.value.split("-");
+            setFabricationDate(
+              new Date(
+                parseInt(dates[0]),
+                parseInt(dates[1]),
+                parseInt(dates[2])
+              )
+            );
           }}
         ></TextField>
         <Button
@@ -94,7 +101,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
               brand: brand,
               carPlate: carPlate,
               engineCapacity: engineCapacity,
-              fabricationDate: fabricationDate,
+              fabricationDate: fabricationDate!,
               horsePower: horsePower,
               numberOfSeats: numberOfSeats,
             });

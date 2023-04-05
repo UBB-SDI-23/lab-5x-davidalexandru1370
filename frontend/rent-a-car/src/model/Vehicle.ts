@@ -3,7 +3,7 @@ export interface Vehicle {
   brand: string;
   horsePower: number;
   carPlate: string;
-  numberOfSeats: string;
-  engineCapacity: string;
+  numberOfSeats: number;
+  engineCapacity: number;
   fabricationDate: string;
 }

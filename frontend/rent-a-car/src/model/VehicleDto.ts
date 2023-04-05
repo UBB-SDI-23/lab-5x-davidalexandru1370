@@ -3,6 +3,6 @@ export interface VehicleDto {
   horsePower: number;
   carPlate: string;
   numberOfSeats: number;
-  engineCapacity: string;
+  engineCapacity: number;
   fabricationDate: string;
 }

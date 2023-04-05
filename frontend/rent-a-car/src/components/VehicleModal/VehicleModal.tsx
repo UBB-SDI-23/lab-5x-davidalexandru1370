@@ -30,7 +30,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
   const [horsePower, setHorsePower] = useState<number>(0);
   const [carPlate, setCarPlate] = useState<string>("");
   const [numberOfSeats, setNumberOfSeats] = useState<number>(0);
-  const [engineCapacity, setEngineCapacity] = useState<string>("");
+  const [engineCapacity, setEngineCapacity] = useState<number>(0);
   const [fabricationDate, setFabricationDate] = useState<string>("");
 
   const handleOnClose = () => {
@@ -46,29 +46,46 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
           }}
         />
         <TextField
-          label="Name"
+          label="Brand"
           sx={textFieldStyle}
-          onChange={(e) => {}}
+          onChange={(e) => {
+            setBrand(e.currentTarget.value);
+          }}
         ></TextField>
         <TextField
-          label="Card Number"
+          label="Horse power"
           sx={textFieldStyle}
-          onChange={(e) => {}}
+          onChange={(e) => {
+            setHorsePower(parseInt(e.currentTarget.value));
+          }}
         ></TextField>
         <TextField
-          label="CNP"
+          label="Car plate"
           sx={textFieldStyle}
-          onChange={(e) => {}}
+          onChange={(e) => {
+            setCarPlate(e.currentTarget.value);
+          }}
         ></TextField>
         <TextField
-          label="Birthday"
+          label="Seats"
           sx={textFieldStyle}
-          onChange={(e) => {}}
+          onChange={(e) => {
+            setNumberOfSeats(parseInt(e.currentTarget.value));
+          }}
         ></TextField>
         <TextField
-          label="Nationality"
+          label="Engine capacity"
           sx={textFieldStyle}
-          onChange={(e) => {}}
+          onChange={(e) => {
+            setEngineCapacity(parseInt(e.currentTarget.value));
+          }}
+        ></TextField>
+        <TextField
+          label="Fabrication date"
+          sx={textFieldStyle}
+          onChange={(e) => {
+            setFabricationDate(e.currentTarget.value);
+          }}
         ></TextField>
         <Button
           variant="contained"

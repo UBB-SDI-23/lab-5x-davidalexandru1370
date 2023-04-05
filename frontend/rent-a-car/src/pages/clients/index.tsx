@@ -39,15 +39,18 @@ export default function Clients() {
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    getAllClients().then(async (x) => {
-      setClients(x);
+    if (isAreYouSureModalOpen === true || isClientModalOpen === true) {
+      return;
+    }
+    getAllClients().then(async (c) => {
+      setClients(c);
     });
-  }, []);
+  }, [isClientModalOpen, isAreYouSureModalOpen]);
 
   return (
     <div>
       <ClientModal
-        onSubmitClick={async (client: Client | ClientDto) => {
+        onSubmitClick={async (client: ClientDto) => {
           if (clientModalMethod === ClientModalMethodsEnum.ADD) {
             await addClient(client);
           } else {
@@ -56,6 +59,7 @@ export default function Clients() {
               id: selectedClient!.id,
             });
           }
+          setSelectedClient(undefined);
           setIsClientModalOpen(false);
         }}
         isOpen={isClientModalOpen}
@@ -84,11 +88,6 @@ export default function Clients() {
         sx={{ padding: "32px", textAlign: "right" }}
         display="flex"
         justifyContent="end"
-        onClick={() => {
-          setSelectedClient(undefined);
-          setClientModalMethod(ClientModalMethodsEnum.ADD);
-          setIsClientModalOpen(true);
-        }}
       >
         <Box
           sx={{
@@ -97,6 +96,11 @@ export default function Clients() {
             padding: ".35em",
             cursor: "pointer",
             display: "flex",
+          }}
+          onClick={() => {
+            setSelectedClient(undefined);
+            setClientModalMethod(ClientModalMethodsEnum.ADD);
+            setIsClientModalOpen(true);
           }}
         >
           <AddIcon />

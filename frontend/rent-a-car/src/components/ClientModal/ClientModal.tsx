@@ -1,10 +1,10 @@
 import { Box, Button, Modal, TextField, Typography } from "@mui/material";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import { ClientDto } from "@/model/ClientDto";
 import { Client } from "@/model/Client";
 interface IClientModalProps {
-  onSubmitClick: (client: Client | ClientDto) => Promise<void>;
+  onSubmitClick: (client: ClientDto) => Promise<void>;
   onClose: () => void;
   client?: Client;
   method: ClientModalMethodsEnum;
@@ -26,16 +26,23 @@ export const ClientModal: FC<IClientModalProps> = ({
   const handleOnClose = () => {
     onClose();
   };
+  //console.log(client);
+  //console.log(client !== undefined ? client.cardNumber : "");
+  const [name, setName] = useState<string>("");
+  const [cardNumber, setCardNumber] = useState<string>("");
+  const [cnp, setCNP] = useState<string>("");
+  const [birthday, setBirthday] = useState<string>("");
+  const [nationality, setNationality] = useState<string>("");
 
-  const [name, setName] = useState<string>(client?.name ?? "");
-  const [cardNumber, setCardNumber] = useState<string>(
-    client?.cardNumber ?? ""
-  );
-  const [cnp, setCNP] = useState<string>(client?.cnp ?? "");
-  const [birthday, setBirthday] = useState<string>(client?.birthday ?? "");
-  const [nationality, setNationality] = useState<string>(
-    client?.nationality ?? ""
-  );
+  useEffect(() => {
+    if (client !== undefined) {
+      setName(client.name);
+      setCardNumber(client.cardNumber);
+      setCNP(client.cnp);
+      setBirthday(client.birthday);
+      setNationality(client.nationality);
+    }
+  }, [client]);
 
   return (
     <Modal open={isOpen} onClose={handleOnClose}>
@@ -89,24 +96,13 @@ export const ClientModal: FC<IClientModalProps> = ({
         <Button
           variant="contained"
           onClick={() => {
-            if (client === undefined) {
-              onSubmitClick({
-                name: name,
-                cardNumber: cardNumber,
-                cnp: cnp,
-                birthday: birthday,
-                nationality: nationality,
-              });
-            } else {
-              onSubmitClick({
-                id: client.id,
-                name: name,
-                cardNumber: cardNumber,
-                cnp: cnp,
-                birthday: birthday,
-                nationality: nationality,
-              });
-            }
+            onSubmitClick({
+              name: name,
+              cardNumber: cardNumber,
+              cnp: cnp,
+              birthday: birthday,
+              nationality: nationality,
+            });
           }}
           sx={button}
         >

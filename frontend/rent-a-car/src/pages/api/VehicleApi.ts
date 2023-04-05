@@ -31,3 +31,16 @@ export const filterVehiclesByEngineCapacity = async (capacity: number) => {
 
   return data;
 };
+
+export const deleteVehicleById = async (vehicleId: string) => {
+  let url = baseUrl + VehicleEndpoints.deleteVehicle(vehicleId);
+  let header = createHeader(Methods.DELETE);
+  let data = await fetch(url, header)
+    .then(async (response: Response) => {
+      return await response.json();
+    })
+    .then((x) => {
+      return x;
+    });
+  return data;
+};

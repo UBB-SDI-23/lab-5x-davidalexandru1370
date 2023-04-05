@@ -26,8 +26,6 @@ export const ClientModal: FC<IClientModalProps> = ({
   const handleOnClose = () => {
     onClose();
   };
-  //console.log(client);
-  //console.log(client !== undefined ? client.cardNumber : "");
   const [name, setName] = useState<string>("");
   const [cardNumber, setCardNumber] = useState<string>("");
   const [cnp, setCNP] = useState<string>("");

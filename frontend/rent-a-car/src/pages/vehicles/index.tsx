@@ -9,10 +9,20 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
+import { Vehicle } from "@/model/Vehicle";
+import { getAllVehicles } from "../api/VehicleApi";
 
 export default function Vehicles() {
+  const [vehicles, setVehicles] = useState<Vehicle[]>();
+
+  useEffect(() => {
+    getAllVehicles().then((v) => {
+      setVehicles(v);
+    });
+  }, []);
+
   return (
     <div>
       <Box

@@ -23,6 +23,7 @@ interface VehicleEndpoint {
   getAllVehicles: string;
   addVehicle: string;
   filterVehiclesByEngineCapacity: (capacity: string) => string;
+  deleteVehicle: (vehicleId: string) => string;
 }
 
 export const ClientEndpoints: ClientEndpoint = {
@@ -38,4 +39,6 @@ export const VehicleEndpoints: VehicleEndpoint = {
   addVehicle: vehicleController + "add-vehicle",
   filterVehiclesByEngineCapacity: (capacity) =>
     vehicleController + "get-vehicles-filtered/" + capacity,
+  deleteVehicle: (vehicleId: string) =>
+    vehicleController + "delete/" + vehicleId,
 };

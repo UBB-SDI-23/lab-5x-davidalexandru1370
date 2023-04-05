@@ -12,5 +12,6 @@ export const getAllVehicles = async () => {
     .then((data: Vehicle[]) => {
       return data;
     });
+
   return data;
 };

@@ -10,12 +10,14 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import ClearIcon from "@mui/icons-material/Clear";
+import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { Vehicle } from "@/model/Vehicle";
 import { getAllVehicles } from "../api/VehicleApi";
 
 export default function Vehicles() {
-  const [vehicles, setVehicles] = useState<Vehicle[]>();
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
   useEffect(() => {
     getAllVehicles().then((v) => {
@@ -59,7 +61,31 @@ export default function Vehicles() {
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody></TableBody>
+          <TableBody>
+            {vehicles.map((v) => {
+              return (
+                <TableRow key={v.id}>
+                  <TableCell>{v.brand}</TableCell>
+                  <TableCell>{v.horsePower}</TableCell>
+                  <TableCell>{v.carPlate}</TableCell>
+                  <TableCell>{v.numberOfSeats}</TableCell>
+                  <TableCell>{v.engineCapacity}</TableCell>
+                  <TableCell>{v.fabricationDate}</TableCell>
+                  <TableCell>
+                    <ClearIcon
+                      sx={{
+                        color: "red",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <EditIcon sx={{ cursor: "pointer" }} />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
         </Table>
       </TableContainer>
     </div>

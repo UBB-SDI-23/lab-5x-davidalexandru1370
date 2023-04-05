@@ -27,6 +27,9 @@ export const filterVehiclesByEngineCapacity = async (capacity: number) => {
     })
     .then((data: Vehicle[]) => {
       return data;
+    })
+    .catch((error: Error) => {
+      throw new Error(error.message);
     });
 
   return data;

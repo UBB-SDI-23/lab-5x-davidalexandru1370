@@ -76,7 +76,7 @@ public class VehicleController : ControllerBase
 
     [HttpDelete]
     [Route("delete/{vehicleId}")]
-    public async Task<ActionResult> DeleteVehicle([FromRoute] Guid vehicleId)
+    public async Task<IActionResult> DeleteVehicle([FromRoute] Guid vehicleId)
     {
         try
         {

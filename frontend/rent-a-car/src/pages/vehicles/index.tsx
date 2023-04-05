@@ -17,22 +17,42 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { Vehicle } from "@/model/Vehicle";
 import {
+  deleteVehicleById,
   filterVehiclesByEngineCapacity,
   getAllVehicles,
 } from "../api/VehicleApi";
+import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
 
 export default function Vehicles() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [filteredCapacity, setFilteredCapacity] = useState<number>(0);
-
+  const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
+    useState<boolean>(false);
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle>();
   useEffect(() => {
+    if (isAreYouSureModalOpen === true) {
+      return;
+    }
     getAllVehicles().then((v) => {
       setVehicles(v);
     });
-  }, []);
+  }, [isAreYouSureModalOpen]);
 
   return (
     <div>
+      <AreYouSureModal
+        isOpen={isAreYouSureModalOpen}
+        onCancelClick={() => {
+          setIsAreYouSureModalOpen(false);
+        }}
+        onOkClick={async () => {
+          try {
+            await deleteVehicleById(selectedVehicle!.id);
+          } catch (error: unknown) {
+            console.log((error as Error).message);
+          }
+        }}
+      />
       <Box
         component={Paper}
         sx={{ padding: "32px", textAlign: "right" }}
@@ -92,20 +112,24 @@ export default function Vehicles() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {vehicles.map((v) => {
+            {vehicles.map((vehicle) => {
               return (
-                <TableRow key={v.id}>
-                  <TableCell>{v.brand}</TableCell>
-                  <TableCell>{v.horsePower}</TableCell>
-                  <TableCell>{v.carPlate}</TableCell>
-                  <TableCell>{v.numberOfSeats}</TableCell>
-                  <TableCell>{v.engineCapacity}</TableCell>
-                  <TableCell>{v.fabricationDate}</TableCell>
+                <TableRow key={vehicle.id}>
+                  <TableCell>{vehicle.brand}</TableCell>
+                  <TableCell>{vehicle.horsePower}</TableCell>
+                  <TableCell>{vehicle.carPlate}</TableCell>
+                  <TableCell>{vehicle.numberOfSeats}</TableCell>
+                  <TableCell>{vehicle.engineCapacity}</TableCell>
+                  <TableCell>{vehicle.fabricationDate}</TableCell>
                   <TableCell>
                     <ClearIcon
                       sx={{
                         color: "red",
                         cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        setSelectedVehicle(vehicle);
+                        setIsAreYouSureModalOpen(true);
                       }}
                     />
                   </TableCell>

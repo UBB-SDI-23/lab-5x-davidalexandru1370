@@ -9,8 +9,11 @@ export const createHeader = (method: Methods, entity?: any) => {
       "Content-type": "application/json",
       "Access-Control-Allow-Origin": "*",
     },
-    body: JSON.stringify(entity),
     credentials: "include",
   };
+
+  if (entity !== undefined) {
+    headerOptions = { ...headerOptions, body: JSON.stringify(entity) };
+  }
   return headerOptions;
 };

@@ -1,0 +1,12 @@
+@startuml
+class IncidentService {
+    + IncidentService(incidentsRepository:IIncidentsRepository)
+    + <<async>> AddIncident(incident:Incident) : Task
+    + <<async>> RemoveIncident(id:Guid) : Task
+    + GetAllIncidents() : Task<IEnumerable<Incident>>
+    + <<async>> UpdateIncident(incident:Incident) : Task<Incident>
+    + <<async>> GetIncidentById(id:Guid) : Task<Incident>
+    + GetIncidentsByVehicleId(vehicleId:Guid) : Task<IEnumerable<Incident>>
+}
+IIncidentService <|-- IncidentService
+@enduml

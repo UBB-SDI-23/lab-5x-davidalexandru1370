@@ -1,0 +1,11 @@
+@startuml
+class VehicleDTO {
+    + Brand : string <<get>> <<set>>
+    + HorsePower : int <<get>> <<set>>
+    + CarPlate : string <<get>> <<set>>
+    + NumberOfSeats : int <<get>> <<set>>
+    + EngineCapacity : int <<get>> <<set>>
+    + NumberOfIncidents : int <<get>> <<set>>
+}
+VehicleDTO --> "FabricationDate" DateTime
+@enduml

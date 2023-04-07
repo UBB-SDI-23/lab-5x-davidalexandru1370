@@ -1,0 +1,12 @@
+@startuml
+class Vehicle {
+    + Brand : string <<get>> <<set>>
+    + HorsePower : int <<get>> <<set>>
+    + CarPlate : string <<get>> <<set>>
+    + NumberOfSeats : int <<get>> <<set>>
+    + EngineCapacity : int <<get>> <<set>>
+    + <<virtual>> Incidents : ICollection<Incident>? <<get>> <<set>>
+}
+Vehicle --> "Id" Guid
+Vehicle --> "FabricationDate" DateTime
+@enduml

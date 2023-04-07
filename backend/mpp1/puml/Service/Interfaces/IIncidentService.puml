@@ -1,0 +1,10 @@
+@startuml
+interface IIncidentService {
+    + AddIncident(incident:Incident) : Task
+    + RemoveIncident(id:Guid) : Task
+    + GetAllIncidents() : Task<IEnumerable<Incident>>
+    + UpdateIncident(incident:Incident) : Task<Incident>
+    + GetIncidentById(id:Guid) : Task<Incident>
+    + GetIncidentsByVehicleId(vehicleId:Guid) : Task<IEnumerable<Incident>>
+}
+@enduml

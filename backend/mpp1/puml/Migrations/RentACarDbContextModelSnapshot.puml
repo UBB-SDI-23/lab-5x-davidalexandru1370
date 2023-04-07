@@ -1,0 +1,5 @@
+@startuml
+class RentACarDbContextModelSnapshot <<partial>> {
+}
+ModelSnapshot <|-- RentACarDbContextModelSnapshot
+@enduml

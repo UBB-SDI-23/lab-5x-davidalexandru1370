@@ -1,0 +1,11 @@
+@startuml
+class Incident {
+    + <<virtual>> Vehicle : Vehicle? <<get>> <<set>>
+    + Location : string <<get>> <<set>>
+    + Description : string <<get>> <<set>>
+    + Cost : int <<get>> <<set>>
+}
+Incident --> "Id" Guid
+Incident --> "VehicleId" Guid
+Incident --> "WhenHappend" DateTime
+@enduml

@@ -1,0 +1,11 @@
+.navigationItem {
+  padding-inline: 1em;
+}
+
+.navigationItem:hover {
+  cursor: pointer;
+}
+
+.selectedNavigationItem {
+  color: yellow;
+}

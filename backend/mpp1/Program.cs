@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using mpp1.DatabaseContext;
 using mpp1.Repository;
 using mpp1.Repository.Interfaces;
@@ -19,25 +18,23 @@ builder.Services.AddScoped<IIncidentService, IncidentService>();
 builder.Services.AddScoped<IIncidentsRepository, IncidentRepository>();
 builder.Services.AddScoped<IVehicleRentRepository, VehicleRentRepository>();
 builder.Services.AddScoped<IVehicleRentService, VehicleRentService>();
-// builder.Services.AddDbContext<RentACarDbContext>(options => 
-//     options.UseSqlServer(builder.Configuration.GetConnectionString("Dev")));
+
 var app = builder.Build();
 var frontendBaseUrl = app.Configuration.GetSection("Frontend")
                                              .GetSection(app.Environment.EnvironmentName)
+                                             .GetSection("BaseUrl")
                                              .Value!;
+
+app.UseCors(options => 
+    options.WithOrigins(frontendBaseUrl).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+    );
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseCors(options => 
-        options.WithOrigins(frontendBaseUrl)
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials());
-
+    
 }
-
 
 app.UseAuthorization();
 

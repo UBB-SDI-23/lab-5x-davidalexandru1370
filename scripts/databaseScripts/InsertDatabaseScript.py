@@ -59,6 +59,7 @@ def create_file():
 
 
 def insert_into_vehicles():
+    global vehicles_ids
     file = open("InsertVehicles.sql","w")
 
     print(Fore.WHITE +  "START INSERT IN VEHICLES AT:", Fore.YELLOW + str(datetime.datetime.now()))

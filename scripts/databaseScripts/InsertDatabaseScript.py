@@ -4,7 +4,7 @@ import uuid
 from random import randint
 from Utilities import get_string_in_quotes
 from model.Client import Client
-
+from colorama import Fore
 client_file_name = "InsertClient.sql"
 fake = Faker()
 client_ids = {}
@@ -37,7 +37,7 @@ def create_file():
         cnp_taken[cnp] = 1
         return cnp
 
-    print("STARTING INSERTING AT TIME: ", datetime.datetime.now())
+    print("STARTING INSERTING AT TIME: ", Fore.YELLOW +  datetime.datetime.now())
     for index in range(number_of_clients):
         cid = uuid.uuid4()
         while(id in client_ids.keys()):
@@ -55,9 +55,20 @@ def create_file():
             file.write("\n")
             batches = ""    
     file.close()
-    print("STOP INSERTING AT", datetime.datetime.now(), "\u2713")
+    print("STOP INSERTING AT", datetime.datetime.now(), Fore.GREEN + "\u2713")
+
+
+def insert_into_vehicles():
+    file = open("InsertVehicles.sql","w")
+
+    print(Fore.WHITE +  "START INSERT IN VEHICLES AT:", Fore.YELLOW + str(datetime.datetime.now()))
+
+    file.close()
+    print(Fore.WHITE +  "STOP INSERT IN VEHICLES AT: ", Fore.YELLOW + str(datetime.datetime.now()), Fore.GREEN +  "\u2713")
 
 if __name__ == "__main__":
-    create_file()
+    #create_file()
+    insert_into_vehicles()
+
 
 

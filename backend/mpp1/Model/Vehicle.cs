@@ -17,6 +17,6 @@ public class Vehicle
     public int NumberOfSeats { get; set; }
     [Range(0,Int32.MaxValue)]
     public int EngineCapacity { get; set; }
-    public DateTime FabricationDate { get; set; }
+    public DateOnly FabricationDate { get; set; }
     public virtual ICollection<Incident>? Incidents { get; set; } = null!;
 }

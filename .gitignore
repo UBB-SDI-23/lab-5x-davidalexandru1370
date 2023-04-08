@@ -286,7 +286,7 @@ node_modules/
 .next/
 # Visual Studio 6 build log
 *.plg
-
+*.sql
 # Visual Studio 6 workspace options file
 *.opt
 

@@ -287,7 +287,8 @@ node_modules/
 # Visual Studio 6 build log
 *.plg
 InsertClient.sql
-InsertVehicles.sql
+InsertVehicle.sql
+InsertRent.sql
 # Visual Studio 6 workspace options file
 *.opt
 

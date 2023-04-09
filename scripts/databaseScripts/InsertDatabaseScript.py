@@ -5,18 +5,22 @@ from random import randint
 from Utilities import get_string_in_quotes
 from model.Client import Client
 from model.Vehicle import Vehicle
+from model.VehicleRent import VehicleRent
 from colorama import Fore
 from Constants import counties_car_plate, car_brands
+import random
 
 client_file_name = "InsertClient.sql"
 fake = Faker()
 client_ids = {}
 vehicles_ids = {}    
+rent_ids = {}
 
-def create_file():
+def insert_into_client():
     global client_ids
     file = open(client_file_name, "w")
-    file.write("DELETE FROM \"Client\"\n")
+    file.write("ALTER TABLE \"Client\" DROP CONSTRAINT \"PK_Client\" CASCADE;\n")
+    file.write("DELETE FROM \"Client\";\n")
     number_of_clients = 1000000
     batches = ""
     cnp_taken = {}
@@ -57,8 +61,10 @@ def create_file():
             file.write(str(f"INSERT INTO \"Client\"(\"Id\",\"Name\",\"CardNumber\",\"CNP\",\"Birthday\",\"Nationality\") VALUES {batches[:-1]};"))
             file.write("\n")
             batches = ""    
+
+    file.write("ALTER TABLE \"Client\" ADD CONSTRAINT \"PK_Client\" PRIMARY KEY(\"Id\");")
     file.close()
-    print(Fore.WHITE + "STOP INSERTING INTO CLIENT AT", datetime.datetime.now(), Fore.GREEN + "\u2713")
+    print(Fore.WHITE + "STOP INSERTING INTO CLIENT AT: ",Fore.YELLOW + str(datetime.datetime.now()), Fore.GREEN + "\u2713")
 
 
 def insert_into_vehicles():
@@ -81,7 +87,6 @@ def insert_into_vehicles():
     file = open("InsertVehicle.sql","w")
     file.write("ALTER TABLE \"Vehicle\" DROP CONSTRAINT \"PK_Vehicle\" CASCADE;\n ")
     file.write("DELETE FROM \"Vehicle\";\n")
-    #file.write("DROP INDEX \"PK_Vehicle\";\n")
 
     print(Fore.WHITE +  "START INSERT IN VEHICLES AT:", Fore.YELLOW + str(datetime.datetime.now()))
     batches = ""
@@ -104,15 +109,57 @@ def insert_into_vehicles():
         if (index + 1) % 1000 == 0:
             file.write(str(f"INSERT INTO \"Vehicle\"(\"Id\",\"Brand\",\"HorsePower\",\"CarPlate\",\"NumberOfSeats\",\"EngineCapacity\",\"FabricationDate\") VALUES {batches[:-1]};\n"))
             batches = ""
-    #???
-    #file.write("Cluster \"Vehicle\" using \"PK_Vehicle\"")
     file.write("ALTER TABLE \"Vehicle\" ADD CONSTRAINT \"PK_Vehicle\" PRIMARY KEY(\"Id\");")
     file.close()
     print(Fore.WHITE +  "STOP INSERT IN VEHICLES AT: ", Fore.YELLOW + str(datetime.datetime.now()), Fore.GREEN +  "\u2713")
 
+
+def insert_into_rents():
+    global vehicles_ids
+    global client_ids
+    global rent_ids
+    number_of_rents = 10000000
+    batches = ""
+
+    file = open("InsertRent.sql","w")
+
+    def get_random_start_date():
+        start_date = datetime.date(2022,1,1)
+        start_date += datetime.timedelta(days=randint(0,364))
+        return start_date
+    
+    print("STARTING INSERTING INTO RENTS AT TIME: ", Fore.YELLOW +  str(datetime.datetime.now()))
+    file.write("DELETE FROM \"VehicleRent\";\n")
+    for index in range(number_of_rents):
+        rid = uuid.uuid4()
+
+        while rid in vehicles_ids.keys():
+            rid = uuid.uuid4()
+
+        client_id = random.choice(list(client_ids.keys()))
+        vehicle_id = random.choice(list(vehicles_ids.keys()))
+
+        start_date = get_random_start_date()
+        end_date = start_date + datetime.timedelta(days=randint(0,4))
+        total_cost = randint(200,1000)
+        comments = ""
+        rent = VehicleRent(rid,client_id,vehicle_id,start_date,end_date,total_cost,comments)
+        batches += str(rent) + ","
+        rent_ids[rid] = 1
+        if (index + 1) % 1000 == 0:
+            file.write(str(f"INSERT INTO \"VehicleRent\"(\"Id\",\"VehicleId\",\"ClientId\",\"StartDate\",\"EndDate\",\"TotalCost\",\"Comments\") VALUES {batches[:-1]};\n"))
+            batches = ""
+        
+    print(Fore.WHITE +  "STOP INSERT IN RENTS AT: ", Fore.YELLOW + str(datetime.datetime.now()), Fore.GREEN +  "\u2713")
+
+    file.close()
+
 if __name__ == "__main__":
-    #create_file()
+    #drop_primary_key_and_foreign_keys_from_all_tables()
+    insert_into_client()
     insert_into_vehicles()
+    insert_into_rents()
+    #add_primary_key_and_foreign_keys_to_all_tables()
 
 
 

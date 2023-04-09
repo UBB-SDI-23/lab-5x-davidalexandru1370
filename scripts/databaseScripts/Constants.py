@@ -39,3 +39,5 @@ counties_car_plate = ["AR",
                       "VL",
                       "VS",
                       "VN"]
+
+car_brands = ["Bmw","Audi","Mercedes","Dacia","Renault"]

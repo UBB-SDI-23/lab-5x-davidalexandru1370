@@ -1,8 +1,9 @@
 from Utilities import get_string_in_single_quotes
 
 class Vehicle():
-    def __init__(self, id, horse_power, car_plate, number_of_seats, engine_capacity, fabrication_date) -> None:
+    def __init__(self, id, brand, horse_power, car_plate, number_of_seats, engine_capacity, fabrication_date) -> None:
         self.__id = id
+        self.__brand = brand
         self.__horse_power = horse_power
         self.__car_plate = car_plate
         self.__number_of_seats = number_of_seats
@@ -11,10 +12,11 @@ class Vehicle():
 
     def __str__(self) -> str:
         return f"({get_string_in_single_quotes(self.__id)}," + \
-               f"{get_string_in_single_quotes(self.__horse_power)}," + \
+               f"{get_string_in_single_quotes(self.__brand)},"+ \
+               f"{self.__horse_power}," + \
                f"{get_string_in_single_quotes(self.__car_plate)}," + \
-               f"{get_string_in_single_quotes(self.__number_of_seats)}," + \
-               f"{get_string_in_single_quotes(self.__engine_capacity)}," + \
+               f"{self.__number_of_seats}," + \
+               f"{self.__engine_capacity}," + \
                f"{get_string_in_single_quotes(self.__fabrication_date)})"
                
         

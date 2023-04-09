@@ -17,7 +17,7 @@ def create_file():
     number_of_clients = 1000000
     batches = ""
     cnp_taken = {}
-    
+
     def generate_card_number():
         card_number = ""
         for _ in range(4):
@@ -29,7 +29,7 @@ def create_file():
         start_date = datetime.date(2004,1,1)
         random_days = 365 * randint(1,44)
         return start_date - datetime.timedelta(days=random_days)
-    
+
     def generate_cnp():
         cnp = randint(10000000, 99999999)
         while(cnp in cnp_taken.keys()):
@@ -37,7 +37,7 @@ def create_file():
         cnp_taken[cnp] = 1
         return cnp
 
-    print("STARTING INSERTING AT TIME: ", Fore.YELLOW +  datetime.datetime.now())
+    print("STARTING INSERTING INTO CLIENT AT TIME: ", Fore.YELLOW +  datetime.datetime.now())
     for index in range(number_of_clients):
         cid = uuid.uuid4()
         while(id in client_ids.keys()):
@@ -55,7 +55,7 @@ def create_file():
             file.write("\n")
             batches = ""    
     file.close()
-    print("STOP INSERTING AT", datetime.datetime.now(), Fore.GREEN + "\u2713")
+    print("STOP INSERTING INTO CLIENT AT", datetime.datetime.now(), Fore.GREEN + "\u2713")
 
 
 def insert_into_vehicles():

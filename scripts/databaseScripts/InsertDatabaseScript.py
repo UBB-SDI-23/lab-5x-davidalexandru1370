@@ -79,6 +79,7 @@ def insert_into_vehicles():
         return car_plate
 
     file = open("InsertVehicle.sql","w")
+    file.write("ALTER TABLE \"Vehicle\" DROP CONSTRAINT \"PK_Vehicle\" CASCADE;\n ")
     file.write("DELETE FROM \"Vehicle\";\n")
     #file.write("DROP INDEX \"PK_Vehicle\";\n")
 
@@ -105,6 +106,7 @@ def insert_into_vehicles():
             batches = ""
     #???
     #file.write("Cluster \"Vehicle\" using \"PK_Vehicle\"")
+    file.write("ALTER TABLE \"Vehicle\" ADD CONSTRAINT \"PK_Vehicle\" PRIMARY KEY(\"Id\");")
     file.close()
     print(Fore.WHITE +  "STOP INSERT IN VEHICLES AT: ", Fore.YELLOW + str(datetime.datetime.now()), Fore.GREEN +  "\u2713")
 

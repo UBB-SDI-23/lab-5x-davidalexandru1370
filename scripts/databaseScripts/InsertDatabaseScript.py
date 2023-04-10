@@ -20,8 +20,13 @@ def drop_constrains_from_all_tables():
     file = open("DropConstraints.sql", "w")
     print(Fore.WHITE + "START DROPPING CONSTRAINTS")
 
-    file.write("ALTER TABLE \"Client\" DROP CONSTRAINT \"PK_Client\" CASCADE;\n")
-    file.write("ALTER TABLE \"Vehicle\" DROP CONSTRAINT \"PK_Vehicle\" CASCADE;\n ")
+    file.write("ALTER TABLE \"Client\" DROP CONSTRAINT IF EXISTS \"PK_Client\" CASCADE;\n")
+    file.write("ALTER TABLE \"Vehicle\" DROP CONSTRAINT IF EXISTS \"PK_Vehicle\" CASCADE;\n ")
+    file.write("ALTER TABLE \"VehicleRent\" DROP CONSTRAINT IF EXISTS \"PK_VehicleRent\" Cascade;\n")
+    file.write("ALTER TABLE \"VehicleRent\" DROP CONSTRAINT IF EXISTS \"FK_VehicleRent_ClientId\" Cascade;\n")
+    file.write("ALTER TABLE \"VehicleRent\" DROP CONSTRAINT IF EXISTS \"FK_VehicleRent_VehicleId\" Cascade;\n")
+    file.write("DROP INDEX IF EXISTS \"IX_VehicleRent_VehicleId\";\n")
+    file.write("DROP INDEX IF EXISTS \"IX_VehicleRent_ClientId\";\n")
 
     print(Fore.WHITE + "STOP DROPPING CONSTRAINTS")
     file.close()
@@ -34,14 +39,17 @@ def add_constrains_to_all_tables():
 
     file.write("ALTER TABLE \"Client\" ADD CONSTRAINT \"PK_Client\" PRIMARY KEY(\"Id\");\n")
     file.write("ALTER TABLE \"Vehicle\" ADD CONSTRAINT \"PK_Vehicle\" PRIMARY KEY(\"Id\");\n")
-
+    file.write("ALTER TABLE \"VehicleRent\" ADD CONSTRAINT \"PK_VehicleRent\" PRIMARY KEY (\"Id\");\n")
+    file.write("ALTER TABLE \"VehicleRent\" ADD CONSTRAINT \"FK_VehicleRent_ClientId\" FOREIGN KEY(\"ClientId\") REFERENCES \"Client\"(\"Id\");\n")
+    file.write("ALTER TABLE \"VehicleRent\" ADD CONSTRAINT \"FK_VehicleRent_VehicleId\" FOREIGN KEY(\"VehicleId\") REFERENCES \"Vehicle\"(\"Id\");\n")
+    file.write("CREATE INDEX \"IX_VehicleRent_ClientId\" on \"VehicleRent\"(\"ClientId\");")
+    file.write("CREATE INDEX \"IX_VehicleRent_VehicleId\" on \"VehicleRent\"(\"VehicleId\");")
     print(Fore.WHITE + "STOP ADDING CONSTRAINTS")
     file.close()
 
 def insert_into_client():
     global client_ids
     file = open(client_file_name, "w")
-    file.write("ALTER TABLE \"Client\" DROP CONSTRAINT \"PK_Client\" CASCADE;\n")
     file.write("DELETE FROM \"Client\";\n")
     number_of_clients = 10
     batches = ""
@@ -84,7 +92,6 @@ def insert_into_client():
             file.write("\n")
             batches = ""    
 
-    file.write("ALTER TABLE \"Client\" ADD CONSTRAINT \"PK_Client\" PRIMARY KEY(\"Id\");")
     file.close()
     print(Fore.WHITE + "STOP INSERTING INTO CLIENT AT: ",Fore.YELLOW + str(datetime.datetime.now()), Fore.GREEN + "\u2713")
 
@@ -107,7 +114,6 @@ def insert_into_vehicles():
         return car_plate
 
     file = open("InsertVehicle.sql","w")
-    file.write("ALTER TABLE \"Vehicle\" DROP CONSTRAINT \"PK_Vehicle\" CASCADE;\n ")
     file.write("DELETE FROM \"Vehicle\";\n")
 
     print(Fore.WHITE +  "START INSERT IN VEHICLES AT:", Fore.YELLOW + str(datetime.datetime.now()))
@@ -131,9 +137,17 @@ def insert_into_vehicles():
         if (index + 1) % 10 == 0:
             file.write(str(f"INSERT INTO \"Vehicle\"(\"Id\",\"Brand\",\"HorsePower\",\"CarPlate\",\"NumberOfSeats\",\"EngineCapacity\",\"FabricationDate\") VALUES {batches[:-1]};\n"))
             batches = ""
-    file.write("ALTER TABLE \"Vehicle\" ADD CONSTRAINT \"PK_Vehicle\" PRIMARY KEY(\"Id\");")
     file.close()
     print(Fore.WHITE +  "STOP INSERT IN VEHICLES AT: ", Fore.YELLOW + str(datetime.datetime.now()), Fore.GREEN +  "\u2713")
+
+def insert_into_incidents():
+    file = open("InsertIncident","w")
+
+    print(Fore.WHITE + "START INSERTING INTO INCIDENTS AT: ", str(datetime.datetime.now()))
+
+    print(Fore.WHITE + "STOP INSERTING INTO INCIDENTS AT: ", Fore.YELLOW + str(datetime.datetime.now()), Fore.GREEN + "\u2713")
+
+    file.close()
 
 
 def insert_into_rents():
@@ -154,7 +168,6 @@ def insert_into_rents():
     print("STARTING INSERTING INTO RENTS AT TIME: ", Fore.YELLOW +  str(datetime.datetime.now()))
     
     file.write("DELETE FROM \"VehicleRent\";\n")
-    file.write("")
 
     for index in range(number_of_rents):
         rid = uuid.uuid4()
@@ -173,7 +186,7 @@ def insert_into_rents():
         batches += str(rent) + ","
         rent_ids[rid] = 1
         if (index + 1) % 10 == 0:
-            file.write(str(f"INSERT INTO \"VehicleRent\"(\"Id\",\"VehicleId\",\"ClientId\",\"StartDate\",\"EndDate\",\"TotalCost\",\"Comments\") VALUES {batches[:-1]};\n"))
+            file.write(str(f"INSERT INTO \"VehicleRent\"(\"Id\",\"ClientId\",\"VehicleId\",\"StartDate\",\"EndDate\",\"TotalCost\",\"Comments\") VALUES {batches[:-1]};\n"))
             batches = ""
         
     print(Fore.WHITE +  "STOP INSERT IN RENTS AT: ", Fore.YELLOW + str(datetime.datetime.now()), Fore.GREEN +  "\u2713")
@@ -184,6 +197,7 @@ if __name__ == "__main__":
     drop_constrains_from_all_tables()
     insert_into_client()
     insert_into_vehicles()
+    insert_into_incidents()
     insert_into_rents()
     add_constrains_to_all_tables()
 

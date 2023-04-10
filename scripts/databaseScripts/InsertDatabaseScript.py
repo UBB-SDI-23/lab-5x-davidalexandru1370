@@ -14,6 +14,7 @@ client_file_name = "InsertClient.sql"
 fake = Faker()
 client_ids = {}
 vehicles_ids = {}    
+incident_ids = {}
 rent_ids = {}
 
 def drop_constrains_from_all_tables():
@@ -141,10 +142,20 @@ def insert_into_vehicles():
     print(Fore.WHITE +  "STOP INSERT IN VEHICLES AT: ", Fore.YELLOW + str(datetime.datetime.now()), Fore.GREEN +  "\u2713")
 
 def insert_into_incidents():
+    global incident_ids
     file = open("InsertIncident","w")
+    vehicle_ids_list = list(vehicles_ids.keys())
+    number_of_incidents = 10
 
-    print(Fore.WHITE + "START INSERTING INTO INCIDENTS AT: ", str(datetime.datetime.now()))
+    print(Fore.WHITE + "START INSERTING INTO INCIDENTS AT: ", Fore.YELLOW +  str(datetime.datetime.now()))
 
+    for index in range(number_of_incidents):
+        iid = uuid.uuid4()
+
+        while id in incident_ids:
+            iid = uuid.uuid4()
+
+        incident_ids[iid] = 1 
     print(Fore.WHITE + "STOP INSERTING INTO INCIDENTS AT: ", Fore.YELLOW + str(datetime.datetime.now()), Fore.GREEN + "\u2713")
 
     file.close()

@@ -48,7 +48,6 @@ export default function Clients() {
     if (isAreYouSureModalOpen === true || isClientModalOpen === true) {
       return;
     }
-
     getClientsPaginated(skip, take).then((c) => {
       setClients(c);
     });
@@ -182,6 +181,7 @@ export default function Clients() {
         </Button>
         <Button
           variant="contained"
+          disabled={clients.length === 0}
           sx={paginationButton}
           onClick={() => {
             setSkip(skip + take);

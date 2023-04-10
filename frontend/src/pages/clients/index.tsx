@@ -1,6 +1,7 @@
 import { Client } from "@/model/Client";
 import {
   Box,
+  Button,
   Paper,
   Table,
   TableBody,
@@ -9,6 +10,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  styled,
 } from "@mui/material";
 import { Inter } from "next/font/google";
 import { useEffect, useReducer, useState } from "react";
@@ -16,6 +18,7 @@ import {
   addClient,
   deleteClientById,
   getAllClients,
+  getClientsPaginated,
   updateClient,
 } from "../api/ClientApi";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -27,6 +30,7 @@ import {
   ClientModalMethodsEnum,
 } from "@/components/ClientModal/ClientModal";
 import { ClientDto } from "@/model/ClientDto";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Clients() {
@@ -37,15 +41,18 @@ export default function Clients() {
   const [clientModalMethod, setClientModalMethod] =
     useState<ClientModalMethodsEnum>(ClientModalMethodsEnum.ADD);
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
+  const [skip, setSkip] = useState<number>(0);
+  const take = 5;
 
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isClientModalOpen === true) {
       return;
     }
-    getAllClients().then(async (c) => {
+
+    getClientsPaginated(skip, take).then((c) => {
       setClients(c);
     });
-  }, [isClientModalOpen, isAreYouSureModalOpen]);
+  }, [isClientModalOpen, isAreYouSureModalOpen, skip]);
 
   return (
     <div>
@@ -107,7 +114,10 @@ export default function Clients() {
           <Typography sx={{ marginTop: "3px" }}>Add client</Typography>
         </Box>
       </Box>
-      <TableContainer component={Paper} sx={{ paddingInline: "2rem" }}>
+      <TableContainer
+        component={Paper}
+        sx={{ paddingInline: "2rem", minHeight: "60vh" }}
+      >
         <Table>
           <TableHead>
             <TableRow>
@@ -157,6 +167,40 @@ export default function Clients() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Box component={Paper} sx={paginationButtons}>
+        <Button
+          variant="contained"
+          sx={paginationButton}
+          disabled={skip === 0}
+          onClick={() => {
+            if (skip - take >= 0) {
+              setSkip(skip - take);
+            }
+          }}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="contained"
+          sx={paginationButton}
+          onClick={() => {
+            setSkip(skip + take);
+          }}
+        >
+          Next
+        </Button>
+      </Box>
     </div>
   );
 }
+
+const paginationButtons = {
+  paddingBlock: "20px",
+  gap: "20px",
+  display: "flex",
+  justifyContent: "center",
+};
+
+const paginationButton = {
+  minWidth: "100px",
+};

@@ -16,12 +16,34 @@ client_ids = {}
 vehicles_ids = {}    
 rent_ids = {}
 
+def drop_constrains_from_all_tables():
+    file = open("DropConstraints.sql", "w")
+    print(Fore.WHITE + "START DROPPING CONSTRAINTS")
+
+    file.write("ALTER TABLE \"Client\" DROP CONSTRAINT \"PK_Client\" CASCADE;\n")
+    file.write("ALTER TABLE \"Vehicle\" DROP CONSTRAINT \"PK_Vehicle\" CASCADE;\n ")
+
+    print(Fore.WHITE + "STOP DROPPING CONSTRAINTS")
+    file.close()
+
+
+def add_constrains_to_all_tables():
+    file = open("AddConstraints.sql", "w")
+    
+    print(Fore.WHITE + "START ADDING CONSTRAINTS")
+
+    file.write("ALTER TABLE \"Client\" ADD CONSTRAINT \"PK_Client\" PRIMARY KEY(\"Id\");\n")
+    file.write("ALTER TABLE \"Vehicle\" ADD CONSTRAINT \"PK_Vehicle\" PRIMARY KEY(\"Id\");\n")
+
+    print(Fore.WHITE + "STOP ADDING CONSTRAINTS")
+    file.close()
+
 def insert_into_client():
     global client_ids
     file = open(client_file_name, "w")
     file.write("ALTER TABLE \"Client\" DROP CONSTRAINT \"PK_Client\" CASCADE;\n")
     file.write("DELETE FROM \"Client\";\n")
-    number_of_clients = 1000000
+    number_of_clients = 10
     batches = ""
     cnp_taken = {}
 
@@ -57,7 +79,7 @@ def insert_into_client():
         nationality = "romanian"
         client = Client(cid,name,card_number,cnp,birthday,nationality)
         batches += str(client) + ","
-        if (index + 1) % 1000 == 0:
+        if (index + 1) % 10 == 0:
             file.write(str(f"INSERT INTO \"Client\"(\"Id\",\"Name\",\"CardNumber\",\"CNP\",\"Birthday\",\"Nationality\") VALUES {batches[:-1]};"))
             file.write("\n")
             batches = ""    
@@ -70,7 +92,7 @@ def insert_into_client():
 def insert_into_vehicles():
     global vehicles_ids
     car_plates = {}
-    number_of_vehicles = 1000000
+    number_of_vehicles = 10
 
     def generate_car_plate():
         car_plate = ""
@@ -106,7 +128,7 @@ def insert_into_vehicles():
         fabrication_date += datetime.timedelta(days=randint(0,364))
         vehicle = Vehicle(vid,brand,horse_power,car_plate,number_of_seats,engine_capacity,fabrication_date)
         batches += str(vehicle) + ","
-        if (index + 1) % 1000 == 0:
+        if (index + 1) % 10 == 0:
             file.write(str(f"INSERT INTO \"Vehicle\"(\"Id\",\"Brand\",\"HorsePower\",\"CarPlate\",\"NumberOfSeats\",\"EngineCapacity\",\"FabricationDate\") VALUES {batches[:-1]};\n"))
             batches = ""
     file.write("ALTER TABLE \"Vehicle\" ADD CONSTRAINT \"PK_Vehicle\" PRIMARY KEY(\"Id\");")
@@ -118,9 +140,10 @@ def insert_into_rents():
     global vehicles_ids
     global client_ids
     global rent_ids
-    number_of_rents = 10000000
+    number_of_rents = 10
     batches = ""
-
+    vehicle_ids_list = list(vehicles_ids.keys())
+    client_ids_list = list(client_ids.keys())
     file = open("InsertRent.sql","w")
 
     def get_random_start_date():
@@ -129,15 +152,18 @@ def insert_into_rents():
         return start_date
     
     print("STARTING INSERTING INTO RENTS AT TIME: ", Fore.YELLOW +  str(datetime.datetime.now()))
+    
     file.write("DELETE FROM \"VehicleRent\";\n")
+    file.write("")
+
     for index in range(number_of_rents):
         rid = uuid.uuid4()
 
-        while rid in vehicles_ids.keys():
+        while rid in rent_ids.keys():
             rid = uuid.uuid4()
 
-        client_id = random.choice(list(client_ids.keys()))
-        vehicle_id = random.choice(list(vehicles_ids.keys()))
+        client_id = client_ids_list[randint(0,len(client_ids_list) -1)]
+        vehicle_id = vehicle_ids_list[randint(0,len(vehicle_ids_list) -1)]
 
         start_date = get_random_start_date()
         end_date = start_date + datetime.timedelta(days=randint(0,4))
@@ -146,7 +172,7 @@ def insert_into_rents():
         rent = VehicleRent(rid,client_id,vehicle_id,start_date,end_date,total_cost,comments)
         batches += str(rent) + ","
         rent_ids[rid] = 1
-        if (index + 1) % 1000 == 0:
+        if (index + 1) % 10 == 0:
             file.write(str(f"INSERT INTO \"VehicleRent\"(\"Id\",\"VehicleId\",\"ClientId\",\"StartDate\",\"EndDate\",\"TotalCost\",\"Comments\") VALUES {batches[:-1]};\n"))
             batches = ""
         
@@ -155,11 +181,11 @@ def insert_into_rents():
     file.close()
 
 if __name__ == "__main__":
-    #drop_primary_key_and_foreign_keys_from_all_tables()
+    drop_constrains_from_all_tables()
     insert_into_client()
     insert_into_vehicles()
     insert_into_rents()
-    #add_primary_key_and_foreign_keys_to_all_tables()
+    add_constrains_to_all_tables()
 
 
 

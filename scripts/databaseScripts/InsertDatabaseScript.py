@@ -6,8 +6,9 @@ from Utilities import get_string_in_quotes
 from model.Client import Client
 from model.Vehicle import Vehicle
 from model.VehicleRent import VehicleRent
+from model.Incident import Incident
 from colorama import Fore
-from Constants import counties_car_plate, car_brands
+from Constants import counties_car_plate, car_brands, cities
 import random
 
 client_file_name = "InsertClient.sql"
@@ -23,6 +24,9 @@ def drop_constrains_from_all_tables():
 
     file.write("ALTER TABLE \"Client\" DROP CONSTRAINT IF EXISTS \"PK_Client\" CASCADE;\n")
     file.write("ALTER TABLE \"Vehicle\" DROP CONSTRAINT IF EXISTS \"PK_Vehicle\" CASCADE;\n ")
+    file.write("ALTER TABLE \"Incidents\" DROP CONSTRAINT IF EXISTS \"PK_Incidents\" CASCADE;\n")
+    file.write("ALTER TABLE \"Incidents\" DROP CONSTRAINT IF EXISTS \"FK_Incidents_VehicleId\" Cascade;\n")
+    file.write("DROP INDEX IF EXISTS \"IX_Incidents_VehicleId\";\n")
     file.write("ALTER TABLE \"VehicleRent\" DROP CONSTRAINT IF EXISTS \"PK_VehicleRent\" Cascade;\n")
     file.write("ALTER TABLE \"VehicleRent\" DROP CONSTRAINT IF EXISTS \"FK_VehicleRent_ClientId\" Cascade;\n")
     file.write("ALTER TABLE \"VehicleRent\" DROP CONSTRAINT IF EXISTS \"FK_VehicleRent_VehicleId\" Cascade;\n")
@@ -40,11 +44,14 @@ def add_constrains_to_all_tables():
 
     file.write("ALTER TABLE \"Client\" ADD CONSTRAINT \"PK_Client\" PRIMARY KEY(\"Id\");\n")
     file.write("ALTER TABLE \"Vehicle\" ADD CONSTRAINT \"PK_Vehicle\" PRIMARY KEY(\"Id\");\n")
+    file.write("ALTER TABLE \"Incidents\" ADD CONSTRAINT \"PK_Incidents\" PRIMARY KEY(\"Id\");\n")
+    file.write("ALTER TABLE \"Incidents\" ADD CONSTRAINT \"FK_Incidents_VehicleId\" FOREIGN KEY(\"VehicleId\") REFERENCES \"Vehicle\"(\"Id\");\n")
     file.write("ALTER TABLE \"VehicleRent\" ADD CONSTRAINT \"PK_VehicleRent\" PRIMARY KEY (\"Id\");\n")
     file.write("ALTER TABLE \"VehicleRent\" ADD CONSTRAINT \"FK_VehicleRent_ClientId\" FOREIGN KEY(\"ClientId\") REFERENCES \"Client\"(\"Id\");\n")
     file.write("ALTER TABLE \"VehicleRent\" ADD CONSTRAINT \"FK_VehicleRent_VehicleId\" FOREIGN KEY(\"VehicleId\") REFERENCES \"Vehicle\"(\"Id\");\n")
-    file.write("CREATE INDEX \"IX_VehicleRent_ClientId\" on \"VehicleRent\"(\"ClientId\");")
-    file.write("CREATE INDEX \"IX_VehicleRent_VehicleId\" on \"VehicleRent\"(\"VehicleId\");")
+    file.write("CREATE INDEX \"IX_VehicleRent_ClientId\" on \"VehicleRent\"(\"ClientId\");\n")
+    file.write("CREATE INDEX \"IX_VehicleRent_VehicleId\" on \"VehicleRent\"(\"VehicleId\");\n")
+    file.write("CREATE INDEX \"IX_Incidents_VehicleId\" on \"Incidents\"(\"Id\");\n")
     print(Fore.WHITE + "STOP ADDING CONSTRAINTS")
     file.close()
 
@@ -52,7 +59,7 @@ def insert_into_client():
     global client_ids
     file = open(client_file_name, "w")
     file.write("DELETE FROM \"Client\";\n")
-    number_of_clients = 10
+    number_of_clients = 1000000
     batches = ""
     cnp_taken = {}
 
@@ -88,9 +95,8 @@ def insert_into_client():
         nationality = "romanian"
         client = Client(cid,name,card_number,cnp,birthday,nationality)
         batches += str(client) + ","
-        if (index + 1) % 10 == 0:
-            file.write(str(f"INSERT INTO \"Client\"(\"Id\",\"Name\",\"CardNumber\",\"CNP\",\"Birthday\",\"Nationality\") VALUES {batches[:-1]};"))
-            file.write("\n")
+        if (index + 1) % 1000 == 0:
+            file.write(str(f"INSERT INTO \"Client\"(\"Id\",\"Name\",\"CardNumber\",\"CNP\",\"Birthday\",\"Nationality\") VALUES {batches[:-1]};\n"))
             batches = ""    
 
     file.close()
@@ -100,7 +106,7 @@ def insert_into_client():
 def insert_into_vehicles():
     global vehicles_ids
     car_plates = {}
-    number_of_vehicles = 10
+    number_of_vehicles = 1000000
 
     def generate_car_plate():
         car_plate = ""
@@ -131,11 +137,11 @@ def insert_into_vehicles():
         car_plate = generate_car_plate()
         number_of_seats = randint(2,6)
         engine_capacity = randint(10,30)*100
-        fabrication_date = datetime.date(randint(2000,2022),1,1)
+        fabrication_date = datetime.date(randint(2000,2021),1,1)
         fabrication_date += datetime.timedelta(days=randint(0,364))
         vehicle = Vehicle(vid,brand,horse_power,car_plate,number_of_seats,engine_capacity,fabrication_date)
         batches += str(vehicle) + ","
-        if (index + 1) % 10 == 0:
+        if (index + 1) % 1000 == 0:
             file.write(str(f"INSERT INTO \"Vehicle\"(\"Id\",\"Brand\",\"HorsePower\",\"CarPlate\",\"NumberOfSeats\",\"EngineCapacity\",\"FabricationDate\") VALUES {batches[:-1]};\n"))
             batches = ""
     file.close()
@@ -143,19 +149,32 @@ def insert_into_vehicles():
 
 def insert_into_incidents():
     global incident_ids
-    file = open("InsertIncident","w")
+    file = open("InsertIncident.sql","w")
     vehicle_ids_list = list(vehicles_ids.keys())
-    number_of_incidents = 10
-
+    number_of_incidents = 1000000
+    batches = ""
     print(Fore.WHITE + "START INSERTING INTO INCIDENTS AT: ", Fore.YELLOW +  str(datetime.datetime.now()))
+    file.write("DELETE FROM \"Incidents\";\n")
 
     for index in range(number_of_incidents):
         iid = uuid.uuid4()
 
+
         while id in incident_ids:
             iid = uuid.uuid4()
 
-        incident_ids[iid] = 1 
+        incident_ids[iid] = 1
+        vehicle_id = random.choice(vehicle_ids_list)
+        location = random.choice(cities)
+        description = f"The car driver crashed the car in {location}  by hitting another car because he was not paying attention to the road because he was looking at his phone"
+        cost = randint(100,10000)
+        incident_date = datetime.date(2022,1,1)
+        incident_date += datetime.timedelta(days=randint(0,364))
+        incident = Incident(iid, vehicle_id, location, description, cost, incident_date)
+        batches += str(incident) + ","
+        if (index + 1) % 1000 == 0:
+            file.write(str(f"INSERT INTO \"Incidents\"(\"Id\",\"VehicleId\",\"Location\",\"Description\",\"Cost\",\"WhenHappend\") VALUES{batches[:-1]};\n"))
+            batches = ""
     print(Fore.WHITE + "STOP INSERTING INTO INCIDENTS AT: ", Fore.YELLOW + str(datetime.datetime.now()), Fore.GREEN + "\u2713")
 
     file.close()
@@ -165,7 +184,7 @@ def insert_into_rents():
     global vehicles_ids
     global client_ids
     global rent_ids
-    number_of_rents = 10
+    number_of_rents = 10000000
     batches = ""
     vehicle_ids_list = list(vehicles_ids.keys())
     client_ids_list = list(client_ids.keys())
@@ -196,7 +215,7 @@ def insert_into_rents():
         rent = VehicleRent(rid,client_id,vehicle_id,start_date,end_date,total_cost,comments)
         batches += str(rent) + ","
         rent_ids[rid] = 1
-        if (index + 1) % 10 == 0:
+        if (index + 1) % 1000 == 0:
             file.write(str(f"INSERT INTO \"VehicleRent\"(\"Id\",\"ClientId\",\"VehicleId\",\"StartDate\",\"EndDate\",\"TotalCost\",\"Comments\") VALUES {batches[:-1]};\n"))
             batches = ""
         

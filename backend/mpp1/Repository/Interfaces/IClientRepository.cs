@@ -13,4 +13,6 @@ public interface IClientRepository
     public Task<IEnumerable<Client>> GetAllClients();
 
     public Task<Client> GetClientById(Guid id);
+
+    public Task<IEnumerable<Client>> GetClientsPaginated(int skip, int take);
 }

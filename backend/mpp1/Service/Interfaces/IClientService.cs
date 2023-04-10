@@ -14,4 +14,6 @@ public interface IClientService
 
     public Task<Client> GetClientById(Guid id);
 
+    public Task<IEnumerable<Client>> GetClientsPaginated(int skip, int take);
+
 }

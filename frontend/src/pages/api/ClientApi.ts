@@ -6,15 +6,15 @@ import { createHeader } from "@/utilities/utilities";
 export const getAllClients = async () => {
   let url = baseUrl + ClientEndpoints.getAllClients;
   let header = createHeader(Methods.GET);
-  let data = await fetch(url, header)
-    .then(async (response: Response) => {
-      return await response.json();
-    })
-    .then((data: Client[]) => {
-      return data;
-    });
-
-  return data;
+  // let data = await fetch(url, header)
+  //   .then(async (response: Response) => {
+  //     return await response.json();
+  //   })
+  //   .then((data: Client[]) => {
+  //     return data;
+  //   });
+  return [];
+  //return data;
 };
 
 export const deleteClientById = async (clientId: string) => {
@@ -56,6 +56,20 @@ export const updateClient = async (client: Client) => {
     })
     .catch((error: Error) => {
       throw new Error(error.message);
+    });
+
+  return data;
+};
+
+export const getClientsPaginated = async (skip: number, take: number) => {
+  let url = baseUrl + ClientEndpoints.getClientsPaginated(skip, take);
+  let header = createHeader(Methods.GET);
+  let data: Client[] = await fetch(url, header)
+    .then(async (response: Response) => {
+      return await response.json();
+    })
+    .then((clients: Client[]) => {
+      return clients;
     });
 
   return data;

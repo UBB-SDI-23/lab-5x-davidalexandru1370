@@ -26,7 +26,7 @@ var frontendBaseUrl = app.Configuration.GetSection("Frontend")
                                              .Value!;
 
 app.UseCors(options => 
-    options.WithOrigins(frontendBaseUrl).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+    options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials()
     );
 
 if (app.Environment.IsDevelopment())

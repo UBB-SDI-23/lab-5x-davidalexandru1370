@@ -28,6 +28,7 @@ import {
   VehicleModalMethodsEnum,
 } from "@/components/VehicleModal/VehicleModal";
 import { VehicleDto } from "@/model/VehicleDto";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 
 export default function Vehicles() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -144,6 +145,7 @@ export default function Vehicles() {
               <TableCell>Fabrication Date</TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -170,6 +172,9 @@ export default function Vehicles() {
                   </TableCell>
                   <TableCell>
                     <EditIcon sx={{ cursor: "pointer" }} />
+                  </TableCell>
+                  <TableCell>
+                    <RemoveRedEyeIcon sx={{ cursor: "pointer" }} />
                   </TableCell>
                 </TableRow>
               );

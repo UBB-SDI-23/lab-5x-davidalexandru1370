@@ -32,6 +32,9 @@ export const addClient = async (client: ClientDto) => {
   let header = createHeader(Methods.POST, client);
   let data = await fetch(url, header)
     .then(async (response: Response) => {
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
       return await response.json();
     })
     .then((c: Client) => {

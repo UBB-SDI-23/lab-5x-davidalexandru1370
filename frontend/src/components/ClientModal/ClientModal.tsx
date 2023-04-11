@@ -1,4 +1,11 @@
-import { Box, Button, Modal, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Modal,
+  TextField,
+  Typography,
+  withStyles,
+} from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import { ClientDto } from "@/model/ClientDto";
@@ -25,12 +32,19 @@ export const ClientModal: FC<IClientModalProps> = ({
 }) => {
   const handleOnClose = () => {
     onClose();
+    setName("");
+    setCardNumber("");
+    setCNP("");
+    setBirthday("");
+    setNationality("");
+    setError("");
   };
   const [name, setName] = useState<string>("");
   const [cardNumber, setCardNumber] = useState<string>("");
   const [cnp, setCNP] = useState<string>("");
   const [birthday, setBirthday] = useState<string>("");
   const [nationality, setNationality] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     if (client !== undefined) {
@@ -41,6 +55,14 @@ export const ClientModal: FC<IClientModalProps> = ({
       setNationality(client.nationality);
     }
   }, [client]);
+
+  const checkIfCardNumberFormatIsCorrect = (cardNumber: string): boolean => {
+    console.log(cardNumber);
+    const regex = /[0-9]-[0-9]-[0-9]-[0-9]/;
+    const result = regex.test(cardNumber);
+    console.log(result);
+    return result;
+  };
 
   return (
     <Modal open={isOpen} onClose={handleOnClose}>
@@ -55,7 +77,7 @@ export const ClientModal: FC<IClientModalProps> = ({
           label="Name"
           sx={textFieldStyle}
           onChange={(e) => {
-            setName(e.currentTarget.value || "");
+            setName(e.currentTarget.value);
           }}
           defaultValue={client?.name ?? ""}
         ></TextField>
@@ -91,16 +113,29 @@ export const ClientModal: FC<IClientModalProps> = ({
             setNationality(e.currentTarget.value);
           }}
         ></TextField>
+        <p style={{ color: "red", minHeight: "20px" }}>{error}</p>
         <Button
           variant="contained"
-          onClick={() => {
-            onSubmitClick({
-              name: name,
-              cardNumber: cardNumber,
-              cnp: cnp,
-              birthday: birthday,
-              nationality: nationality,
-            });
+          disabled={
+            name.length === 0 ||
+            cardNumber.length === 0 ||
+            cnp.length === 0 ||
+            birthday.length === 0 ||
+            nationality.length === 0 ||
+            checkIfCardNumberFormatIsCorrect(cardNumber) === true
+          }
+          onClick={async () => {
+            try {
+              await onSubmitClick({
+                name: name,
+                cardNumber: cardNumber,
+                cnp: cnp,
+                birthday: birthday,
+                nationality: nationality,
+              });
+            } catch (e) {
+              setError((e as Error).message);
+            }
           }}
           sx={button}
         >

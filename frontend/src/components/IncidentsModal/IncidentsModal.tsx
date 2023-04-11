@@ -38,19 +38,16 @@ export const IncidentsModal: FC<IIncidentsModal> = ({
     });
   }, [vehicle]);
 
+  const handleOnClose = () => {
+    onClose();
+    setIncidents(undefined);
+  };
+
   return (
-    <Modal open={isOpen} onClose={onClose}>
+    <Modal open={isOpen} onClose={handleOnClose} component={Paper}>
       <>
         {incidents === undefined ? (
-          <Box
-            component={Paper}
-            sx={{
-              paddingTop: "2rem",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
+          <Box component={Paper} sx={style}>
             <CircularProgress />
             <Typography>Loading data...</Typography>
           </Box>
@@ -102,7 +99,7 @@ const style = {
   justifyContent: "space-between",
   top: "50%",
   left: "50%",
-  minHeight: "35%",
+  height: "400px",
   transform: "translate(-50%, -50%)",
   width: "80%",
   backgroundImage: "linear-gradient(to bottom right, #0097b9, #8769ae)",

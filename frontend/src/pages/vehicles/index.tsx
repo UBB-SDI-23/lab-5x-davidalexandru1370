@@ -30,6 +30,7 @@ import {
 } from "@/components/VehicleModal/VehicleModal";
 import { VehicleDto } from "@/model/VehicleDto";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import { IncidentsModal } from "@/components/IncidentsModal/IncidentsModal";
 
 export default function Vehicles() {
   const [vehicles, setVehicles] = useState<Vehicle[]>();
@@ -37,6 +38,8 @@ export default function Vehicles() {
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState<boolean>(false);
+  const [isIncidentModalOpen, setIsIncidentModalOpen] =
+    useState<boolean>(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle>();
   const [skip, setSkip] = useState<number>(0);
   const take = 5;
@@ -76,6 +79,15 @@ export default function Vehicles() {
           }
         }}
       />
+      {selectedVehicle && (
+        <IncidentsModal
+          isOpen={isIncidentModalOpen}
+          vehicle={selectedVehicle}
+          onClose={() => {
+            setIsIncidentModalOpen(false);
+          }}
+        />
+      )}
 
       {vehicles === undefined ? (
         <Box
@@ -183,7 +195,13 @@ export default function Vehicles() {
                         <EditIcon sx={{ cursor: "pointer" }} />
                       </TableCell>
                       <TableCell>
-                        <RemoveRedEyeIcon sx={{ cursor: "pointer" }} />
+                        <RemoveRedEyeIcon
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => {
+                            setSelectedVehicle(vehicle);
+                            setIsIncidentModalOpen(true);
+                          }}
+                        />
                       </TableCell>
                     </TableRow>
                   );

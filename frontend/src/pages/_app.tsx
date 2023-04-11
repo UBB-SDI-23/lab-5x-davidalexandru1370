@@ -10,7 +10,6 @@ export default function App({ Component, pageProps }: AppProps) {
           { name: "Clients", routeName: "clients" },
           { name: "Vehicles", routeName: "vehicles" },
           { name: "Rents", routeName: "rents" },
-          { name: "Incidents", routeName: "incidents" },
         ]}
       />
       <Component {...pageProps} />

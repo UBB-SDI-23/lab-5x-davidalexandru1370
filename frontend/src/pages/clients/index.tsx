@@ -88,34 +88,12 @@ export default function Clients() {
           setIsAreYouSureModalOpen(false);
         }}
       />
-      <Box
-        component={Paper}
-        sx={{ padding: "32px", textAlign: "right" }}
-        display="flex"
-        justifyContent="end"
-      >
-        <Box
-          sx={{
-            backgroundColor: "blueviolet",
-            borderRadius: "10px",
-            padding: ".35em",
-            cursor: "pointer",
-            display: "flex",
-          }}
-          onClick={() => {
-            setSelectedClient(undefined);
-            setClientModalMethod(ClientModalMethodsEnum.ADD);
-            setIsClientModalOpen(true);
-          }}
-        >
-          <AddIcon />
-          <Typography sx={{ marginTop: "3px" }}>Add client</Typography>
-        </Box>
-      </Box>
+
       {clients === undefined ? (
         <Box
           component={Paper}
           sx={{
+            paddingTop: "2rem",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -126,6 +104,30 @@ export default function Clients() {
         </Box>
       ) : (
         <>
+          <Box
+            component={Paper}
+            sx={{ padding: "32px", textAlign: "right" }}
+            display="flex"
+            justifyContent="end"
+          >
+            <Box
+              sx={{
+                backgroundColor: "blueviolet",
+                borderRadius: "10px",
+                padding: ".35em",
+                cursor: "pointer",
+                display: "flex",
+              }}
+              onClick={() => {
+                setSelectedClient(undefined);
+                setClientModalMethod(ClientModalMethodsEnum.ADD);
+                setIsClientModalOpen(true);
+              }}
+            >
+              <AddIcon />
+              <Typography sx={{ marginTop: "3px" }}>Add client</Typography>
+            </Box>
+          </Box>
           <TableContainer
             component={Paper}
             sx={{ paddingInline: "2rem", minHeight: "60vh" }}

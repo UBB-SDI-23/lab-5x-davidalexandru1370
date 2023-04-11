@@ -2,6 +2,7 @@ import { Client } from "@/model/Client";
 import {
   Box,
   Button,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -10,14 +11,12 @@ import {
   TableHead,
   TableRow,
   Typography,
-  styled,
 } from "@mui/material";
 import { Inter } from "next/font/google";
 import { useEffect, useReducer, useState } from "react";
 import {
   addClient,
   deleteClientById,
-  getAllClients,
   getClientsPaginated,
   updateClient,
 } from "../api/ClientApi";
@@ -34,7 +33,7 @@ import { ClientDto } from "@/model/ClientDto";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Clients() {
-  const [clients, setClients] = useState<Client[]>([]);
+  const [clients, setClients] = useState<Client[]>();
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
   const [selectedClient, setSelectedClient] = useState<Client>();
@@ -113,83 +112,99 @@ export default function Clients() {
           <Typography sx={{ marginTop: "3px" }}>Add client</Typography>
         </Box>
       </Box>
-      <TableContainer
-        component={Paper}
-        sx={{ paddingInline: "2rem", minHeight: "60vh" }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Card Number</TableCell>
-              <TableCell>CNP</TableCell>
-              <TableCell>Birthday</TableCell>
-              <TableCell>Nationality</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {clients.map((client) => {
-              return (
-                <TableRow key={client.id}>
-                  <TableCell>{client.name}</TableCell>
-                  <TableCell>{client.cardNumber}</TableCell>
-                  <TableCell>{client.cnp}</TableCell>
-                  <TableCell>{client.birthday.toString()}</TableCell>
-                  <TableCell>{client.nationality}</TableCell>
-                  <TableCell>
-                    <ClearIcon
-                      sx={{
-                        color: "red",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        setSelectedClient(client);
-                        setIsAreYouSureModalOpen(true);
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <EditIcon
-                      sx={{ cursor: "pointer" }}
-                      onClick={() => {
-                        setClientModalMethod(ClientModalMethodsEnum.UPDATE);
-                        setSelectedClient(client);
-                        setIsClientModalOpen(true);
-                      }}
-                    />
-                  </TableCell>
+      {clients === undefined ? (
+        <Box
+          component={Paper}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+          <Typography>Loading data...</Typography>
+        </Box>
+      ) : (
+        <>
+          <TableContainer
+            component={Paper}
+            sx={{ paddingInline: "2rem", minHeight: "60vh" }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Card Number</TableCell>
+                  <TableCell>CNP</TableCell>
+                  <TableCell>Birthday</TableCell>
+                  <TableCell>Nationality</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Box component={Paper} sx={paginationButtons}>
-        <Button
-          variant="contained"
-          sx={paginationButton}
-          disabled={skip === 0}
-          onClick={() => {
-            if (skip - take >= 0) {
-              setSkip(skip - take);
-            }
-          }}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="contained"
-          disabled={clients.length < take}
-          sx={paginationButton}
-          onClick={() => {
-            setSkip(skip + take);
-          }}
-        >
-          Next
-        </Button>
-      </Box>
+              </TableHead>
+              <TableBody>
+                {clients.map((client) => {
+                  return (
+                    <TableRow key={client.id}>
+                      <TableCell>{client.name}</TableCell>
+                      <TableCell>{client.cardNumber}</TableCell>
+                      <TableCell>{client.cnp}</TableCell>
+                      <TableCell>{client.birthday.toString()}</TableCell>
+                      <TableCell>{client.nationality}</TableCell>
+                      <TableCell>
+                        <ClearIcon
+                          sx={{
+                            color: "red",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            setSelectedClient(client);
+                            setIsAreYouSureModalOpen(true);
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <EditIcon
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => {
+                            setClientModalMethod(ClientModalMethodsEnum.UPDATE);
+                            setSelectedClient(client);
+                            setIsClientModalOpen(true);
+                          }}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box component={Paper} sx={paginationButtons}>
+            <Button
+              variant="contained"
+              sx={paginationButton}
+              disabled={skip === 0}
+              onClick={() => {
+                if (skip - take >= 0) {
+                  setSkip(skip - take);
+                }
+              }}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="contained"
+              disabled={clients.length < take}
+              sx={paginationButton}
+              onClick={() => {
+                setSkip(skip + take);
+              }}
+            >
+              Next
+            </Button>
+          </Box>
+        </>
+      )}
     </div>
   );
 }

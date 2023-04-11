@@ -62,7 +62,7 @@ def insert_into_client():
     number_of_clients = 10
     batches = ""
     cnp_taken = {}
-
+    nationalities = ['romanian','hungarian','french','german']
     def generate_card_number():
         card_number = ""
         for _ in range(4):
@@ -92,7 +92,7 @@ def insert_into_client():
         card_number = generate_card_number()
         cnp = str(generate_cnp())
         birthday = str(generate_birthday())
-        nationality = "romanian"
+        nationality = random.choice(nationalities)
         client = Client(cid,name,card_number,cnp,birthday,nationality)
         batches += str(client) + ","
         if (index + 1) % 10 == 0:

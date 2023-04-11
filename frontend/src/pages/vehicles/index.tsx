@@ -20,7 +20,7 @@ import {
   addVehicle,
   deleteVehicleById,
   filterVehiclesByEngineCapacity,
-  getAllVehicles,
+  getVehiclesPaginated,
 } from "../api/VehicleApi";
 import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
 import {
@@ -36,15 +36,17 @@ export default function Vehicles() {
     useState<boolean>(false);
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState<boolean>(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle>();
+  const [skip, setSkip] = useState<number>(0);
+  const take = 5;
 
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isVehicleModalOpen === true) {
       return;
     }
-    getAllVehicles().then((v) => {
+    getVehiclesPaginated(skip, take).then((v) => {
       setVehicles(v);
     });
-  }, [isAreYouSureModalOpen, isVehicleModalOpen]);
+  }, [isAreYouSureModalOpen, isVehicleModalOpen, skip]);
 
   return (
     <div>
@@ -175,6 +177,41 @@ export default function Vehicles() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Box component={Paper} sx={paginationButtons}>
+        <Button
+          variant="contained"
+          sx={paginationButton}
+          disabled={skip === 0}
+          onClick={() => {
+            if (skip - take >= 0) {
+              setSkip(skip - take);
+            }
+          }}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="contained"
+          disabled={vehicles.length === 0}
+          sx={paginationButton}
+          onClick={() => {
+            setSkip(skip + take);
+          }}
+        >
+          Next
+        </Button>
+      </Box>
     </div>
   );
 }
+
+const paginationButtons = {
+  paddingBlock: "20px",
+  gap: "20px",
+  display: "flex",
+  justifyContent: "center",
+};
+
+const paginationButton = {
+  minWidth: "100px",
+};

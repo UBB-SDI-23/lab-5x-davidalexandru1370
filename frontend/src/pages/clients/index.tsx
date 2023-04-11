@@ -181,7 +181,7 @@ export default function Clients() {
         </Button>
         <Button
           variant="contained"
-          disabled={clients.length === 0}
+          disabled={clients.length < take}
           sx={paginationButton}
           onClick={() => {
             setSkip(skip + take);

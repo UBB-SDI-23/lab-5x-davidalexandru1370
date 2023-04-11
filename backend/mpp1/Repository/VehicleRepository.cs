@@ -94,4 +94,10 @@ public class VehicleRepository : IVehicleRepository
         var result = _rentACarDbContext.Vehicles.Where(condition) as IEnumerable<Vehicle>;
         return Task.FromResult(result);
     }
+
+    public async Task<IEnumerable<Vehicle>> GetVehiclesPaginated(int skip, int take)
+    {
+        var result = await _rentACarDbContext.Vehicles.Skip(skip).Take(take).ToListAsync();
+        return result;
+    }
 }

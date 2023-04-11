@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using mpp1.Exceptions;
 using mpp1.Model;
 using mpp1.Model.DTO;
-using mpp1.Repository;
 using mpp1.Service;
 using mpp1.Service.Interfaces;
 
@@ -119,7 +118,7 @@ public class VehicleController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("get-by-incidents")]
+    [HttpGet("get-by-incidents")]   
     public async Task<ActionResult<IEnumerable<VehicleDTO>>> GetVehiclesByNumberOfIncidents()
     {
         var result = await _vehicleService.GetVehiclesOrderByNumberOfIncidents();
@@ -138,5 +137,13 @@ public class VehicleController : ControllerBase
         {
             return BadRequest(rentACarException.Message);
         }
+    }
+
+    [HttpGet("get-vehicles-paginated/{skip}/{take}")]
+    public async Task<ActionResult<IEnumerable<Vehicle>>> GetVehiclesPaginated([FromRoute] int skip,
+        [FromRoute] int take)
+    {
+        var result = await _vehicleService.GetVehiclesPaginated(skip, take);
+        return Ok(result);
     }
 }

@@ -65,7 +65,7 @@ export const addVehicle = async (vehicle: VehicleDto) => {
 
 export const getVehiclesPaginated = async (skip: number, take: number) => {
   let url: string = baseUrl + VehicleEndpoints.getVehiclesPaginated(skip, take);
-  let header = createHeader(Methods.POST);
+  let header = createHeader(Methods.GET);
   let data: Vehicle[] = await fetch(url, header)
     .then(async (response: Response) => {
       return await response.json();

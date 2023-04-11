@@ -59,7 +59,7 @@ def insert_into_client():
     global client_ids
     file = open(client_file_name, "w")
     file.write("DELETE FROM \"Client\";\n")
-    number_of_clients = 10
+    number_of_clients = 1000000
     batches = ""
     cnp_taken = {}
     nationalities = ['romanian','hungarian','french','german']
@@ -95,7 +95,7 @@ def insert_into_client():
         nationality = random.choice(nationalities)
         client = Client(cid,name,card_number,cnp,birthday,nationality)
         batches += str(client) + ","
-        if (index + 1) % 10 == 0:
+        if (index + 1) % 1000 == 0:
             file.write(str(f"INSERT INTO \"Client\"(\"Id\",\"Name\",\"CardNumber\",\"CNP\",\"Birthday\",\"Nationality\") VALUES {batches[:-1]};\n"))
             batches = ""    
 
@@ -106,7 +106,7 @@ def insert_into_client():
 def insert_into_vehicles():
     global vehicles_ids
     car_plates = {}
-    number_of_vehicles = 10
+    number_of_vehicles = 1000000
 
     def generate_car_plate():
         car_plate = ""
@@ -151,7 +151,7 @@ def insert_into_incidents():
     global incident_ids
     file = open("InsertIncident.sql","w")
     vehicle_ids_list = list(vehicles_ids.keys())
-    number_of_incidents = 10
+    number_of_incidents = 1000000
     batches = ""
     print(Fore.WHITE + "START INSERTING INTO INCIDENTS AT: ", Fore.YELLOW +  str(datetime.datetime.now()))
     file.write("DELETE FROM \"Incidents\";\n")
@@ -172,7 +172,7 @@ def insert_into_incidents():
         incident_date += datetime.timedelta(days=randint(0,364))
         incident = Incident(iid, vehicle_id, location, description, cost, incident_date)
         batches += str(incident) + ","
-        if (index + 1) % 10 == 0:
+        if (index + 1) % 1000 == 0:
             file.write(str(f"INSERT INTO \"Incidents\"(\"Id\",\"VehicleId\",\"Location\",\"Description\",\"Cost\",\"WhenHappend\") VALUES{batches[:-1]};\n"))
             batches = ""
     print(Fore.WHITE + "STOP INSERTING INTO INCIDENTS AT: ", Fore.YELLOW + str(datetime.datetime.now()), Fore.GREEN + "\u2713")
@@ -184,7 +184,7 @@ def insert_into_rents():
     global vehicles_ids
     global client_ids
     global rent_ids
-    number_of_rents = 10
+    number_of_rents = 10000000
     batches = ""
     vehicle_ids_list = list(vehicles_ids.keys())
     client_ids_list = list(client_ids.keys())
@@ -215,7 +215,7 @@ def insert_into_rents():
         rent = VehicleRent(rid,client_id,vehicle_id,start_date,end_date,total_cost,comments)
         batches += str(rent) + ","
         rent_ids[rid] = 1
-        if (index + 1) % 10 == 0:
+        if (index + 1) % 1000 == 0:
             file.write(str(f"INSERT INTO \"VehicleRent\"(\"Id\",\"ClientId\",\"VehicleId\",\"StartDate\",\"EndDate\",\"TotalCost\",\"Comments\") VALUES {batches[:-1]};\n"))
             batches = ""
         

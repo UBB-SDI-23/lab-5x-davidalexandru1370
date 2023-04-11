@@ -46,5 +46,5 @@ export const VehicleEndpoints: VehicleEndpoint = {
   deleteVehicle: (vehicleId: string) =>
     vehicleController + "delete/" + vehicleId,
   getVehiclesPaginated: (skip, take) =>
-    vehicleController + "get-vehicles-paginated" + skip + "/" + take,
+    vehicleController + "get-vehicles-paginated/" + skip + "/" + take,
 };

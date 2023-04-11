@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -31,7 +32,7 @@ import { VehicleDto } from "@/model/VehicleDto";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 
 export default function Vehicles() {
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [vehicles, setVehicles] = useState<Vehicle[]>();
   const [filteredCapacity, setFilteredCapacity] = useState<number>(0);
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
@@ -75,137 +76,147 @@ export default function Vehicles() {
           }
         }}
       />
-      <Box
-        component={Paper}
-        sx={{ padding: "32px", textAlign: "right" }}
-        display="flex"
-        justifyContent="space-between"
-      >
-        <Box>
-          <TextField
-            label="Engine capacity"
-            size="small"
-            onChange={(e) => {
-              setFilteredCapacity(
-                parseInt(
-                  e.currentTarget.value.length === 0
-                    ? "0"
-                    : e.currentTarget.value
-                )
-              );
-            }}
-          ></TextField>
-          <Button
-            variant="contained"
-            onClick={async () => {
-              let data = await filterVehiclesByEngineCapacity(filteredCapacity);
-              setVehicles(data);
-            }}
-          >
-            Filter
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ marginInline: "100px" }}
-            onClick={() => {
-              const vehiclesSorted = [...vehicles].sort((v1, v2) =>
-                v1.engineCapacity > v2.engineCapacity ? 1 : 0
-              );
-              setVehicles(vehiclesSorted);
-            }}
-          >
-            Sort by engine capacity
-          </Button>
-        </Box>
+
+      {vehicles === undefined ? (
         <Box
+          component={Paper}
           sx={{
-            backgroundColor: "blueviolet",
-            borderRadius: "10px",
-            padding: ".35em",
-            cursor: "pointer",
+            paddingTop: "2rem",
             display: "flex",
-          }}
-          onClick={() => {
-            setIsVehicleModalOpen(true);
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <AddIcon />
-          <Typography sx={{ marginTop: "3px" }}>Add vehicle</Typography>
+          <CircularProgress />
+          <Typography>Loading data...</Typography>
         </Box>
-      </Box>
-      <TableContainer component={Paper} sx={{ paddingInline: "2rem" }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Brand</TableCell>
-              <TableCell>Horse Power</TableCell>
-              <TableCell>Car Plate</TableCell>
-              <TableCell>Seats</TableCell>
-              <TableCell>Engine Capacity</TableCell>
-              <TableCell>Fabrication Date</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {vehicles.map((vehicle) => {
-              return (
-                <TableRow key={vehicle.id}>
-                  <TableCell>{vehicle.brand}</TableCell>
-                  <TableCell>{vehicle.horsePower}</TableCell>
-                  <TableCell>{vehicle.carPlate}</TableCell>
-                  <TableCell>{vehicle.numberOfSeats}</TableCell>
-                  <TableCell>{vehicle.engineCapacity}</TableCell>
-                  <TableCell>{vehicle.fabricationDate.toString()}</TableCell>
-                  <TableCell>
-                    <ClearIcon
-                      sx={{
-                        color: "red",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        setSelectedVehicle(vehicle);
-                        setIsAreYouSureModalOpen(true);
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <EditIcon sx={{ cursor: "pointer" }} />
-                  </TableCell>
-                  <TableCell>
-                    <RemoveRedEyeIcon sx={{ cursor: "pointer" }} />
-                  </TableCell>
+      ) : (
+        <>
+          <Box
+            component={Paper}
+            sx={{ padding: "32px", textAlign: "right" }}
+            display="flex"
+            justifyContent="space-between"
+          >
+            <Box>
+              <TextField
+                label="Engine capacity"
+                size="small"
+                onChange={(e) => {
+                  setFilteredCapacity(
+                    parseInt(
+                      e.currentTarget.value.length === 0
+                        ? "0"
+                        : e.currentTarget.value
+                    )
+                  );
+                }}
+              ></TextField>
+              <Button
+                variant="contained"
+                onClick={async () => {
+                  let data = await filterVehiclesByEngineCapacity(
+                    filteredCapacity
+                  );
+                  setVehicles(data);
+                }}
+              >
+                Filter
+              </Button>
+            </Box>
+            <Box
+              sx={{
+                backgroundColor: "blueviolet",
+                borderRadius: "10px",
+                padding: ".35em",
+                cursor: "pointer",
+                display: "flex",
+              }}
+              onClick={() => {
+                setIsVehicleModalOpen(true);
+              }}
+            >
+              <AddIcon />
+              <Typography sx={{ marginTop: "3px" }}>Add vehicle</Typography>
+            </Box>
+          </Box>
+          <TableContainer component={Paper} sx={{ paddingInline: "2rem" }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Brand</TableCell>
+                  <TableCell>Horse Power</TableCell>
+                  <TableCell>Car Plate</TableCell>
+                  <TableCell>Seats</TableCell>
+                  <TableCell>Engine Capacity</TableCell>
+                  <TableCell>Fabrication Date</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Box component={Paper} sx={paginationButtons}>
-        <Button
-          variant="contained"
-          sx={paginationButton}
-          disabled={skip === 0}
-          onClick={() => {
-            if (skip - take >= 0) {
-              setSkip(skip - take);
-            }
-          }}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="contained"
-          disabled={vehicles.length === 0}
-          sx={paginationButton}
-          onClick={() => {
-            setSkip(skip + take);
-          }}
-        >
-          Next
-        </Button>
-      </Box>
+              </TableHead>
+              <TableBody>
+                {vehicles.map((vehicle) => {
+                  return (
+                    <TableRow key={vehicle.id}>
+                      <TableCell>{vehicle.brand}</TableCell>
+                      <TableCell>{vehicle.horsePower}</TableCell>
+                      <TableCell>{vehicle.carPlate}</TableCell>
+                      <TableCell>{vehicle.numberOfSeats}</TableCell>
+                      <TableCell>{vehicle.engineCapacity}</TableCell>
+                      <TableCell>
+                        {vehicle.fabricationDate.toString()}
+                      </TableCell>
+                      <TableCell>
+                        <ClearIcon
+                          sx={{
+                            color: "red",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            setSelectedVehicle(vehicle);
+                            setIsAreYouSureModalOpen(true);
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <EditIcon sx={{ cursor: "pointer" }} />
+                      </TableCell>
+                      <TableCell>
+                        <RemoveRedEyeIcon sx={{ cursor: "pointer" }} />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box component={Paper} sx={paginationButtons}>
+            <Button
+              variant="contained"
+              sx={paginationButton}
+              disabled={skip === 0}
+              onClick={() => {
+                if (skip - take >= 0) {
+                  setSkip(skip - take);
+                }
+              }}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="contained"
+              disabled={vehicles.length === 0}
+              sx={paginationButton}
+              onClick={() => {
+                setSkip(skip + take);
+              }}
+            >
+              Next
+            </Button>
+          </Box>
+        </>
+      )}
     </div>
   );
 }

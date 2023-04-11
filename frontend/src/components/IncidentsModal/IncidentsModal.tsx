@@ -1,3 +1,4 @@
+import Incident from "@/model/Incident";
 import {
   Box,
   Modal,
@@ -9,7 +10,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 
 interface IIncidentsModal {
   onClose: () => void;
@@ -22,6 +23,16 @@ export const IncidentsModal: FC<IIncidentsModal> = ({
   vehicleId,
   isOpen,
 }) => {
+  const [incidents, setIncidents] = useState<Incident[]>();
+
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    return () => {
+      abortController.abort();
+    };
+  }, []);
+
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box sx={style}>

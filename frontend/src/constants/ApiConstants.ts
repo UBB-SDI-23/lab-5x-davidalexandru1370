@@ -2,6 +2,7 @@ export const baseUrl = "http://localhost:5191/";
 
 export const clientController = "api/client/";
 export const vehicleController = "api/vehicle/";
+export const incidentController = "api/incidents/";
 
 export enum Methods {
   POST = "POST",
@@ -28,6 +29,10 @@ interface VehicleEndpoint {
   getVehiclesPaginated: (skip: number, take: number) => string;
 }
 
+interface IncidentEndpoint {
+  getIncidentsByVehicleId: (vehicleId: string) => string;
+}
+
 export const ClientEndpoints: ClientEndpoint = {
   getAllClients: clientController + "get-clients",
   addClient: clientController + "add-client",
@@ -47,4 +52,9 @@ export const VehicleEndpoints: VehicleEndpoint = {
     vehicleController + "delete/" + vehicleId,
   getVehiclesPaginated: (skip, take) =>
     vehicleController + "get-vehicles-paginated/" + skip + "/" + take,
+};
+
+export const IncidentEndpoints: IncidentEndpoint = {
+  getIncidentsByVehicleId: (vehicleId) =>
+    incidentController + "get-by-vehicleId/" + vehicleId,
 };

@@ -159,7 +159,6 @@ def insert_into_incidents():
     for index in range(number_of_incidents):
         iid = uuid.uuid4()
 
-
         while id in incident_ids:
             iid = uuid.uuid4()
 

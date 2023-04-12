@@ -83,3 +83,5 @@ cities= ["Alba",
 	"Vaslui",
 	"Focşani"
 ]
+
+descriptions = ["The car hit a deer", "Driver felt asleep while driving during night", "Driver was staying on the phone and hit a car in the buttom"]

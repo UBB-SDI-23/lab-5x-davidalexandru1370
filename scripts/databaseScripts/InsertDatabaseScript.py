@@ -8,7 +8,7 @@ from model.Vehicle import Vehicle
 from model.VehicleRent import VehicleRent
 from model.Incident import Incident
 from colorama import Fore
-from Constants import counties_car_plate, car_brands, cities
+from Constants import counties_car_plate, car_brands, cities, descriptions
 import random
 
 client_file_name = "InsertClient.sql"
@@ -166,7 +166,7 @@ def insert_into_incidents():
         incident_ids[iid] = 1
         vehicle_id = random.choice(vehicle_ids_list)
         location = random.choice(cities)
-        description = f"The car driver crashed the car in {location}  by hitting another car because he was not paying attention to the road because he was looking at his phone"
+        description = random.choice(descriptions)
         cost = randint(100,10000)
         incident_date = datetime.date(2022,1,1)
         incident_date += datetime.timedelta(days=randint(0,364))
@@ -230,6 +230,3 @@ if __name__ == "__main__":
     insert_into_incidents()
     insert_into_rents()
     add_constrains_to_all_tables()
-
-
-

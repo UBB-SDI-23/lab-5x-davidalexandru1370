@@ -1,4 +1,4 @@
-export const baseUrl = "/api/";
+export const baseUrl = "api/";
 
 export const clientController = "client/";
 export const vehicleController = "vehicle/";

@@ -1,4 +1,4 @@
-export const baseUrl = "http://34.77.100.165/";
+export const baseUrl = "http://34.78.176.145/";
 
 export const clientController = "api/client/";
 export const vehicleController = "api/vehicle/";

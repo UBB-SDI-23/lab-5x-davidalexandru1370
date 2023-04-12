@@ -2,9 +2,9 @@ interface Incident {
   id: string;
   vehicleId: string;
   location: string;
-  description: string;
   cost: number;
   whenHappend: string;
+  description: string;
 }
 
 export default Incident;

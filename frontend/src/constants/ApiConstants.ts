@@ -1,8 +1,8 @@
-export const baseUrl = "http://34.78.176.145/";
+export const baseUrl = "api/";
 
-export const clientController = "api/client/";
-export const vehicleController = "api/vehicle/";
-export const incidentController = "api/incidents/";
+export const clientController = "client/";
+export const vehicleController = "vehicle/";
+export const incidentController = "incidents/";
 
 export enum Methods {
   POST = "POST",

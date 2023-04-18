@@ -9,6 +9,7 @@ export const baseUrl =
 export const clientController = "client/";
 export const vehicleController = "vehicle/";
 export const incidentController = "incidents/";
+export const rentsController = "vehiclerent/";
 
 export enum Methods {
   POST = "POST",
@@ -39,6 +40,13 @@ interface IncidentEndpoint {
   getIncidentsByVehicleId: (vehicleId: string) => string;
 }
 
+interface RentsEndpoint {
+  getAllRents: string;
+  addRent: string;
+  updateRent: string;
+  deleteRent: (rentId: string) => string;
+}
+
 export const ClientEndpoints: ClientEndpoint = {
   getAllClients: clientController + "get-clients",
   addClient: clientController + "add-client",
@@ -63,4 +71,11 @@ export const VehicleEndpoints: VehicleEndpoint = {
 export const IncidentEndpoints: IncidentEndpoint = {
   getIncidentsByVehicleId: (vehicleId) =>
     incidentController + "get-by-vehicleId/" + vehicleId,
+};
+
+export const RentEndpoints: RentsEndpoint = {
+  getAllRents: rentsController + "get-all",
+  addRent: rentsController + "add-rent",
+  updateRent: rentsController + "update-vehiclerent",
+  deleteRent: (rentId: string) => rentsController + "delete-rent/" + rentId,
 };

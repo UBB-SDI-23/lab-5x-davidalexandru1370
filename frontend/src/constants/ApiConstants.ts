@@ -1,10 +1,10 @@
 const PRODUCTION_RentAVehicleApi_URL = "https://104.155.121.9/";
-const DEVELOPMENT_RentAVehicleApi_URL = "http://localhost:5199/";
+const DEVELOPMENT_RentAVehicleApi_URL = "https://localhost:7037/";
 
 export const baseUrl =
   (process.env.NODE_ENV === "development"
     ? DEVELOPMENT_RentAVehicleApi_URL
-    : PRODUCTION_RentAVehicleApi_URL) + "/api/";
+    : PRODUCTION_RentAVehicleApi_URL) + "api/";
 
 export const clientController = "client/";
 export const vehicleController = "vehicle/";

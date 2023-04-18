@@ -26,7 +26,7 @@ var frontendBaseUrl = app.Configuration.GetSection("Frontend")
                                              .Value!;
 
 app.UseCors(options => 
-    options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+    options.WithOrigins(frontendBaseUrl).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
     );
 
 if (app.Environment.IsDevelopment())
@@ -37,6 +37,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
+
+app.UseHttpsRedirection();
 
 app.MapControllers();
 

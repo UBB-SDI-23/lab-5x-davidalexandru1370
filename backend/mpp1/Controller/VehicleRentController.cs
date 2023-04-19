@@ -116,4 +116,11 @@ public class VehicleRentController : ControllerBase
       return BadRequest(repositoryException.Message);
     }
   }
+
+  [HttpGet("get-vehiclerents-paginated/{skip}/{take}")]
+  public async Task<ActionResult<IEnumerable<VehicleRent>>> GetVehicleRentsPaginated(int skip, int take)
+  {
+    var result = await _vehicleRentService.GetVehicleRentsPaginated(skip, take);
+    return Ok(result);
+  }
 }

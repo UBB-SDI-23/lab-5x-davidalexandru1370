@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace mpp1.Model;
 
@@ -19,4 +20,7 @@ public class Vehicle
     public int EngineCapacity { get; set; }
     public DateOnly FabricationDate { get; set; }
     public virtual ICollection<Incident>? Incidents { get; set; } = null!;
+    
+    [JsonIgnore]
+    public virtual ICollection<VehicleRent> VehicleRents { get; set; }
 }

@@ -82,4 +82,9 @@ public class VehicleRentService : IVehicleRentService
 
         return result;
     }
+    
+    public async  Task<IEnumerable<VehicleRent>> GetVehicleRentsPaginated(int skip, int take)
+    {
+        return await _vehicleRentRepository.GetVehicleRentsPaginated(skip, take);
+    }
 }

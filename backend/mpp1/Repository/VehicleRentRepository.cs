@@ -89,4 +89,16 @@ public class VehicleRentRepository : IVehicleRentRepository
         }
         return result;
     }
+
+    public  Task<IEnumerable<VehicleRent>> GetVehicleRentsPaginated(int skip, int take)
+    {
+        var result =  _rentACarDbContext.Set<VehicleRent>()
+            .Skip(skip)
+            .Take(take)
+            .Include(r => r.Client)
+            .Include(r => r.Vehicle)
+            as IEnumerable<VehicleRent>;
+        return Task.FromResult(result);
+    }
+
 }

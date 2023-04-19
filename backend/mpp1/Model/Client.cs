@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using mpp1.Validators.ClientValidators;
 
 namespace mpp1.Model;
@@ -16,5 +17,7 @@ public class Client
     [MinimumAge(18)]
     public DateOnly Birthday { get; set; }
     public string Nationality { get; set; }
-
+    
+    [JsonIgnore]
+    public virtual ICollection<VehicleRent> VehicleRents { get; set; }
 }

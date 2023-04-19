@@ -16,4 +16,6 @@ public interface IVehicleRentRepository
     public Task<IEnumerable<Client>> GetClientsByVehicleId(Guid vehicleId);
 
     public Task<VehicleRent> GetVehicleRentById(Guid vehicleRentId);
+
+    public Task<IEnumerable<VehicleRent>> GetVehicleRentsPaginated(int skip, int take);
 }

@@ -45,6 +45,7 @@ interface RentsEndpoint {
   addRent: string;
   updateRent: string;
   deleteRent: (rentId: string) => string;
+  getRentsPaginated: (skip: number, take: number) => string;
 }
 
 export const ClientEndpoints: ClientEndpoint = {
@@ -78,4 +79,6 @@ export const RentEndpoints: RentsEndpoint = {
   addRent: rentsController + "add-rent",
   updateRent: rentsController + "update-vehiclerent",
   deleteRent: (rentId: string) => rentsController + "delete-rent/" + rentId,
+  getRentsPaginated: (skip: number, take: number) =>
+    rentsController + "get-vehiclerents-paginated" + "/" + skip + "/" + take,
 };

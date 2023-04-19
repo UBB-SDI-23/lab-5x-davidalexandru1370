@@ -117,7 +117,7 @@ public class VehicleRentController : ControllerBase
     }
   }
 
-  [HttpGet("get-vehiclerents-paginated/{skip}/{take}")]
+  [HttpGet("get-vehicleRents-paginated/{skip}/{take}")]
   public async Task<ActionResult<IEnumerable<VehicleRent>>> GetVehicleRentsPaginated(int skip, int take)
   {
     var result = await _vehicleRentService.GetVehicleRentsPaginated(skip, take);

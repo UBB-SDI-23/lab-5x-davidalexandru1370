@@ -1,4 +1,11 @@
-import { Box, Paper } from "@mui/material";
+import {
+  Box,
+  Paper,
+  Table,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import React from "react";
 
 export default function Rents() {
@@ -12,7 +19,15 @@ export default function Rents() {
           alignItems: "center",
           paddingTop: "2rem",
         }}
-      ></Box>
+      >
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell> </TableCell>
+            </TableRow>
+          </TableHead>
+        </Table>
+      </Box>
     </div>
   );
 }

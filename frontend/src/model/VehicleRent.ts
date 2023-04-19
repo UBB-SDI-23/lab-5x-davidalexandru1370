@@ -1,7 +1,10 @@
-interface VehicleRent {
+import { Client } from "./Client";
+import { Vehicle } from "./Vehicle";
+
+export default interface VehicleRent {
   id: string;
-  vehicleId: string;
-  clientId: string;
+  vehicle: Vehicle;
+  client: Client;
   startDate: Date;
   endDate: Date;
   totalCost: number;

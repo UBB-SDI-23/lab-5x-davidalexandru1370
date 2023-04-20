@@ -9,13 +9,12 @@ public class VehicleRent
 {
     [Key]
     public Guid Id { get; set; }
-    
     public virtual Vehicle? Vehicle { get; set; }
     public virtual Client? Client { get; set; }
     public virtual Guid VehicleId { get; set; }
     public virtual Guid ClientId { get; set; }
-    public DateTime StartDate { get; set; }
-    public DateTime EndDate { get; set; }
+    public DateOnly StartDate { get; set; }
+    public DateOnly EndDate { get; set; }
     public int TotalCost { get; set; }
     public string? Comments { get; set; }
 }

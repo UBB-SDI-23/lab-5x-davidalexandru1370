@@ -123,4 +123,10 @@ public class VehicleRentController : ControllerBase
     var result = await _vehicleRentService.GetVehicleRentsPaginated(skip, take);
     return Ok(result);
   }
+
+  [HttpGet("get-number-of-rents")]
+  public ActionResult<int> GetNumberOfRents()
+  {
+    return Ok(_vehicleRentService.GetNumberOfRents());
+  }
 }

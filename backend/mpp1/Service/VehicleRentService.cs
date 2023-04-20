@@ -87,4 +87,9 @@ public class VehicleRentService : IVehicleRentService
     {
         return await _vehicleRentRepository.GetVehicleRentsPaginated(skip, take);
     }
+
+    public int GetNumberOfRents()
+    {
+        return _vehicleRentRepository.GetNumberOfRents();
+    }
 }

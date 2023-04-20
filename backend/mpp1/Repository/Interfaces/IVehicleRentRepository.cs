@@ -18,4 +18,6 @@ public interface IVehicleRentRepository
     public Task<VehicleRent> GetVehicleRentById(Guid vehicleRentId);
 
     public Task<IEnumerable<VehicleRent>> GetVehicleRentsPaginated(int skip, int take);
+
+    public int GetNumberOfRents();
 }

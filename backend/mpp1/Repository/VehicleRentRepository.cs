@@ -101,4 +101,8 @@ public class VehicleRentRepository : IVehicleRentRepository
         return Task.FromResult(result);
     }
 
+    public int GetNumberOfRents()
+    {
+        return _rentACarDbContext.Set<VehicleRent>().Count();
+    }
 }

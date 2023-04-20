@@ -27,10 +27,17 @@ export default function Rents() {
   return (
     <div>
       {rents === undefined ? (
-        <>
+        <Box
+          component={Paper}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           <CircularProgress />
           <Typography>Loading data...</Typography>
-        </>
+        </Box>
       ) : (
         <Box
           component={Paper}
@@ -45,7 +52,6 @@ export default function Rents() {
             <TableHead>
               <TableRow>
                 <TableCell>Car Plate</TableCell>
-                <TableCell>Client CNP</TableCell>
                 <TableCell>Client Name</TableCell>
                 <TableCell>Start Date</TableCell>
                 <TableCell>End Date</TableCell>
@@ -58,7 +64,6 @@ export default function Rents() {
                 return (
                   <TableRow key={rent.id}>
                     <TableCell>{rent.vehicle.carPlate}</TableCell>
-                    <TableCell>{rent.client.cnp}</TableCell>
                     <TableCell>{rent.client.name}</TableCell>
                     <TableCell>{rent.startDate.toString()}</TableCell>
                     <TableCell>{rent.endDate.toString()}</TableCell>

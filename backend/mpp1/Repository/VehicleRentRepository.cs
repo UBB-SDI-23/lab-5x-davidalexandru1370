@@ -43,13 +43,13 @@ public class VehicleRentRepository : IVehicleRentRepository
 
         return vehicleRent;
     }
-    
+
     /*
      * SELECT V.* From VehiclesRent VR
      * WHERE VR.clientId = @clientId
      * LEFT JOIN Vehicles V on V.Id = VR.vehicleId 
      */
-    
+
     public Task<IEnumerable<Vehicle>> GetVehiclesByClientId(Guid clientId)
     {
         var result = (
@@ -58,7 +58,7 @@ public class VehicleRentRepository : IVehicleRentRepository
             join V in _rentACarDbContext.Vehicles on VR.VehicleId equals V.Id
             select V
         ) as IEnumerable<Vehicle>;
-            
+
         return Task.FromResult(result);
     }
 
@@ -87,18 +87,31 @@ public class VehicleRentRepository : IVehicleRentRepository
         {
             throw new RepositoryException($"Vehicle with Id={vehicleRentId} does not exists!");
         }
+
         return result;
     }
 
-    public  Task<IEnumerable<VehicleRent>> GetVehicleRentsPaginated(int skip, int take)
+    public Task<Pagination<VehicleRent>> GetVehicleRentsPaginated(int skip, int take)
     {
-        var result =  _rentACarDbContext.Set<VehicleRent>()
-            .Skip(skip)
-            .Take(take)
-            .Include(r => r.Client)
-            .Include(r => r.Vehicle)
+        Pagination<VehicleRent> paginatedRents = new();
+
+        var result = _rentACarDbContext
+                .Set<VehicleRent>()
+                .Skip(skip)
+                .Take(take)
+                .Include(r => r.Client)
+                .Include(r => r.Vehicle)
             as IEnumerable<VehicleRent>;
-        return Task.FromResult(result);
+
+        paginatedRents.Elements = result;
+
+        paginatedRents.HasPrevious = skip != 0;
+
+        int numberOfRents = GetNumberOfRents();
+
+        paginatedRents.HasNext = !(skip >= numberOfRents || skip + take >= numberOfRents);
+        
+        return Task.FromResult(paginatedRents);
     }
 
     public int GetNumberOfRents()

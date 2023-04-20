@@ -51,7 +51,6 @@ namespace mpp1.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     VehicleId = table.Column<Guid>(type: "uuid", nullable: false),
                     Location = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
                     Cost = table.Column<int>(type: "integer", nullable: false),
                     WhenHappend = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },

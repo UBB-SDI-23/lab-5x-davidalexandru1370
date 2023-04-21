@@ -88,11 +88,11 @@ public class ClientController : ControllerBase
     }
 
     [HttpGet("get-clients-by-name/{name}")]
-    public ActionResult<IEnumerable<Client>> GetClientsByName([FromRoute] string name)
+    public async Task<ActionResult<IEnumerable<Client>>> GetClientsByName([FromRoute] string name)
     {
         try
         {
-            var result = _clientService.GetClientsByName(name);
+            var result = await _clientService.GetClientsByName(name);
             return Ok(result);
         }
         catch (RepositoryException repositoryException)

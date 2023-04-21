@@ -78,6 +78,6 @@ export const getClientsByName = async (name: string) => {
     .then((clients: Client[]) => {
       return clients;
     });
-
+  console.log(data);
   return data;
 };

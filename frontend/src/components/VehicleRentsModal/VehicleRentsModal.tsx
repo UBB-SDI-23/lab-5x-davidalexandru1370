@@ -58,14 +58,11 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
   method,
   isOpen,
 }) => {
-  const handleDebouncedClientFetchSuggestions = async (name: string) => {
-    const data = await getClientsByName(name);
-    console.log(data);
-    setClients(data);
-  };
-
   const debouncedClientFetchSuggestions = useCallback(
-    debounce(handleDebouncedClientFetchSuggestions, 500),
+    debounce(async (name: string) => {
+      const data = await getClientsByName(name);
+      setClients(data);
+    }, 500),
     []
   );
 

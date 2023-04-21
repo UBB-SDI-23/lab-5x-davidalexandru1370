@@ -10,9 +10,10 @@ import { FC, useCallback, useEffect, useReducer, useState } from "react";
 import { debounce } from "lodash";
 import { getClientsByName } from "@/pages/api/ClientApi";
 import { getVehiclesByCarPlate } from "@/pages/api/VehicleApi";
+import { toast } from "react-toastify";
 
 interface IVehicleRentsModalProps {
-  onSubmitClick: (vehicle: VehicleDto) => Promise<void>;
+  onSubmitClick: (vehicle: VehicleRentDto) => Promise<void>;
   onClose: () => void;
   vehicleRent?: VehicleRent;
   method: VehicleModalMethodsEnum;
@@ -223,7 +224,18 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
         ></TextField>
         <Button
           variant="contained"
-          onClick={() => {}}
+          onClick={async () => {
+            try {
+              await onSubmitClick(vehicleRentState);
+              toast("Updated succesfully", {
+                type: "error",
+              });
+            } catch (error) {
+              toast((error as Error).message, {
+                type: "error",
+              });
+            }
+          }}
           sx={button}
           disabled={
             vehicleRentState.vehicleId === "" ||

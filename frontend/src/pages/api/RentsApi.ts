@@ -2,6 +2,7 @@ import { Methods, RentEndpoints, baseUrl } from "@/constants/ApiConstants";
 import IPagination from "@/model/Pagination";
 import VehicleRent from "@/model/VehicleRent";
 import { createHeader } from "@/utilities/utilities";
+import { METHODS } from "http";
 
 export const getRentsPaginated = async (skip: number, take: number) => {
   let url = baseUrl + RentEndpoints.getRentsPaginated(skip, take);
@@ -21,4 +22,21 @@ export const deleteVehicleRentById = async (rentId: string) => {
   let url = baseUrl + RentEndpoints.deleteRent(rentId);
   let header = createHeader(Methods.DELETE);
   await fetch(url, header);
+};
+
+export const updateVehicleRent = async (vehicleRent: VehicleRent) => {
+  let url = baseUrl + RentEndpoints.updateRent;
+  let header = createHeader(Methods.PUT, vehicleRent);
+  let data = await fetch(url, header)
+    .then(async (response: Response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return await response.json();
+    })
+    .then((updatedVehicleRent: VehicleRent) => {
+      return updatedVehicleRent;
+    });
+
+  return data;
 };

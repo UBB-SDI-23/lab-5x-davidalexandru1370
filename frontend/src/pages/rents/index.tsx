@@ -11,7 +11,11 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import { deleteVehicleRentById, getRentsPaginated } from "../api/RentsApi";
+import {
+  deleteVehicleRentById,
+  getRentsPaginated,
+  updateVehicleRent,
+} from "../api/RentsApi";
 import Pagination from "@/components/Pagination/Pagination";
 import IPagination from "@/model/Pagination";
 import styles from "./rents.module.css";
@@ -72,7 +76,14 @@ export default function Rents() {
           setSelectedVehicleRent(undefined);
         }}
         vehicleRent={selectedVehicleRent}
-        onSubmitClick={async () => {}}
+        onSubmitClick={async (vehicleRent) => {
+          selectedVehicleRent === undefined
+            ? () => {}
+            : await updateVehicleRent({
+                ...selectedVehicleRent,
+                ...vehicleRent,
+              });
+        }}
       />
       {rents === undefined ? (
         <Box

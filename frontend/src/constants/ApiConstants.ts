@@ -83,7 +83,7 @@ export const IncidentEndpoints: IncidentEndpoint = {
 export const RentEndpoints: RentsEndpoint = {
   getAllRents: rentsController + "get-all",
   addRent: rentsController + "add-rent",
-  updateRent: rentsController + "update-vehiclerent",
+  updateRent: rentsController + "update-vehicleRent",
   deleteRent: (rentId: string) => rentsController + "delete-rent/" + rentId,
   getRentsPaginated: (skip: number, take: number) =>
     rentsController + "get-vehiclerents-paginated" + "/" + skip + "/" + take,

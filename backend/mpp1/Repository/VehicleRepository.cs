@@ -100,4 +100,23 @@ public class VehicleRepository : IVehicleRepository
         var result = await _rentACarDbContext.Vehicles.Skip(skip).Take(take).ToListAsync();
         return result;
     }
+
+    public Task<IEnumerable<Vehicle>> GetVehiclesByCarPlate(string carPlate)
+    {
+        if (carPlate is null)
+        {
+            throw new RepositoryException("Invalid car plate!");
+        }
+
+        const int numberOfVehicles = 15;
+        
+        var foundVehicles = _rentACarDbContext
+            .Set<Vehicle>()
+            .Where(v => v.CarPlate.Contains(carPlate))
+            .Take(numberOfVehicles)
+            as IEnumerable<Vehicle>;
+
+        return Task.FromResult(foundVehicles);
+    }
+
 }

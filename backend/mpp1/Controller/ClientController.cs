@@ -100,5 +100,5 @@ public class ClientController : ControllerBase
             return BadRequest(repositoryException.Message);
         }
     }
-
+    
 }

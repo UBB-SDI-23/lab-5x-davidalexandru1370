@@ -10,7 +10,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getRentsPaginated } from "../api/RentsApi";
 import Pagination from "@/components/Pagination/Pagination";
 import IPagination from "@/model/Pagination";
@@ -19,16 +19,18 @@ import styles from "./rents.module.css";
 export default function Rents() {
   const [rents, setRents] = useState<IPagination<VehicleRent>>();
   const [skip, setSkip] = useState<number>(0);
-  const take = 5;
+  const parentContainerRef = useRef<HTMLDivElement>(null);
+  const take = 10;
 
   useEffect(() => {
+    setRents(undefined);
     getRentsPaginated(skip, take).then((r) => {
       setRents(r);
     });
   }, [skip]);
 
   return (
-    <div>
+    <div ref={parentContainerRef}>
       {rents === undefined ? (
         <Box
           component={Paper}

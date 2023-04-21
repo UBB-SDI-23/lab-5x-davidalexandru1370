@@ -19,6 +19,15 @@ const Pagination: FC<IPaginationComponent> = ({
 }) => {
   return (
     <div className={`${styles.content} ${className}`} style={style}>
+      <button
+        className={`${styles.paginationButton}`}
+        disabled={hasPrevious === false}
+        onClick={() => {
+          onChangePage(pageNumber - 1);
+        }}
+      >
+        Previous page
+      </button>
       {pageNumber >= 3 && (
         <>
           <span
@@ -65,6 +74,15 @@ const Pagination: FC<IPaginationComponent> = ({
           <span className={`${styles.pageIndexCard}`}>...</span>
         </>
       )}
+      <button
+        className={`${styles.paginationButton}`}
+        disabled={hasNext === false}
+        onClick={() => {
+          onChangePage(pageNumber + 1);
+        }}
+      >
+        Next page
+      </button>
     </div>
   );
 };

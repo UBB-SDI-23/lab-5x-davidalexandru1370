@@ -76,3 +76,20 @@ export const getVehiclesPaginated = async (skip: number, take: number) => {
 
   return data;
 };
+
+export const getVehiclesByCarPlate = async (carPlate: string) => {
+  let url: string = baseUrl + VehicleEndpoints.getVehiclesByCarPlate(carPlate);
+  let header = createHeader(Methods.GET);
+  let data: Vehicle[] = await fetch(url, header)
+    .then(async (response: Response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return await response.json();
+    })
+    .then((vehicles: Vehicle[]) => {
+      return vehicles;
+    });
+
+  return data;
+};

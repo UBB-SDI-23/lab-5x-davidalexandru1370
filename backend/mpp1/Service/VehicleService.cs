@@ -1,3 +1,4 @@
+using System.Text;
 using mpp1.Model;
 using mpp1.Model.DTO;
 using mpp1.Repository.Interfaces;
@@ -77,6 +78,14 @@ public class VehicleService : IVehicleService
 
     public Task<IEnumerable<Vehicle>> GetVehiclesByCarPlate(string carPlate)
     {
-        return _vehicleRepository.GetVehiclesByCarPlate(carPlate);
+        string normalizedCarPlate = normalizeCarPlate(carPlate);
+        return _vehicleRepository.GetVehiclesByCarPlate(normalizedCarPlate);
+    }
+
+    private string normalizeCarPlate(string carPlate)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.Append(carPlate.ToUpper());
+        return stringBuilder.ToString();
     }
 }

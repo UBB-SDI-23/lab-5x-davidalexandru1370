@@ -35,6 +35,7 @@ interface VehicleEndpoint {
   filterVehiclesByEngineCapacity: (capacity: string) => string;
   deleteVehicle: (vehicleId: string) => string;
   getVehiclesPaginated: (skip: number, take: number) => string;
+  getVehiclesByCarPlate: (name: string) => string;
 }
 
 interface IncidentEndpoint {
@@ -70,6 +71,8 @@ export const VehicleEndpoints: VehicleEndpoint = {
     vehicleController + "delete/" + vehicleId,
   getVehiclesPaginated: (skip, take) =>
     vehicleController + "get-vehicles-paginated/" + skip + "/" + take,
+  getVehiclesByCarPlate: (name: string) =>
+    vehicleController + "get-vehicles-by-carPlate/" + name,
 };
 
 export const IncidentEndpoints: IncidentEndpoint = {

@@ -9,6 +9,7 @@ import { FC, useCallback, useEffect, useReducer, useState } from "react";
 //@ts-ignore
 import { debounce } from "lodash";
 import { getClientsByName } from "@/pages/api/ClientApi";
+import { getVehiclesByCarPlate } from "@/pages/api/VehicleApi";
 
 interface IVehicleRentsModalProps {
   onSubmitClick: (vehicle: VehicleDto) => Promise<void>;
@@ -66,6 +67,14 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
     []
   );
 
+  const debouncedVehicleFetchSuggestions = useCallback(
+    debounce(async (carPlate: string) => {
+      const data = await getVehiclesByCarPlate(carPlate);
+      setVehicles(data);
+    }, 500),
+    []
+  );
+
   useEffect(() => {
     return () => {
       debouncedClientFetchSuggestions.cancel();
@@ -77,9 +86,18 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
     value: any,
     reason: any
   ) => {
-    console.log("input", value, reason);
     if (reason === "input") {
       debouncedClientFetchSuggestions(value);
+    }
+  };
+
+  const handleVehicleAutocompleteInputChange = (
+    event: any,
+    value: any,
+    reason: any
+  ) => {
+    if (reason === "input") {
+      debouncedVehicleFetchSuggestions(value);
     }
   };
 
@@ -95,6 +113,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
     } as VehicleRentState
   );
   const [clients, setClients] = useState<Client[]>([]);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
   const handleOnClose = () => {
     onClose();
@@ -130,6 +149,26 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
                 type: VehicleRentActionKind.UPDATE,
                 payload: {
                   clientId: value.id,
+                },
+              });
+            }
+          }}
+        />
+        <Autocomplete
+          id="Vehicle-id"
+          options={vehicles}
+          getOptionLabel={(option) => `${option.carPlate}`}
+          renderInput={(params) => (
+            <TextField {...params} label="Vehicle" variant="outlined" />
+          )}
+          filterOptions={(x) => x}
+          onInputChange={handleVehicleAutocompleteInputChange}
+          onChange={(event, value) => {
+            if (value) {
+              vehicleRentDispatch({
+                type: VehicleRentActionKind.UPDATE,
+                payload: {
+                  vehicleId: value.id,
                 },
               });
             }

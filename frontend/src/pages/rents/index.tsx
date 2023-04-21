@@ -62,10 +62,16 @@ export default function Rents() {
       />
       <VehicleRentsModal
         isOpen={isVehicleRentsModalOpen}
-        method={VehicleModalMethodsEnum.ADD}
+        method={
+          selectedVehicleRent === undefined
+            ? VehicleModalMethodsEnum.ADD
+            : VehicleModalMethodsEnum.UPDATE
+        }
         onClose={() => {
           setIsVehicleRentsModalOpen(false);
+          setSelectedVehicleRent(undefined);
         }}
+        vehicleRent={selectedVehicleRent}
         onSubmitClick={async () => {}}
       />
       {rents === undefined ? (
@@ -128,6 +134,7 @@ export default function Rents() {
                         <EditIcon
                           sx={{ cursor: "pointer" }}
                           onClick={() => {
+                            setSelectedVehicleRent(rent);
                             setIsVehicleRentsModalOpen(true);
                           }}
                         />

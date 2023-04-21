@@ -149,11 +149,13 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
           size="small"
           sx={textFieldStyle}
           onChange={async (e) => {}}
+          defaultValue={vehicleRent?.vehicle.carPlate}
         ></TextField>
         <Autocomplete
           id="Client-id"
           options={clients}
-          getOptionLabel={(option) => `${option.name} - ${option.cnp}`}
+          defaultValue={vehicleRent?.client}
+          getOptionLabel={(option: Client) => `${option.name} - ${option.cnp}`}
           renderInput={(params) => (
             <TextField {...params} label="Client" variant="outlined" />
           )}
@@ -173,6 +175,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
         <Autocomplete
           id="Vehicle-id"
           options={vehicles}
+          defaultValue={vehicleRent?.vehicle}
           getOptionLabel={(option) => `${option.carPlate}`}
           renderInput={(params) => (
             <TextField {...params} label="Vehicle" variant="outlined" />
@@ -193,18 +196,28 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
         <TextField
           label="Start date"
           size="small"
+          defaultValue={vehicleRent?.startDate}
           sx={textFieldStyle}
           onChange={(e) => {}}
         ></TextField>
         <TextField
           label="End date"
           size="small"
+          defaultValue={vehicleRent?.endDate}
           sx={textFieldStyle}
           onChange={(e) => {}}
         ></TextField>
         <TextField
           label="Total cost"
           size="small"
+          defaultValue={vehicleRent?.totalCost}
+          sx={textFieldStyle}
+          onChange={(e) => {}}
+        ></TextField>
+        <TextField
+          label="Comments"
+          size="small"
+          defaultValue={vehicleRent?.comments}
           sx={textFieldStyle}
           onChange={(e) => {}}
         ></TextField>

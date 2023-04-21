@@ -15,6 +15,7 @@ import {
 import React, { useEffect, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import AddIcon from "@mui/icons-material/Add";
 import { Vehicle } from "@/model/Vehicle";
 import {
@@ -29,7 +30,6 @@ import {
   VehicleModalMethodsEnum,
 } from "@/components/VehicleModal/VehicleModal";
 import { VehicleDto } from "@/model/VehicleDto";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { IncidentsModal } from "@/components/IncidentsModal/IncidentsModal";
 
 export default function Vehicles() {

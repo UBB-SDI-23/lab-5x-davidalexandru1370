@@ -1,10 +1,14 @@
+import { Client } from "@/model/Client";
 import { Vehicle } from "@/model/Vehicle";
 import { VehicleDto } from "@/model/VehicleDto";
 import VehicleRent from "@/model/VehicleRent";
 import VehicleRentDto from "@/model/VehicleRentDto";
 import ClearIcon from "@mui/icons-material/Clear";
-import { Box, Button, Modal, TextField } from "@mui/material";
-import { FC, useReducer, useState } from "react";
+import { Autocomplete, Box, Button, Modal, TextField } from "@mui/material";
+import { FC, useCallback, useEffect, useReducer, useState } from "react";
+//@ts-ignore
+import { debounce } from "lodash";
+import { getClientsByName } from "@/pages/api/ClientApi";
 
 interface IVehicleRentsModalProps {
   onSubmitClick: (vehicle: VehicleDto) => Promise<void>;
@@ -23,7 +27,7 @@ interface VehicleRentState extends VehicleRentDto {}
 
 interface VehicleRentAction {
   type: VehicleRentActionKind;
-  payload: VehicleRentDto;
+  payload: Partial<VehicleRentDto>;
 }
 
 enum VehicleRentActionKind {
@@ -47,13 +51,41 @@ function handleChangeVehicleRentState(
   }
 }
 
-export const VehicleModal: FC<IVehicleRentsModalProps> = ({
+export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
   onSubmitClick,
   onClose,
   vehicleRent,
   method,
   isOpen,
 }) => {
+  const handleDebouncedClientFetchSuggestions = async (name: string) => {
+    const data = await getClientsByName(name);
+    console.log(data);
+    setClients(data);
+  };
+
+  const debouncedClientFetchSuggestions = useCallback(
+    debounce(handleDebouncedClientFetchSuggestions, 500),
+    []
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedClientFetchSuggestions.cancel();
+    };
+  }, [debouncedClientFetchSuggestions]);
+
+  const handleClientAutocompleteInputChange = (
+    event: any,
+    value: any,
+    reason: any
+  ) => {
+    console.log("input", value, reason);
+    if (reason === "input") {
+      debouncedClientFetchSuggestions(value);
+    }
+  };
+
   const [vehicleRentState, vehicleRentDispatch] = useReducer(
     handleChangeVehicleRentState,
     {
@@ -65,6 +97,7 @@ export const VehicleModal: FC<IVehicleRentsModalProps> = ({
       clientId: "",
     } as VehicleRentState
   );
+  const [clients, setClients] = useState<Client[]>([]);
 
   const handleOnClose = () => {
     onClose();
@@ -79,41 +112,62 @@ export const VehicleModal: FC<IVehicleRentsModalProps> = ({
           }}
         />
         <TextField
-          label="Brand"
-          size="small"
-          sx={textFieldStyle}
-          onChange={(e) => {}}
-        ></TextField>
-        <TextField
-          label="Horse power"
-          size="small"
-          sx={textFieldStyle}
-          onChange={(e) => {}}
-        ></TextField>
-        <TextField
           label="Car plate"
           size="small"
           sx={textFieldStyle}
-          onChange={(e) => {}}
+          onChange={async (e) => {}}
         ></TextField>
+        <Autocomplete
+          id="Client-id"
+          options={clients}
+          getOptionLabel={(option) => `${option.name} - ${option.cnp}`}
+          renderInput={(params) => (
+            <TextField {...params} label="Client" variant="outlined" />
+          )}
+          filterOptions={(x) => x}
+          onInputChange={handleClientAutocompleteInputChange}
+          onChange={(event, value) => {
+            if (value) {
+              console.log(value);
+              vehicleRentDispatch({
+                type: VehicleRentActionKind.UPDATE,
+                payload: {
+                  clientId: value.id,
+                },
+              });
+            }
+          }}
+        />
         <TextField
-          label="Seats"
+          label="Start date"
           size="small"
           sx={textFieldStyle}
           onChange={(e) => {}}
         ></TextField>
         <TextField
-          label="Engine capacity"
+          label="End date"
           size="small"
           sx={textFieldStyle}
           onChange={(e) => {}}
         ></TextField>
         <TextField
-          label="Fabrication date"
+          label="Total cost"
           size="small"
           sx={textFieldStyle}
+          onChange={(e) => {}}
         ></TextField>
-        <Button variant="contained" onClick={() => {}} sx={button}>
+        <Button
+          variant="contained"
+          onClick={() => {}}
+          sx={button}
+          disabled={
+            vehicleRentState.vehicleId === "" ||
+            vehicleRentState.clientId === "" ||
+            vehicleRentState.endDate === new Date(0, 0, 0) ||
+            vehicleRentState.startDate === new Date(0, 0, 0) ||
+            vehicleRentState.totalCost.toString() === ""
+          }
+        >
           {method === VehicleModalMethodsEnum.ADD ? "Add" : "Update"}
         </Button>
       </Box>

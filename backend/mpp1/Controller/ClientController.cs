@@ -57,7 +57,7 @@ public class ClientController : ControllerBase
             return BadRequest(repositoryException.Message);
         }
     }
-    
+
     [HttpGet("get-clients")]
     public async Task<ActionResult<IEnumerable<Client>>> GetAllClients()
     {
@@ -78,12 +78,27 @@ public class ClientController : ControllerBase
             return BadRequest(repositoryException.Message);
         }
     }
-    
+
     [HttpGet("get-clients-paginated/{skip}/{take}")]
-    public async Task<ActionResult<IEnumerable<Client>>> GetClientsPaginated([FromRoute] uint skip, [FromRoute] uint take)
+    public async Task<ActionResult<IEnumerable<Client>>> GetClientsPaginated([FromRoute] uint skip,
+        [FromRoute] uint take)
     {
         var result = await _clientService.GetClientsPaginated((int)skip, (int)take);
         return Ok(result);
     }
-    
+
+    [HttpGet("get-clients-by-name/{name}")]
+    public ActionResult<IEnumerable<Client>> GetClientsByName([FromRoute] string name)
+    {
+        try
+        {
+            var result = _clientService.GetClientsByName(name);
+            return Ok(result);
+        }
+        catch (RepositoryException repositoryException)
+        {
+            return BadRequest(repositoryException.Message);
+        }
+    }
+
 }

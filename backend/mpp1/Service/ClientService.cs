@@ -1,3 +1,4 @@
+using System.Text;
 using mpp1.Model;
 using mpp1.Repository.Interfaces;
 using mpp1.Service.Interfaces;
@@ -41,5 +42,18 @@ public class ClientService : IClientService
     public async Task<IEnumerable<Client>> GetClientsPaginated(int skip, int take)
     {
         return await _clientRepository.GetClientsPaginated(skip, take);
+    }
+
+    public Task<IEnumerable<Client>> GetClientsByName(string name)
+    {
+        string normalizedName = normalizeNameString(name);
+        return _clientRepository.GetClientsByName(normalizedName);
+    }
+
+    private string normalizeNameString(string name)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append(name[0].ToString().ToUpper() + name.Substring(1));
+        return sb.ToString();
     }
 }

@@ -3,20 +3,6 @@ import { Client } from "@/model/Client";
 import { ClientDto } from "@/model/ClientDto";
 import { createHeader } from "@/utilities/utilities";
 
-export const getAllClients = async () => {
-  let url = baseUrl + ClientEndpoints.getAllClients;
-  let header = createHeader(Methods.GET);
-  // let data = await fetch(url, header)
-  //   .then(async (response: Response) => {
-  //     return await response.json();
-  //   })
-  //   .then((data: Client[]) => {
-  //     return data;
-  //   });
-  return [];
-  //return data;
-};
-
 export const deleteClientById = async (clientId: string) => {
   let url = baseUrl + ClientEndpoints.deleteClient + "/" + clientId;
   let header = createHeader(Methods.DELETE);
@@ -69,6 +55,24 @@ export const getClientsPaginated = async (skip: number, take: number) => {
   let header = createHeader(Methods.GET);
   let data: Client[] = await fetch(url, header)
     .then(async (response: Response) => {
+      return await response.json();
+    })
+    .then((clients: Client[]) => {
+      return clients;
+    });
+
+  return data;
+};
+
+export const getClientsByName = async (name: string) => {
+  let url = baseUrl + ClientEndpoints.getClientsByName(name);
+  let header = createHeader(Methods.GET);
+  let data: Client[] = await fetch(url, header)
+    .then(async (response: Response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
       return await response.json();
     })
     .then((clients: Client[]) => {

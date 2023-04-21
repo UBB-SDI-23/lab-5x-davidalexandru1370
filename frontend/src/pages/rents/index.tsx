@@ -20,10 +20,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import AddIcon from "@mui/icons-material/Add";
 import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
+import {
+  VehicleModalMethodsEnum,
+  VehicleRentsModal,
+} from "@/components/VehicleRentsModal/VehicleRentsModal";
 export default function Rents() {
   const [rents, setRents] = useState<IPagination<VehicleRent>>();
   const [skip, setSkip] = useState<number>(0);
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
+    useState<boolean>(false);
+  const [isVehicleRentsModalOpen, setIsVehicleRentsModalOpen] =
     useState<boolean>(false);
   const [selectedVehicleRent, setSelectedVehicleRent] = useState<VehicleRent>();
   const parentContainerRef = useRef<HTMLDivElement>(null);
@@ -54,7 +60,14 @@ export default function Rents() {
           setIsAreYouSureModalOpen(false);
         }}
       />
-
+      <VehicleRentsModal
+        isOpen={isVehicleRentsModalOpen}
+        method={VehicleModalMethodsEnum.ADD}
+        onClose={() => {
+          setIsVehicleRentsModalOpen(false);
+        }}
+        onSubmitClick={async () => {}}
+      />
       {rents === undefined ? (
         <Box
           component={Paper}
@@ -112,7 +125,12 @@ export default function Rents() {
                         />
                       </TableCell>
                       <TableCell>
-                        <EditIcon sx={{ cursor: "pointer" }} />
+                        <EditIcon
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => {
+                            setIsVehicleRentsModalOpen(true);
+                          }}
+                        />
                       </TableCell>
                     </TableRow>
                   );

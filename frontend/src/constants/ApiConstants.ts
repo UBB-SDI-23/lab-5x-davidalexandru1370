@@ -26,6 +26,7 @@ interface ClientEndpoint {
   updateClient: string;
   getClientById: string;
   getClientsPaginated: (skip: number, take: number) => string;
+  getClientsByName: (name: string) => string;
 }
 
 interface VehicleEndpoint {
@@ -56,6 +57,8 @@ export const ClientEndpoints: ClientEndpoint = {
   getClientById: clientController + "get-client",
   getClientsPaginated: (skip, take) =>
     clientController + "get-clients-paginated/" + skip + "/" + take,
+  getClientsByName: (name: string) =>
+    clientController + "get-clients-by-name/" + name,
 };
 
 export const VehicleEndpoints: VehicleEndpoint = {

@@ -15,7 +15,7 @@ public class ClientRepository : IClientRepository
         _rentACarDbContext = rentACarDbContext;
     }
 
-    public async Task  AddClient(Client client)
+    public async Task AddClient(Client client)
     {
         if (client is null)
         {
@@ -29,7 +29,7 @@ public class ClientRepository : IClientRepository
     public async Task RemoveClient(Guid id)
     {
         var client = await GetClientById(id);
-        
+
         if (client is null)
         {
             throw new RepositoryException($"Client with Id={id} does not exists!");
@@ -47,7 +47,7 @@ public class ClientRepository : IClientRepository
         }
 
         var foundClient = await _rentACarDbContext.Clients.FirstOrDefaultAsync(c => c.Id == client.Id);
-        
+
         if (foundClient is null)
         {
             throw new RepositoryException($"Client with Id={client.Id} does not exists");
@@ -79,5 +79,23 @@ public class ClientRepository : IClientRepository
     {
         var result = await _rentACarDbContext.Clients.Skip(skip).Take(take).ToListAsync() as IEnumerable<Client>;
         return result;
+    }
+
+    public Task<IEnumerable<Client>> GetClientsByName(string name)
+    {
+        if (name is null)
+        {
+            throw new RepositoryException("Invalid name");
+        }
+
+        const int maximumClients = 15;
+
+        var foundClients = _rentACarDbContext
+                .Set<Client>()
+                .Where(c => c.Name.Contains(name))
+                .Take(maximumClients)
+            as IEnumerable<Client>;
+
+        return Task.FromResult(foundClients);
     }
 }

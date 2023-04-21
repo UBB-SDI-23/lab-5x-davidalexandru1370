@@ -110,7 +110,7 @@ public class VehicleRentRepository : IVehicleRentRepository
         int numberOfRents = GetNumberOfRents();
 
         paginatedRents.HasNext = !(skip >= numberOfRents || skip + take >= numberOfRents);
-        
+            
         return Task.FromResult(paginatedRents);
     }
 

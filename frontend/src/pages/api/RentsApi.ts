@@ -1,4 +1,5 @@
 import { Methods, RentEndpoints, baseUrl } from "@/constants/ApiConstants";
+import IPagination from "@/model/Pagination";
 import VehicleRent from "@/model/VehicleRent";
 import { createHeader } from "@/utilities/utilities";
 
@@ -9,7 +10,7 @@ export const getRentsPaginated = async (skip: number, take: number) => {
     .then(async (response: Response) => {
       return await response.json();
     })
-    .then((rents: VehicleRent[]) => {
+    .then((rents: IPagination<VehicleRent>) => {
       return rents;
     });
 

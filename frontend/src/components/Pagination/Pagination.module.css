@@ -1,0 +1,16 @@
+.pageIndexCard {
+  border: 1px solid grey;
+  padding: 1em;
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.content {
+  display: "flex";
+}
+
+.selectedPageIndexCard {
+  background-color: rgb(16, 131, 177);
+}

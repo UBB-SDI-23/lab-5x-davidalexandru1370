@@ -12,9 +12,12 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { getRentsPaginated } from "../api/RentsApi";
+import Pagination from "@/components/Pagination/Pagination";
+import IPagination from "@/model/Pagination";
+import styles from "./rents.module.css";
 
 export default function Rents() {
-  const [rents, setRents] = useState<VehicleRent[]>();
+  const [rents, setRents] = useState<IPagination<VehicleRent>>();
   const [skip, setSkip] = useState<number>(0);
   const take = 5;
 
@@ -22,7 +25,7 @@ export default function Rents() {
     getRentsPaginated(skip, take).then((r) => {
       setRents(r);
     });
-  }, []);
+  }, [skip]);
 
   return (
     <div>
@@ -60,7 +63,7 @@ export default function Rents() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rents.map((rent) => {
+              {rents.elements.map((rent) => {
                 return (
                   <TableRow key={rent.id}>
                     <TableCell>{rent.vehicle.carPlate}</TableCell>
@@ -74,6 +77,17 @@ export default function Rents() {
               })}
             </TableBody>
           </Table>
+          <Box component={Paper}>
+            <Pagination
+              hasNext={rents.hasNext}
+              hasPrevious={rents.hasPrevious}
+              onChangePage={(pageNumber) => {
+                setSkip(take * (pageNumber - 1));
+              }}
+              pageNumber={skip / take + 1}
+              className={styles.pagination}
+            />
+          </Box>
         </Box>
       )}
     </div>

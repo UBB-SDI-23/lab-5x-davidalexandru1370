@@ -146,4 +146,18 @@ public class VehicleController : ControllerBase
         var result = await _vehicleService.GetVehiclesPaginated(skip, take);
         return Ok(result);
     }
+
+    [HttpGet("get-vehicles-by-carPlate/{carPlate}")]
+    public async Task<ActionResult<IEnumerable<Vehicle>>> GetVehiclesByCarPlate([FromRoute] string carPlate)
+    {
+        try
+        {
+            var result = await _vehicleService.GetVehiclesByCarPlate(carPlate);
+            return Ok(result);
+        }
+        catch (RepositoryException repositoryException)
+        {
+            return BadRequest(repositoryException.Message);
+        }
+    }
 }

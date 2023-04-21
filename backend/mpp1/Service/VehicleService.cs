@@ -75,4 +75,8 @@ public class VehicleService : IVehicleService
         return await _vehicleRepository.GetVehiclesPaginated(skip, take);
     }
 
+    public Task<IEnumerable<Vehicle>> GetVehiclesByCarPlate(string carPlate)
+    {
+        return _vehicleRepository.GetVehiclesByCarPlate(carPlate);
+    }
 }

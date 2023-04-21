@@ -115,9 +115,26 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
   const [clients, setClients] = useState<Client[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
+  useEffect(() => {
+    vehicleRentDispatch({
+      type: VehicleRentActionKind.UPDATE,
+      payload: {
+        id: vehicleRent === undefined ? "" : vehicleRent.id,
+        endDate:
+          vehicleRent === undefined ? new Date(0, 0, 0) : vehicleRent.endDate,
+        totalCost: vehicleRent === undefined ? 0 : vehicleRent.totalCost,
+        startDate:
+          vehicleRent === undefined ? new Date(0, 0, 0) : vehicleRent.startDate,
+        vehicleId: vehicleRent === undefined ? "" : vehicleRent.vehicle.id,
+        clientId: vehicleRent === undefined ? "" : vehicleRent.client.id,
+      },
+    });
+  }, [vehicleRent]);
+
   const handleOnClose = () => {
     onClose();
   };
+
   return (
     <Modal open={isOpen} onClose={handleOnClose}>
       <Box sx={style}>
@@ -144,7 +161,6 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
           onInputChange={handleClientAutocompleteInputChange}
           onChange={(event, value) => {
             if (value) {
-              console.log(value);
               vehicleRentDispatch({
                 type: VehicleRentActionKind.UPDATE,
                 payload: {

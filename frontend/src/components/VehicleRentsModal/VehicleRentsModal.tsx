@@ -191,28 +191,56 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
           size="small"
           defaultValue={vehicleRent?.startDate}
           sx={textFieldStyle}
-          onChange={(e) => {}}
+          onChange={(e) => {
+            vehicleRentDispatch({
+              type: VehicleRentActionKind.UPDATE,
+              payload: {
+                startDate: new Date(e.currentTarget.value),
+              },
+            });
+          }}
         ></TextField>
         <TextField
           label="End date"
           size="small"
           defaultValue={vehicleRent?.endDate}
           sx={textFieldStyle}
-          onChange={(e) => {}}
+          onChange={(e) => {
+            vehicleRentDispatch({
+              type: VehicleRentActionKind.UPDATE,
+              payload: {
+                endDate: new Date(e.currentTarget.value),
+              },
+            });
+          }}
         ></TextField>
         <TextField
           label="Total cost"
           size="small"
           defaultValue={vehicleRent?.totalCost}
           sx={textFieldStyle}
-          onChange={(e) => {}}
+          onChange={(e) => {
+            vehicleRentDispatch({
+              type: VehicleRentActionKind.UPDATE,
+              payload: {
+                totalCost: parseInt(e.currentTarget.value),
+              },
+            });
+          }}
         ></TextField>
         <TextField
           label="Comments"
           size="small"
           defaultValue={vehicleRent?.comments}
           sx={textFieldStyle}
-          onChange={(e) => {}}
+          onChange={(e) => {
+            vehicleRentDispatch({
+              type: VehicleRentActionKind.UPDATE,
+              payload: {
+                comments: e.currentTarget.value,
+              },
+            });
+          }}
         ></TextField>
         <Button
           variant="contained"

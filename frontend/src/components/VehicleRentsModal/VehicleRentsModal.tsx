@@ -41,7 +41,6 @@ function handleChangeVehicleRentState(
   action: VehicleRentAction
 ) {
   const { type, payload } = action;
-
   switch (type) {
     case VehicleRentActionKind.UPDATE:
       return {
@@ -126,8 +125,8 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
         totalCost: vehicleRent === undefined ? 0 : vehicleRent.totalCost,
         startDate:
           vehicleRent === undefined ? new Date(0, 0, 0) : vehicleRent.startDate,
-        vehicleId: vehicleRent === undefined ? "" : vehicleRent.vehicle.id,
-        clientId: vehicleRent === undefined ? "" : vehicleRent.client.id,
+        vehicleId: vehicleRent === undefined ? "" : vehicleRent.vehicle?.id,
+        clientId: vehicleRent === undefined ? "" : vehicleRent.client?.id,
       },
     });
   }, [vehicleRent]);
@@ -145,13 +144,6 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
             handleOnClose();
           }}
         />
-        <TextField
-          label="Car plate"
-          size="small"
-          sx={textFieldStyle}
-          onChange={async (e) => {}}
-          defaultValue={vehicleRent?.vehicle.carPlate}
-        ></TextField>
         <Autocomplete
           id="Client-id"
           options={clients}
@@ -228,7 +220,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
             try {
               await onSubmitClick(vehicleRentState);
               toast("Updated succesfully", {
-                type: "error",
+                type: "success",
               });
             } catch (error) {
               toast((error as Error).message, {

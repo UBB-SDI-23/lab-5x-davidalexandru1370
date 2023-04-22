@@ -28,6 +28,7 @@ import {
   VehicleModalMethodsEnum,
   VehicleRentsModal,
 } from "@/components/VehicleRentsModal/VehicleRentsModal";
+import { toast } from "react-toastify";
 export default function Rents() {
   const [rents, setRents] = useState<IPagination<VehicleRent>>();
   const [skip, setSkip] = useState<number>(0);
@@ -77,12 +78,28 @@ export default function Rents() {
         }}
         vehicleRent={selectedVehicleRent}
         onSubmitClick={async (vehicleRent) => {
-          selectedVehicleRent === undefined
-            ? () => {}
-            : await updateVehicleRent({
+          if (selectedVehicleRent !== undefined) {
+            try {
+              const updatedRent = await updateVehicleRent({
                 ...selectedVehicleRent,
                 ...vehicleRent,
               });
+
+              const rentsListWithUpdatedRent =
+                rents?.elements.map((r) =>
+                  r.id === updatedRent.id ? updatedRent : r
+                ) || [];
+
+              setRents({ ...rents!, elements: rentsListWithUpdatedRent });
+              toast("Updated succesfully!", {
+                type: "success",
+              });
+            } catch (error) {
+              toast((error as Error).message, {
+                type: "error",
+              });
+            }
+          }
         }}
       />
       {rents === undefined ? (
@@ -124,8 +141,8 @@ export default function Rents() {
                 {rents.elements.map((rent) => {
                   return (
                     <TableRow key={rent.id}>
-                      <TableCell>{rent.vehicle.carPlate}</TableCell>
-                      <TableCell>{rent.client.name}</TableCell>
+                      <TableCell>{rent.vehicle?.carPlate}</TableCell>
+                      <TableCell>{rent.client?.name}</TableCell>
                       <TableCell>{rent.startDate.toString()}</TableCell>
                       <TableCell>{rent.endDate.toString()}</TableCell>
                       <TableCell>{rent.totalCost}</TableCell>

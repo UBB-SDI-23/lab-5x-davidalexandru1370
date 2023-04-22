@@ -19,5 +19,5 @@ public class Client
     public string Nationality { get; set; }
     
     [JsonIgnore]
-    public virtual ICollection<VehicleRent> VehicleRents { get; set; }
+    public virtual ICollection<VehicleRent>? VehicleRents { get; set; }
 }

@@ -22,5 +22,5 @@ public class Vehicle
     public virtual ICollection<Incident>? Incidents { get; set; } = null!;
     
     [JsonIgnore]
-    public virtual ICollection<VehicleRent> VehicleRents { get; set; }
+    public virtual ICollection<VehicleRent>? VehicleRents { get; set; }
 }

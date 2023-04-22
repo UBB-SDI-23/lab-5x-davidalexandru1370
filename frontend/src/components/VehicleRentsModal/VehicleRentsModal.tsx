@@ -11,6 +11,7 @@ import { debounce } from "lodash";
 import { getClientsByName } from "@/pages/api/ClientApi";
 import { getVehiclesByCarPlate } from "@/pages/api/VehicleApi";
 import { toast } from "react-toastify";
+import { convertStringToDate } from "@/utilities/utilities";
 
 interface IVehicleRentsModalProps {
   onSubmitClick: (vehicle: VehicleRentDto) => Promise<void>;
@@ -83,20 +84,20 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
 
   const handleClientAutocompleteInputChange = (
     event: any,
-    value: any,
+    value: string,
     reason: any
   ) => {
-    if (reason === "input") {
+    if (reason === "input" && value.length > 0) {
       debouncedClientFetchSuggestions(value);
     }
   };
 
   const handleVehicleAutocompleteInputChange = (
     event: any,
-    value: any,
+    value: string,
     reason: any
   ) => {
-    if (reason === "input") {
+    if (reason === "input" && value.length > 0) {
       debouncedVehicleFetchSuggestions(value);
     }
   };
@@ -105,9 +106,9 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
     handleChangeVehicleRentState,
     {
       id: "",
-      endDate: new Date(0, 0, 0),
+      endDate: "",
       totalCost: 0,
-      startDate: new Date(0, 0, 0),
+      startDate: "",
       vehicleId: "",
       clientId: "",
     } as VehicleRentState
@@ -120,11 +121,9 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
       type: VehicleRentActionKind.UPDATE,
       payload: {
         id: vehicleRent === undefined ? "" : vehicleRent.id,
-        endDate:
-          vehicleRent === undefined ? new Date(0, 0, 0) : vehicleRent.endDate,
+        endDate: vehicleRent === undefined ? "" : vehicleRent.endDate,
         totalCost: vehicleRent === undefined ? 0 : vehicleRent.totalCost,
-        startDate:
-          vehicleRent === undefined ? new Date(0, 0, 0) : vehicleRent.startDate,
+        startDate: vehicleRent === undefined ? "" : vehicleRent.startDate,
         vehicleId: vehicleRent === undefined ? "" : vehicleRent.vehicle?.id,
         clientId: vehicleRent === undefined ? "" : vehicleRent.client?.id,
       },
@@ -195,7 +194,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
             vehicleRentDispatch({
               type: VehicleRentActionKind.UPDATE,
               payload: {
-                startDate: new Date(e.currentTarget.value),
+                startDate: e.currentTarget.value,
               },
             });
           }}
@@ -209,7 +208,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
             vehicleRentDispatch({
               type: VehicleRentActionKind.UPDATE,
               payload: {
-                endDate: new Date(e.currentTarget.value),
+                endDate: e.currentTarget.value,
               },
             });
           }}
@@ -250,6 +249,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
               toast("Updated succesfully", {
                 type: "success",
               });
+              onClose();
             } catch (error) {
               toast((error as Error).message, {
                 type: "error",
@@ -260,8 +260,8 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
           disabled={
             vehicleRentState.vehicleId === "" ||
             vehicleRentState.clientId === "" ||
-            vehicleRentState.endDate === new Date(0, 0, 0) ||
-            vehicleRentState.startDate === new Date(0, 0, 0) ||
+            vehicleRentState.endDate === "" ||
+            vehicleRentState.startDate === "" ||
             vehicleRentState.totalCost.toString() === ""
           }
         >

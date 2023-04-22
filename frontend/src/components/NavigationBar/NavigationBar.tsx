@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FC, useState } from "react";
 import styles from "./NavigationBar.module.css";
+import { injectStyle } from "react-toastify/dist/inject-style";
 
 interface INavigationBar {
   navigationItems: Route[];

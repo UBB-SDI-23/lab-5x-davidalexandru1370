@@ -5,8 +5,8 @@ export default interface VehicleRent {
   id: string;
   vehicle?: Vehicle;
   client?: Client;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   totalCost: number;
   comments?: string;
 }

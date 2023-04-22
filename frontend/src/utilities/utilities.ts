@@ -17,3 +17,12 @@ export const createHeader = (method: Methods, entity?: any) => {
   }
   return headerOptions;
 };
+
+export const convertStringToDate = (date: string) => {
+  const dates = date.split("-");
+  return new Date(
+    parseInt(dates[0]),
+    parseInt(dates[1]) - 1,
+    parseInt(dates[2]) + 1
+  );
+};

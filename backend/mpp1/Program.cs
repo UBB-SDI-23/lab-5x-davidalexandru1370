@@ -1,12 +1,16 @@
 using mpp1.DatabaseContext;
 using mpp1.Repository;
 using mpp1.Repository.Interfaces;
+using mpp1.Serialization;
 using mpp1.Service;
 using mpp1.Service.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(
+        options => options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter())
+    );
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
@@ -21,13 +25,13 @@ builder.Services.AddScoped<IVehicleRentService, VehicleRentService>();
 
 var app = builder.Build();
 var frontendBaseUrl = app.Configuration.GetSection("Frontend")
-                                             .GetSection(app.Environment.EnvironmentName)
-                                             .GetSection("BaseUrl")
-                                             .Value!;
+    .GetSection(app.Environment.EnvironmentName)
+    .GetSection("BaseUrl")
+    .Value!;
 
-app.UseCors(options => 
+app.UseCors(options =>
     options.WithOrigins(frontendBaseUrl).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
-    );
+);
 
 if (app.Environment.IsDevelopment())
 {

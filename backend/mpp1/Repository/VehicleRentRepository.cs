@@ -40,7 +40,8 @@ public class VehicleRentRepository : IVehicleRentRepository
 
         _rentACarDbContext.Entry(foundVehicleRent).CurrentValues.SetValues(vehicleRent);
         await _rentACarDbContext.SaveChangesAsync();
-
+        vehicleRent.Client = foundVehicleRent.Client;
+        vehicleRent.Vehicle = foundVehicleRent.Vehicle; 
         return vehicleRent;
     }
 
@@ -82,7 +83,10 @@ public class VehicleRentRepository : IVehicleRentRepository
     public async Task<VehicleRent> GetVehicleRentById(Guid vehicleRentId)
     {
         var result = await _rentACarDbContext.VehicleRents
-            .Where(vr => vr.Id == vehicleRentId).FirstOrDefaultAsync();
+            .Where(vr => vr.Id == vehicleRentId)
+            .Include(x => x.Vehicle)
+            .Include(x => x.Client)
+            .FirstOrDefaultAsync();
         if (result is null)
         {
             throw new RepositoryException($"Vehicle with Id={vehicleRentId} does not exists!");
@@ -110,7 +114,7 @@ public class VehicleRentRepository : IVehicleRentRepository
         int numberOfRents = GetNumberOfRents();
 
         paginatedRents.HasNext = !(skip >= numberOfRents || skip + take >= numberOfRents);
-            
+
         return Task.FromResult(paginatedRents);
     }
 

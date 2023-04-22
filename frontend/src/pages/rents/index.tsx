@@ -79,26 +79,17 @@ export default function Rents() {
         vehicleRent={selectedVehicleRent}
         onSubmitClick={async (vehicleRent) => {
           if (selectedVehicleRent !== undefined) {
-            try {
-              const updatedRent = await updateVehicleRent({
-                ...selectedVehicleRent,
-                ...vehicleRent,
-              });
+            const updatedRent = await updateVehicleRent({
+              ...vehicleRent,
+              id: selectedVehicleRent!.id,
+            });
 
-              const rentsListWithUpdatedRent =
-                rents?.elements.map((r) =>
-                  r.id === updatedRent.id ? updatedRent : r
-                ) || [];
-
-              setRents({ ...rents!, elements: rentsListWithUpdatedRent });
-              toast("Updated succesfully!", {
-                type: "success",
-              });
-            } catch (error) {
-              toast((error as Error).message, {
-                type: "error",
-              });
-            }
+            const rentsWithUpdatedRent =
+              rents?.elements.map((r) =>
+                r.id === updatedRent.id ? updatedRent : r
+              ) || [];
+            setRents({ ...rents!, elements: rentsWithUpdatedRent! });
+            //setRents({ ...rents!, elements: rentsListWithUpdatedRent });
           }
         }}
       />
@@ -106,6 +97,7 @@ export default function Rents() {
         <Box
           component={Paper}
           sx={{
+            paddingTop: "2rem",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",

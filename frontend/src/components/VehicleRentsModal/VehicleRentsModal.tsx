@@ -1,24 +1,16 @@
 import { Client } from "@/model/Client";
 import { Vehicle } from "@/model/Vehicle";
-import { VehicleDto } from "@/model/VehicleDto";
 import VehicleRent from "@/model/VehicleRent";
 import VehicleRentDto from "@/model/VehicleRentDto";
 import ClearIcon from "@mui/icons-material/Clear";
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Modal,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Autocomplete, Box, Button, Modal, TextField } from "@mui/material";
 import { FC, useCallback, useEffect, useReducer, useState } from "react";
-//@ts-ignore
-import { debounce } from "lodash";
 import { getClientsByName } from "@/pages/api/ClientApi";
 import { getVehiclesByCarPlate } from "@/pages/api/VehicleApi";
-import { toast } from "react-toastify";
-import { convertStringToDate } from "@/utilities/utilities";
+//@ts-ignore
+import { debounce } from "lodash";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 interface IVehicleRentsModalProps {
   onSubmitClick: (vehicle: VehicleRentDto) => Promise<void>;
@@ -214,6 +206,9 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
             });
           }}
         ></TextField>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker format="YYYY-MM-DD" />
+        </LocalizationProvider>
         <TextField
           label="End date"
           size="small"

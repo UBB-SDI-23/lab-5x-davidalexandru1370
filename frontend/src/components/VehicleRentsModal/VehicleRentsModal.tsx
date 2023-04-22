@@ -4,7 +4,14 @@ import { VehicleDto } from "@/model/VehicleDto";
 import VehicleRent from "@/model/VehicleRent";
 import VehicleRentDto from "@/model/VehicleRentDto";
 import ClearIcon from "@mui/icons-material/Clear";
-import { Autocomplete, Box, Button, Modal, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Modal,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { FC, useCallback, useEffect, useReducer, useState } from "react";
 //@ts-ignore
 import { debounce } from "lodash";
@@ -105,7 +112,6 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
   const [vehicleRentState, vehicleRentDispatch] = useReducer(
     handleChangeVehicleRentState,
     {
-      id: "",
       endDate: "",
       totalCost: 0,
       startDate: "",
@@ -120,7 +126,6 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
     vehicleRentDispatch({
       type: VehicleRentActionKind.UPDATE,
       payload: {
-        id: vehicleRent === undefined ? "" : vehicleRent.id,
         endDate: vehicleRent === undefined ? "" : vehicleRent.endDate,
         totalCost: vehicleRent === undefined ? 0 : vehicleRent.totalCost,
         startDate: vehicleRent === undefined ? "" : vehicleRent.startDate,
@@ -131,6 +136,16 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
   }, [vehicleRent]);
 
   const handleOnClose = () => {
+    vehicleRentDispatch({
+      type: VehicleRentActionKind.UPDATE,
+      payload: {
+        endDate: "",
+        totalCost: 0,
+        startDate: "",
+        vehicleId: "",
+        clientId: "",
+      },
+    });
     onClose();
   };
 
@@ -246,23 +261,15 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
           onClick={async () => {
             try {
               await onSubmitClick(vehicleRentState);
-              toast("Updated succesfully", {
-                type: "success",
-              });
               onClose();
-            } catch (error) {
-              toast((error as Error).message, {
-                type: "error",
-              });
-            }
+            } catch (error) {}
           }}
           sx={button}
           disabled={
             vehicleRentState.vehicleId === "" ||
             vehicleRentState.clientId === "" ||
             vehicleRentState.endDate === "" ||
-            vehicleRentState.startDate === "" ||
-            vehicleRentState.totalCost.toString() === ""
+            vehicleRentState.startDate === ""
           }
         >
           {method === VehicleModalMethodsEnum.ADD ? "Add" : "Update"}

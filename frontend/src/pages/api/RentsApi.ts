@@ -1,6 +1,7 @@
 import { Methods, RentEndpoints, baseUrl } from "@/constants/ApiConstants";
 import IPagination from "@/model/Pagination";
 import VehicleRent from "@/model/VehicleRent";
+import VehicleRentDto from "@/model/VehicleRentDto";
 import { createHeader } from "@/utilities/utilities";
 import { METHODS } from "http";
 
@@ -39,4 +40,18 @@ export const updateVehicleRent = async (vehicleRent: VehicleRent) => {
     });
 
   return data;
+};
+
+export const addVehicleRent = async (vehicleRentDto: VehicleRentDto) => {
+  let url = baseUrl + RentEndpoints.addRent;
+  let header = createHeader(Methods.POST, vehicleRentDto);
+  await fetch(url, header)
+    .then(async (response: Response) => {
+      if (response.status >= 400) {
+        return await response.json();
+      }
+    })
+    .then((error: string) => {
+      throw new Error(error);
+    });
 };

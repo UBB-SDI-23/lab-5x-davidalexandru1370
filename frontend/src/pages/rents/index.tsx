@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import {
+  addVehicleRent,
   deleteVehicleRentById,
   getRentsPaginated,
   updateVehicleRent,
@@ -79,17 +80,36 @@ export default function Rents() {
         vehicleRent={selectedVehicleRent}
         onSubmitClick={async (vehicleRent) => {
           if (selectedVehicleRent !== undefined) {
-            const updatedRent = await updateVehicleRent({
-              ...vehicleRent,
-              id: selectedVehicleRent!.id,
-            });
+            try {
+              const updatedRent = await updateVehicleRent({
+                ...vehicleRent,
+                id: selectedVehicleRent!.id,
+              });
 
-            const rentsWithUpdatedRent =
-              rents?.elements.map((r) =>
-                r.id === updatedRent.id ? updatedRent : r
-              ) || [];
-            setRents({ ...rents!, elements: rentsWithUpdatedRent! });
-            //setRents({ ...rents!, elements: rentsListWithUpdatedRent });
+              const rentsWithUpdatedRent =
+                rents?.elements.map((r) =>
+                  r.id === updatedRent.id ? updatedRent : r
+                ) || [];
+              setRents({ ...rents!, elements: rentsWithUpdatedRent });
+              toast("Updated succesfully", {
+                type: "success",
+              });
+            } catch (error) {
+              toast((error as Error).message, {
+                type: "error",
+              });
+            }
+          } else {
+            try {
+              await addVehicleRent(vehicleRent);
+              toast("Added succesfully", {
+                type: "success",
+              });
+            } catch (error) {
+              toast((error as Error).message, {
+                type: "error",
+              });
+            }
           }
         }}
       />
@@ -108,6 +128,29 @@ export default function Rents() {
         </Box>
       ) : (
         <>
+          <Box
+            component={Paper}
+            sx={{ padding: "32px 32px 0px 32px", textAlign: "right" }}
+            display="flex"
+            justifyContent="end"
+          >
+            <Box
+              sx={{
+                backgroundColor: "blueviolet",
+                borderRadius: "10px",
+                padding: ".35em",
+                cursor: "pointer",
+                display: "flex",
+              }}
+              onClick={() => {
+                setSelectedVehicleRent(undefined);
+                setIsVehicleRentsModalOpen(true);
+              }}
+            >
+              <AddIcon />
+              <Typography>Add rent</Typography>
+            </Box>
+          </Box>
           <Box
             component={Paper}
             sx={{

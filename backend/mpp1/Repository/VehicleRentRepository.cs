@@ -18,8 +18,16 @@ public class VehicleRentRepository : IVehicleRentRepository
 
     public async Task AddVehicleRent(VehicleRent vehicleRent)
     {
-        _rentACarDbContext.VehicleRents.Add(vehicleRent);
-        await _rentACarDbContext.SaveChangesAsync();
+        try
+        {
+            _rentACarDbContext.VehicleRents.Add(vehicleRent);
+            await _rentACarDbContext.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            throw new RepositoryException(e.Message);
+        }
+        
     }
 
     public async Task DeleteVehicleRent(Guid vehicleRentId)

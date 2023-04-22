@@ -1,5 +1,4 @@
 export default interface VehicleRentDto {
-  id: string;
   vehicleId: string;
   clientId: string;
   startDate: string;

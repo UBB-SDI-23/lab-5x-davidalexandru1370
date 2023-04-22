@@ -153,6 +153,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
         <Autocomplete
           id="Client-id"
           options={clients}
+          sx={textFieldStyle}
           defaultValue={vehicleRent?.client}
           getOptionLabel={(option: Client) => `${option.name} - ${option.cnp}`}
           renderInput={(params) => (
@@ -175,6 +176,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
           id="Vehicle-id"
           options={vehicles}
           defaultValue={vehicleRent?.vehicle}
+          sx={textFieldStyle}
           getOptionLabel={(option) => `${option.carPlate}`}
           renderInput={(params) => (
             <TextField {...params} label="Vehicle" variant="outlined" />
@@ -192,7 +194,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
             }
           }}
         />
-        <TextField
+        {/* <TextField
           label="Start date"
           size="small"
           defaultValue={vehicleRent?.startDate}
@@ -205,24 +207,22 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
               },
             });
           }}
-        ></TextField>
+        ></TextField> */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker format="YYYY-MM-DD" />
+          <DatePicker
+            format="YYYY-MM-DD"
+            label="Start date"
+            sx={textFieldStyle}
+          />
         </LocalizationProvider>
-        <TextField
-          label="End date"
-          size="small"
-          defaultValue={vehicleRent?.endDate}
-          sx={textFieldStyle}
-          onChange={(e) => {
-            vehicleRentDispatch({
-              type: VehicleRentActionKind.UPDATE,
-              payload: {
-                endDate: e.currentTarget.value,
-              },
-            });
-          }}
-        ></TextField>
+
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            format="YYYY-MM-DD"
+            label="End date"
+            sx={textFieldStyle}
+          />
+        </LocalizationProvider>
         <TextField
           label="Total cost"
           size="small"

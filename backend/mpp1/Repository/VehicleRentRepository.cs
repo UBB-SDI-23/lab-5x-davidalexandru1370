@@ -40,9 +40,9 @@ public class VehicleRentRepository : IVehicleRentRepository
 
         _rentACarDbContext.Entry(foundVehicleRent).CurrentValues.SetValues(vehicleRent);
         await _rentACarDbContext.SaveChangesAsync();
-        vehicleRent.Client = foundVehicleRent.Client;
-        vehicleRent.Vehicle = foundVehicleRent.Vehicle; 
-        return vehicleRent;
+
+        var vehicleRentWithAllData = await GetVehicleRentById(foundVehicleRent.Id);
+        return vehicleRentWithAllData;
     }
 
     /*

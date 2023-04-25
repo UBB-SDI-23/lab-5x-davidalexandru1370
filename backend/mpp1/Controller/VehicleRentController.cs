@@ -87,10 +87,12 @@ public class VehicleRentController : ControllerBase
     }
   }
 
+  
   [HttpPut]
   [Route("update-vehicleRent")]
   public async Task<ActionResult<VehicleRent>> UpdateVehicleRent([FromBody] VehicleRent vehicleRent)
   {
+ 
     try
     {
       var result = await _vehicleRentService.UpdateVehicleRent(vehicleRent);

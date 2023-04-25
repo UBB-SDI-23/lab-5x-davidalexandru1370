@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace mpp1.Model;
 
 [Table("VehicleRent")]
-public class VehicleRent
+public class VehicleRent : IValidatableObject
 {
     [Key]
     public Guid Id { get; set; }
@@ -17,4 +17,12 @@ public class VehicleRent
     public DateOnly EndDate { get; set; }
     public int TotalCost { get; set; }
     public string? Comments { get; set; }
+    
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (StartDate > EndDate)
+        {
+            yield return new ValidationResult("Start date can not be later then end date!",new []{"errors   "});
+        }
+    }
 }

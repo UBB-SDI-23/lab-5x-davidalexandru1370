@@ -105,6 +105,7 @@ export default function Rents() {
               toast("Added succesfully", {
                 type: "success",
               });
+              setRents(undefined);
             } catch (error) {
               toast((error as Error).message, {
                 type: "error",

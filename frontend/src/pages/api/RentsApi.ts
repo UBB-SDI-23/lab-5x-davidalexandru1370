@@ -47,7 +47,9 @@ export const addVehicleRent = async (vehicleRentDto: VehicleRentDto) => {
   let header = createHeader(Methods.POST, vehicleRentDto);
   await fetch(url, header).then(async (response: Response) => {
     if (response.status >= 400) {
-      throw new Error(response.statusText);
+      return response.json().then((x) => {
+        throw new Error(x.errors.errors);
+      });
     }
   });
 };

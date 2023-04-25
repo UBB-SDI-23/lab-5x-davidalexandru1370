@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace mpp1.Model;
 
@@ -23,6 +22,11 @@ public class VehicleRent : IValidatableObject
         if (StartDate > EndDate)
         {
             yield return new ValidationResult("Start date can not be later then end date!",new []{"errors   "});
+        }
+
+        if (TotalCost < 0)
+        {
+            yield return new ValidationResult("Total cost can not be lower than 0!", new[]{"errors"});
         }
     }
 }

@@ -250,6 +250,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
         <TextField
           label="Total cost"
           size="small"
+          type="number"
           defaultValue={vehicleRent?.totalCost}
           sx={textFieldStyle}
           onChange={(e) => {

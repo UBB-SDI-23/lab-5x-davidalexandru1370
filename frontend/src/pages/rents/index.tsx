@@ -94,7 +94,10 @@ export default function Rents() {
               toast("Updated succesfully", {
                 type: "success",
               });
-            } catch (error) {
+            } catch (error: unknown) {
+              if ((error as Error).message.length === 0) {
+                return;
+              }
               toast((error as Error).message, {
                 type: "error",
               });

@@ -213,6 +213,18 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
             format="YYYY-MM-DD"
             label="Start date"
             sx={textFieldStyle}
+            onChange={(e) => {
+              try {
+                //@ts-ignore
+                const date: string = (e.$d as Date).toISOString().split("T")[0];
+                vehicleRentDispatch({
+                  type: VehicleRentActionKind.UPDATE,
+                  payload: {
+                    startDate: date,
+                  },
+                });
+              } catch (error) {}
+            }}
           />
         </LocalizationProvider>
 
@@ -221,6 +233,18 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
             format="YYYY-MM-DD"
             label="End date"
             sx={textFieldStyle}
+            onChange={(e) => {
+              try {
+                //@ts-ignore
+                const date: string = (e.$d as Date).toISOString().split("T")[0];
+                vehicleRentDispatch({
+                  type: VehicleRentActionKind.UPDATE,
+                  payload: {
+                    endDate: date,
+                  },
+                });
+              } catch (error) {}
+            }}
           />
         </LocalizationProvider>
         <TextField
@@ -264,7 +288,8 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
             vehicleRentState.vehicleId === "" ||
             vehicleRentState.clientId === "" ||
             vehicleRentState.endDate === "" ||
-            vehicleRentState.startDate === ""
+            vehicleRentState.startDate === "" ||
+            vehicleRentState.totalCost === 0
           }
         >
           {method === VehicleModalMethodsEnum.ADD ? "Add" : "Update"}

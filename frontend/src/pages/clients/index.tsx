@@ -29,11 +29,12 @@ import {
   ClientModalMethodsEnum,
 } from "@/components/ClientModal/ClientModal";
 import { ClientDto } from "@/model/ClientDto";
-
-const inter = Inter({ subsets: ["latin"] });
+import IPagination from "@/model/Pagination";
+import Pagination from "@/components/Pagination/Pagination";
+import styles from "./clients.module.css";
 
 export default function Clients() {
-  const [clients, setClients] = useState<Client[]>();
+  const [clients, setClients] = useState<IPagination<Client>>();
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
   const [selectedClient, setSelectedClient] = useState<Client>();
@@ -145,7 +146,7 @@ export default function Clients() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {clients.map((client) => {
+                {clients.elements.map((client) => {
                   return (
                     <TableRow key={client.id}>
                       <TableCell>{client.name}</TableCell>
@@ -181,29 +182,17 @@ export default function Clients() {
               </TableBody>
             </Table>
           </TableContainer>
-          <Box component={Paper} sx={paginationButtons}>
-            <Button
-              variant="contained"
-              sx={paginationButton}
-              disabled={skip === 0}
-              onClick={() => {
-                if (skip - take >= 0) {
-                  setSkip(skip - take);
-                }
+          <Box component={Paper}>
+            <Pagination
+              hasNext={clients.hasNext}
+              hasPrevious={clients.hasPrevious}
+              onChangePage={(pageNumber) => {
+                setClients(undefined);
+                setSkip(take * (pageNumber - 1));
               }}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              disabled={clients.length < take}
-              sx={paginationButton}
-              onClick={() => {
-                setSkip(skip + take);
-              }}
-            >
-              Next
-            </Button>
+              pageNumber={skip / take + 1}
+              className={styles.pagination}
+            />
           </Box>
         </>
       )}

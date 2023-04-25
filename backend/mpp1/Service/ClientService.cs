@@ -39,7 +39,7 @@ public class ClientService : IClientService
         return await _clientRepository.GetClientById(id);
     }
 
-    public async Task<IEnumerable<Client>> GetClientsPaginated(int skip, int take)
+    public async Task<Pagination<Client>> GetClientsPaginated(int skip, int take)
     {
         return await _clientRepository.GetClientsPaginated(skip, take);
     }

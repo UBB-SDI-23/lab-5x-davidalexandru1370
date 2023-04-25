@@ -75,10 +75,24 @@ public class ClientRepository : IClientRepository
         return result;
     }
 
-    public async Task<IEnumerable<Client>> GetClientsPaginated(int skip, int take)
+    public async Task<Pagination<Client>> GetClientsPaginated(int skip, int take)
     {
+        Pagination<Client> clientsPaginated = new();
+        
         var result = await _rentACarDbContext.Clients.Skip(skip).Take(take).ToListAsync() as IEnumerable<Client>;
-        return result;
+        clientsPaginated.Elements = result;
+        clientsPaginated.HasPrevious = (skip != 0);
+
+        int numberOfRents = GetNumberOfClients();
+
+        clientsPaginated.HasNext = !(skip >= numberOfRents || skip + take >= numberOfRents);
+        
+        return clientsPaginated;
+    }
+
+    public int GetNumberOfClients()
+    {
+        return _rentACarDbContext.Set<Client>().Count();
     }
 
     public Task<IEnumerable<Client>> GetClientsByName(string name)

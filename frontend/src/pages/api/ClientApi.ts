@@ -1,6 +1,7 @@
 import { ClientEndpoints, Methods, baseUrl } from "@/constants/ApiConstants";
 import { Client } from "@/model/Client";
 import { ClientDto } from "@/model/ClientDto";
+import IPagination from "@/model/Pagination";
 import { createHeader } from "@/utilities/utilities";
 
 export const deleteClientById = async (clientId: string) => {
@@ -53,11 +54,11 @@ export const updateClient = async (client: Client) => {
 export const getClientsPaginated = async (skip: number, take: number) => {
   let url = baseUrl + ClientEndpoints.getClientsPaginated(skip, take);
   let header = createHeader(Methods.GET);
-  let data: Client[] = await fetch(url, header)
+  let data: IPagination<Client> = await fetch(url, header)
     .then(async (response: Response) => {
       return await response.json();
     })
-    .then((clients: Client[]) => {
+    .then((clients: IPagination<Client>) => {
       return clients;
     });
 

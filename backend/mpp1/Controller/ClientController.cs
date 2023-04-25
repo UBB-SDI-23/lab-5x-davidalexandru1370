@@ -80,7 +80,7 @@ public class ClientController : ControllerBase
     }
 
     [HttpGet("get-clients-paginated/{skip}/{take}")]
-    public async Task<ActionResult<IEnumerable<Client>>> GetClientsPaginated([FromRoute] uint skip,
+    public async Task<ActionResult<Pagination<Client>>> GetClientsPaginated([FromRoute] uint skip,
         [FromRoute] uint take)
     {
         var result = await _clientService.GetClientsPaginated((int)skip, (int)take);

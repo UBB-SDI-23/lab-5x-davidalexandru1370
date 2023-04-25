@@ -241,7 +241,6 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
             }}
           />
         </LocalizationProvider>
-
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             format="YYYY-MM-DD"

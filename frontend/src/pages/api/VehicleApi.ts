@@ -40,13 +40,14 @@ export const filterVehiclesByEngineCapacity = async (capacity: number) => {
 export const deleteVehicleById = async (vehicleId: string) => {
   let url = baseUrl + VehicleEndpoints.deleteVehicle(vehicleId);
   let header = createHeader(Methods.DELETE);
-  let data = await fetch(url, header)
-    .then(async (response: Response) => {
-      return await response.json();
-    })
-    .then((x) => {
-      return x;
-    });
+  let data = await fetch(url, header).then(async (response: Response) => {
+    if (response.status >= 400) {
+      return response.text().then((x) => {
+        throw new Error(x);
+      });
+    }
+  });
+
   return data;
 };
 
@@ -90,6 +91,25 @@ export const getVehiclesByCarPlate = async (carPlate: string) => {
     })
     .then((vehicles: Vehicle[]) => {
       return vehicles;
+    });
+
+  return data;
+};
+
+export const updateVehicle = async (vehicle: Vehicle) => {
+  let url: string = baseUrl + VehicleEndpoints.updateVehicle;
+  let header = createHeader(Methods.PUT, vehicle);
+  let data: Vehicle = await fetch(url, header)
+    .then(async (response: Response) => {
+      if (response.status >= 400) {
+        return response.json().then((e) => {
+          throw new Error(e.errors.errors);
+        });
+      }
+      return await response.json();
+    })
+    .then((v: Vehicle) => {
+      return v;
     });
 
   return data;

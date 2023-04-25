@@ -32,8 +32,10 @@ import {
   deleteVehicleById,
   filterVehiclesByEngineCapacity,
   getVehiclesPaginated,
+  updateVehicle,
 } from "../api/VehicleApi";
 import styles from "./vehicles.module.css";
+import { toast } from "react-toastify";
 
 export default function Vehicles() {
   const [vehicles, setVehicles] = useState<IPagination<Vehicle>>();
@@ -68,12 +70,42 @@ export default function Vehicles() {
         vehicle={selectedVehicle}
         onSubmitClick={async (vehicle: VehicleDto) => {
           if (selectedVehicle !== undefined) {
-            setIsVehicleModalOpen(false);
+            try {
+              const updatedVehicle = await updateVehicle({
+                ...vehicle,
+                id: selectedVehicle.id,
+              });
+
+              const updatedVehicleList =
+                vehicles?.elements.map((v) =>
+                  v.id === selectedVehicle.id ? updatedVehicle : v
+                ) || [];
+
+              setVehicles({
+                ...vehicles!,
+                elements: updatedVehicleList,
+              });
+              toast("Updated succesfully", {
+                type: "success",
+              });
+              setIsVehicleModalOpen(false);
+            } catch (error) {
+              toast((error as Error).message, {
+                type: "error",
+              });
+            }
           } else {
             try {
               const newVehicle = await addVehicle(vehicle);
               setIsVehicleModalOpen(false);
-            } catch (error) {}
+              toast("Added successfully", {
+                type: "success",
+              });
+            } catch (error) {
+              toast((error as Error).message, {
+                type: "error",
+              });
+            }
           }
         }}
         onClose={() => {
@@ -89,8 +121,15 @@ export default function Vehicles() {
         onOkClick={async () => {
           try {
             await deleteVehicleById(selectedVehicle!.id);
+            toast("Deleted succesfully!", {
+              type: "success",
+            });
           } catch (error: unknown) {
-            console.log((error as Error).message);
+            toast((error as Error).message, {
+              type: "error",
+            });
+          } finally {
+            setIsAreYouSureModalOpen(false);
           }
         }}
       />

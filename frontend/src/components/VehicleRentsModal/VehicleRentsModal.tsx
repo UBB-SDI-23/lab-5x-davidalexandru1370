@@ -141,6 +141,20 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
     onClose();
   };
 
+  const validateTotalCost = (): boolean => {
+    return vehicleRentState.totalCost > 0;
+  };
+
+  const validateDifferenceBetweenStartTimeAndEndTime = (): boolean => {
+    return vehicleRentState.startDate <= vehicleRentState.endDate;
+  };
+
+  const checkIfAllInputFieldsAreValid = (): boolean => {
+    return (
+      validateTotalCost() && validateDifferenceBetweenStartTimeAndEndTime()
+    );
+  };
+
   return (
     <Modal open={isOpen} onClose={handleOnClose}>
       <Box sx={style}>
@@ -289,7 +303,8 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
             vehicleRentState.clientId === "" ||
             vehicleRentState.endDate === "" ||
             vehicleRentState.startDate === "" ||
-            vehicleRentState.totalCost === 0
+            vehicleRentState.totalCost === 0 ||
+            checkIfAllInputFieldsAreValid() === false
           }
         >
           {method === VehicleModalMethodsEnum.ADD ? "Add" : "Update"}

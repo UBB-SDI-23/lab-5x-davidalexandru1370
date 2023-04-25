@@ -95,9 +95,6 @@ export default function Rents() {
                 type: "success",
               });
             } catch (error: unknown) {
-              if ((error as Error).message.length === 0) {
-                return;
-              }
               toast((error as Error).message, {
                 type: "error",
               });

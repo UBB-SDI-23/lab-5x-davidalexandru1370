@@ -1,4 +1,5 @@
 import { Methods, VehicleEndpoints, baseUrl } from "@/constants/ApiConstants";
+import IPagination from "@/model/Pagination";
 import { Vehicle } from "@/model/Vehicle";
 import { VehicleDto } from "@/model/VehicleDto";
 import { createHeader } from "@/utilities/utilities";
@@ -66,7 +67,7 @@ export const addVehicle = async (vehicle: VehicleDto) => {
 export const getVehiclesPaginated = async (skip: number, take: number) => {
   let url: string = baseUrl + VehicleEndpoints.getVehiclesPaginated(skip, take);
   let header = createHeader(Methods.GET);
-  let data: Vehicle[] = await fetch(url, header)
+  let data: IPagination<Vehicle> = await fetch(url, header)
     .then(async (response: Response) => {
       return await response.json();
     })

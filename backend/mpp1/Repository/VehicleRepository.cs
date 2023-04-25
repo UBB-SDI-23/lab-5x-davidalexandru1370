@@ -95,12 +95,27 @@ public class VehicleRepository : IVehicleRepository
         return Task.FromResult(result);
     }
 
-    public async Task<IEnumerable<Vehicle>> GetVehiclesPaginated(int skip, int take)
+    public async Task<Pagination<Vehicle>> GetVehiclesPaginated(int skip, int take)
     {
+        Pagination<Vehicle> paginatedRents = new();
+
         var result = await _rentACarDbContext.Vehicles.Skip(skip).Take(take).ToListAsync();
-        return result;
+
+        paginatedRents.Elements = result;
+        paginatedRents.HasPrevious = skip != 0;
+
+        int numberOfRents = GetNumberOfRents();
+
+        paginatedRents.HasNext = !(skip >= numberOfRents || skip + take >= numberOfRents);
+
+        return paginatedRents;
     }
 
+    public int GetNumberOfRents()
+    {
+        return _rentACarDbContext.Set<Vehicle>().Count();
+    }
+    
     public Task<IEnumerable<Vehicle>> GetVehiclesByCarPlate(string carPlate)
     {
         if (carPlate is null)

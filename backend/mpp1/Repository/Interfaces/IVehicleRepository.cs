@@ -13,6 +13,6 @@ public interface IVehicleRepository
     public Task<IEnumerable<Vehicle>> GetAllVehiclesWithAllData();
     public Task<Vehicle> GetVehicleById(Guid id);
     public Task<IEnumerable<Vehicle>> GetVehiclesFiltered(Expression<Func<Vehicle, bool>> condition);
-    public Task<IEnumerable<Vehicle>> GetVehiclesPaginated(int skip, int take);
+    public Task<Pagination<Vehicle>> GetVehiclesPaginated(int skip, int take);
     public Task<IEnumerable<Vehicle>> GetVehiclesByCarPlate(string carPlate);
 }

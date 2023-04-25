@@ -1,3 +1,17 @@
+import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
+import { IncidentsModal } from "@/components/IncidentsModal/IncidentsModal";
+import Pagination from "@/components/Pagination/Pagination";
+import {
+  VehicleModal,
+  VehicleModalMethodsEnum,
+} from "@/components/VehicleModal/VehicleModal";
+import IPagination from "@/model/Pagination";
+import { Vehicle } from "@/model/Vehicle";
+import { VehicleDto } from "@/model/VehicleDto";
+import AddIcon from "@mui/icons-material/Add";
+import ClearIcon from "@mui/icons-material/Clear";
+import EditIcon from "@mui/icons-material/Edit";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import {
   Box,
   Button,
@@ -12,28 +26,17 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import ClearIcon from "@mui/icons-material/Clear";
-import EditIcon from "@mui/icons-material/Edit";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import AddIcon from "@mui/icons-material/Add";
-import { Vehicle } from "@/model/Vehicle";
+import { useEffect, useState } from "react";
 import {
   addVehicle,
   deleteVehicleById,
   filterVehiclesByEngineCapacity,
   getVehiclesPaginated,
 } from "../api/VehicleApi";
-import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
-import {
-  VehicleModal,
-  VehicleModalMethodsEnum,
-} from "@/components/VehicleModal/VehicleModal";
-import { VehicleDto } from "@/model/VehicleDto";
-import { IncidentsModal } from "@/components/IncidentsModal/IncidentsModal";
+import styles from "./vehicles.module.css";
 
 export default function Vehicles() {
-  const [vehicles, setVehicles] = useState<Vehicle[]>();
+  const [vehicles, setVehicles] = useState<IPagination<Vehicle>>();
   const [filteredCapacity, setFilteredCapacity] = useState<number>(0);
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
@@ -142,7 +145,10 @@ export default function Vehicles() {
                   let data = await filterVehiclesByEngineCapacity(
                     filteredCapacity
                   );
-                  setVehicles(data);
+                  setVehicles({
+                    ...vehicles,
+                    elements: data,
+                  });
                 }}
               >
                 Filter
@@ -180,7 +186,7 @@ export default function Vehicles() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {vehicles.map((vehicle) => {
+                {vehicles.elements.map((vehicle) => {
                   return (
                     <TableRow key={vehicle.id}>
                       <TableCell>{vehicle.brand}</TableCell>
@@ -225,29 +231,17 @@ export default function Vehicles() {
               </TableBody>
             </Table>
           </TableContainer>
-          <Box component={Paper} sx={paginationButtons}>
-            <Button
-              variant="contained"
-              sx={paginationButton}
-              disabled={skip === 0}
-              onClick={() => {
-                if (skip - take >= 0) {
-                  setSkip(skip - take);
-                }
+          <Box component={Paper}>
+            <Pagination
+              hasNext={vehicles.hasNext}
+              hasPrevious={vehicles.hasPrevious}
+              onChangePage={(pageNumber) => {
+                setVehicles(undefined);
+                setSkip(take * (pageNumber - 1));
               }}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              disabled={vehicles.length === 0}
-              sx={paginationButton}
-              onClick={() => {
-                setSkip(skip + take);
-              }}
-            >
-              Next
-            </Button>
+              pageNumber={skip / take + 1}
+              className={styles.pagination}
+            />
           </Box>
         </>
       )}

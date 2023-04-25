@@ -71,7 +71,7 @@ public class VehicleService : IVehicleService
         return result;
     }
 
-    public async Task<IEnumerable<Vehicle>> GetVehiclesPaginated(int skip, int take)
+    public async Task<Pagination<Vehicle>> GetVehiclesPaginated(int skip, int take)
     {
         return await _vehicleRepository.GetVehiclesPaginated(skip, take);
     }

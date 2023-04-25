@@ -86,7 +86,6 @@ public class VehicleRentController : ControllerBase
       return BadRequest(repositoryException.Message);
     }
   }
-
   
   [HttpPut]
   [Route("update-vehicleRent")]

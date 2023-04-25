@@ -57,12 +57,24 @@ export default function Vehicles() {
     <div>
       <VehicleModal
         isOpen={isVehicleModalOpen}
-        method={VehicleModalMethodsEnum.ADD}
+        method={
+          selectedVehicle === undefined
+            ? VehicleModalMethodsEnum.ADD
+            : VehicleModalMethodsEnum.UPDATE
+        }
+        vehicle={selectedVehicle}
         onSubmitClick={async (vehicle: VehicleDto) => {
-          await addVehicle(vehicle);
-          setIsVehicleModalOpen(false);
+          if (selectedVehicle !== undefined) {
+            setIsVehicleModalOpen(false);
+          } else {
+            try {
+              const newVehicle = await addVehicle(vehicle);
+              setIsVehicleModalOpen(false);
+            } catch (error) {}
+          }
         }}
         onClose={() => {
+          setSelectedVehicle(undefined);
           setIsVehicleModalOpen(false);
         }}
       />
@@ -176,9 +188,7 @@ export default function Vehicles() {
                       <TableCell>{vehicle.carPlate}</TableCell>
                       <TableCell>{vehicle.numberOfSeats}</TableCell>
                       <TableCell>{vehicle.engineCapacity}</TableCell>
-                      <TableCell>
-                        {vehicle.fabricationDate.toString()}
-                      </TableCell>
+                      <TableCell>{vehicle.fabricationDate}</TableCell>
                       <TableCell>
                         <ClearIcon
                           sx={{
@@ -192,7 +202,13 @@ export default function Vehicles() {
                         />
                       </TableCell>
                       <TableCell>
-                        <EditIcon sx={{ cursor: "pointer" }} />
+                        <EditIcon
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => {
+                            setSelectedVehicle(vehicle);
+                            setIsVehicleModalOpen(true);
+                          }}
+                        />
                       </TableCell>
                       <TableCell>
                         <RemoveRedEyeIcon

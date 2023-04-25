@@ -4,18 +4,25 @@ import {
   LocalizationProvider,
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import { FC } from "react";
 
 interface IDatePicker {
   onChange?: (e?: unknown) => void;
   label: string;
+  defaultValue?: Date;
 }
 
-const DatePicker: FC<IDatePicker> = ({ onChange, label }) => {
+const DatePicker: FC<IDatePicker> = ({
+  onChange,
+  label,
+  defaultValue = "",
+}) => {
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Datepicker
+          defaultValue={dayjs(defaultValue)}
           format="YYYY-MM-DD"
           label={label}
           sx={textFieldStyle}

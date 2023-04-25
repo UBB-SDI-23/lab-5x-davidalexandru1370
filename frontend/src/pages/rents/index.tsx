@@ -1,4 +1,14 @@
+import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
+import Pagination from "@/components/Pagination/Pagination";
+import {
+  VehicleModalMethodsEnum,
+  VehicleRentsModal,
+} from "@/components/VehicleRentsModal/VehicleRentsModal";
+import IPagination from "@/model/Pagination";
 import VehicleRent from "@/model/VehicleRent";
+import AddIcon from "@mui/icons-material/Add";
+import ClearIcon from "@mui/icons-material/Clear";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
   CircularProgress,
@@ -10,26 +20,15 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
 import {
   addVehicleRent,
   deleteVehicleRentById,
   getRentsPaginated,
   updateVehicleRent,
 } from "../api/RentsApi";
-import Pagination from "@/components/Pagination/Pagination";
-import IPagination from "@/model/Pagination";
 import styles from "./rents.module.css";
-import ClearIcon from "@mui/icons-material/Clear";
-import EditIcon from "@mui/icons-material/Edit";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import AddIcon from "@mui/icons-material/Add";
-import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
-import {
-  VehicleModalMethodsEnum,
-  VehicleRentsModal,
-} from "@/components/VehicleRentsModal/VehicleRentsModal";
-import { toast } from "react-toastify";
 export default function Rents() {
   const [rents, setRents] = useState<IPagination<VehicleRent>>();
   const [skip, setSkip] = useState<number>(0);

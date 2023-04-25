@@ -2,7 +2,7 @@ import { Vehicle } from "@/model/Vehicle";
 import { VehicleDto } from "@/model/VehicleDto";
 import ClearIcon from "@mui/icons-material/Clear";
 import { Box, Button, Modal, TextField } from "@mui/material";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import DatePicker from "../DatePicker/DatePicker";
 
 interface IVehicleModalProps {
@@ -33,8 +33,32 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
   const [fabricationDate, setFabricationDate] = useState<string>("");
 
   const handleOnClose = () => {
+    setBrand("");
+    setHorsePower(0);
+    setCarPlate("");
+    setNumberOfSeats(0);
+    setEngineCapacity(0);
+    setFabricationDate("");
     onClose();
   };
+
+  useEffect(() => {
+    if (method === VehicleModalMethodsEnum.ADD) {
+      setBrand("");
+      setHorsePower(0);
+      setCarPlate("");
+      setNumberOfSeats(0);
+      setEngineCapacity(0);
+      setFabricationDate("");
+    } else {
+      setBrand(vehicle!.brand);
+      setHorsePower(vehicle!.horsePower);
+      setCarPlate(vehicle!.carPlate);
+      setNumberOfSeats(vehicle!.numberOfSeats);
+      setEngineCapacity(vehicle!.engineCapacity);
+      setFabricationDate(vehicle!.fabricationDate);
+    }
+  }, [vehicle]);
 
   const checkIfCarPlateIsCorrect = (carPlate: string): boolean => {
     const pattern: RegExp = new RegExp(
@@ -67,6 +91,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
         <TextField
           label="Brand"
           size="small"
+          defaultValue={vehicle?.brand}
           sx={textFieldStyle}
           onChange={(e) => {
             setBrand(e.currentTarget.value);
@@ -76,6 +101,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
           label="Horse power"
           size="small"
           type="numeric"
+          defaultValue={vehicle?.horsePower}
           sx={textFieldStyle}
           onChange={(e) => {
             setHorsePower(parseInt(e.currentTarget.value));
@@ -84,6 +110,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
         <TextField
           label="Car plate"
           size="small"
+          defaultValue={vehicle?.carPlate}
           sx={textFieldStyle}
           onChange={(e) => {
             setCarPlate(e.currentTarget.value);
@@ -92,6 +119,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
         <TextField
           label="Seats"
           size="small"
+          defaultValue={vehicle?.numberOfSeats}
           type="numeric"
           sx={textFieldStyle}
           onChange={(e) => {
@@ -100,6 +128,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
         ></TextField>
         <TextField
           label="Engine capacity"
+          defaultValue={vehicle?.engineCapacity}
           size="small"
           type="numeric"
           sx={textFieldStyle}
@@ -109,6 +138,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
         ></TextField>
         <DatePicker
           label="Fabrication Date"
+          defaultValue={new Date(vehicle?.fabricationDate || "")}
           onChange={(e: any) => {
             const date: string = (e.$d as Date).toISOString().split("T")[0];
             setFabricationDate(date);
@@ -125,6 +155,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
               horsePower: horsePower,
               numberOfSeats: numberOfSeats,
             });
+            handleOnClose();
           }}
           disabled={checkIfAllInputFieldsAreCorrect()}
           sx={button}

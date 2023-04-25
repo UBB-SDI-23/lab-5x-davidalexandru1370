@@ -3,6 +3,7 @@ import { VehicleDto } from "@/model/VehicleDto";
 import ClearIcon from "@mui/icons-material/Clear";
 import { Box, Button, Modal, TextField } from "@mui/material";
 import { FC, useState } from "react";
+import DatePicker from "../DatePicker/DatePicker";
 
 interface IVehicleModalProps {
   onSubmitClick: (vehicle: VehicleDto) => Promise<void>;
@@ -29,11 +30,31 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
   const [carPlate, setCarPlate] = useState<string>("");
   const [numberOfSeats, setNumberOfSeats] = useState<number>(0);
   const [engineCapacity, setEngineCapacity] = useState<number>(0);
-  const [fabricationDate, setFabricationDate] = useState<Date>();
+  const [fabricationDate, setFabricationDate] = useState<string>("");
 
   const handleOnClose = () => {
     onClose();
   };
+
+  const checkIfCarPlateIsCorrect = (carPlate: string): boolean => {
+    const pattern: RegExp = new RegExp(
+      "[A-Z]{2}([0-9][1-9]|[1-9][0-9])[A-Z]{3}"
+    );
+
+    return pattern.test(carPlate);
+  };
+
+  const checkIfAllInputFieldsAreCorrect = (): boolean => {
+    return (
+      brand === "" ||
+      fabricationDate === "" ||
+      numberOfSeats < 0 ||
+      engineCapacity < 0 ||
+      carPlate === "" ||
+      checkIfCarPlateIsCorrect(carPlate) === false
+    );
+  };
+
   return (
     <Modal open={isOpen} onClose={handleOnClose}>
       <Box sx={style}>
@@ -54,6 +75,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
         <TextField
           label="Horse power"
           size="small"
+          type="numeric"
           sx={textFieldStyle}
           onChange={(e) => {
             setHorsePower(parseInt(e.currentTarget.value));
@@ -70,6 +92,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
         <TextField
           label="Seats"
           size="small"
+          type="numeric"
           sx={textFieldStyle}
           onChange={(e) => {
             setNumberOfSeats(parseInt(e.currentTarget.value));
@@ -78,26 +101,19 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
         <TextField
           label="Engine capacity"
           size="small"
+          type="numeric"
           sx={textFieldStyle}
           onChange={(e) => {
             setEngineCapacity(parseInt(e.currentTarget.value));
           }}
         ></TextField>
-        <TextField
-          label="Fabrication date"
-          size="small"
-          sx={textFieldStyle}
-          onChange={(e) => {
-            const dates = e.currentTarget.value.split("-");
-            setFabricationDate(
-              new Date(
-                parseInt(dates[0]),
-                parseInt(dates[1]),
-                parseInt(dates[2])
-              )
-            );
+        <DatePicker
+          label="Fabrication Date"
+          onChange={(e: any) => {
+            const date: string = (e.$d as Date).toISOString().split("T")[0];
+            setFabricationDate(date);
           }}
-        ></TextField>
+        />
         <Button
           variant="contained"
           onClick={() => {
@@ -110,6 +126,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
               numberOfSeats: numberOfSeats,
             });
           }}
+          disabled={checkIfAllInputFieldsAreCorrect()}
           sx={button}
         >
           {method === VehicleModalMethodsEnum.ADD ? "Add" : "Update"}

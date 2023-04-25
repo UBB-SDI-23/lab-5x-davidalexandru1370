@@ -7,7 +7,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { FC } from "react";
 
 interface IDatePicker {
-  onChange?: () => void;
+  onChange?: (e?: unknown) => void;
   label: string;
 }
 
@@ -20,7 +20,7 @@ const DatePicker: FC<IDatePicker> = ({ onChange, label }) => {
           label={label}
           sx={textFieldStyle}
           onChange={(e) => {
-            onChange && onChange();
+            onChange && onChange(e);
           }}
         />
       </LocalizationProvider>
@@ -31,3 +31,5 @@ const DatePicker: FC<IDatePicker> = ({ onChange, label }) => {
 const textFieldStyle = {
   border: "2px solid white",
 };
+
+export default DatePicker;

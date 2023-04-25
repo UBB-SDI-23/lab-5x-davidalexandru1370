@@ -4,5 +4,5 @@ export interface VehicleDto {
   carPlate: string;
   numberOfSeats: number;
   engineCapacity: number;
-  fabricationDate: Date;
+  fabricationDate: string;
 }

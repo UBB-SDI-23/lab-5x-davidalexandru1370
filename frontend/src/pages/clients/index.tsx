@@ -1,7 +1,17 @@
+import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
+import {
+  ClientModal,
+  ClientModalMethodsEnum,
+} from "@/components/ClientModal/ClientModal";
+import Pagination from "@/components/Pagination/Pagination";
 import { Client } from "@/model/Client";
+import { ClientDto } from "@/model/ClientDto";
+import IPagination from "@/model/Pagination";
+import AddIcon from "@mui/icons-material/Add";
+import ClearIcon from "@mui/icons-material/Clear";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
-  Button,
   CircularProgress,
   Paper,
   Table,
@@ -12,25 +22,13 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { Inter } from "next/font/google";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   addClient,
   deleteClientById,
   getClientsPaginated,
   updateClient,
 } from "../api/ClientApi";
-import ClearIcon from "@mui/icons-material/Clear";
-import EditIcon from "@mui/icons-material/Edit";
-import AddIcon from "@mui/icons-material/Add";
-import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
-import {
-  ClientModal,
-  ClientModalMethodsEnum,
-} from "@/components/ClientModal/ClientModal";
-import { ClientDto } from "@/model/ClientDto";
-import IPagination from "@/model/Pagination";
-import Pagination from "@/components/Pagination/Pagination";
 import styles from "./clients.module.css";
 
 export default function Clients() {
@@ -184,8 +182,8 @@ export default function Clients() {
           </TableContainer>
           <Box component={Paper}>
             <Pagination
-              hasNext={clients.hasNext}
-              hasPrevious={clients.hasPrevious}
+              take={take}
+              totalNumberOfElements={clients.totalNumberOfElements}
               onChangePage={(pageNumber) => {
                 setClients(undefined);
                 setSkip(take * (pageNumber - 1));

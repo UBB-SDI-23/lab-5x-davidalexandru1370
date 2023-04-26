@@ -272,8 +272,8 @@ export default function Vehicles() {
           </TableContainer>
           <Box component={Paper}>
             <Pagination
-              hasNext={vehicles.hasNext}
-              hasPrevious={vehicles.hasPrevious}
+              take={take}
+              totalNumberOfElements={vehicles.totalNumberOfElements}
               onChangePage={(pageNumber) => {
                 setVehicles(undefined);
                 setSkip(take * (pageNumber - 1));

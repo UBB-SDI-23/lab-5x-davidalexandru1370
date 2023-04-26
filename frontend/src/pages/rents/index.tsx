@@ -209,8 +209,8 @@ export default function Rents() {
             </Table>
             <Box component={Paper}>
               <Pagination
-                hasNext={rents.hasNext}
-                hasPrevious={rents.hasPrevious}
+                totalNumberOfElements={rents.totalNumberOfElements}
+                take={take}
                 onChangePage={(pageNumber) => {
                   setRents(undefined);
                   setSkip(take * (pageNumber - 1));

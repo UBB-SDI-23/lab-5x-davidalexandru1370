@@ -102,11 +102,11 @@ public class VehicleRepository : IVehicleRepository
         var result = await _rentACarDbContext.Vehicles.Skip(skip).Take(take).ToListAsync();
 
         paginatedRents.Elements = result;
-        paginatedRents.HasPrevious = skip != 0;
+        //paginatedRents.HasPrevious = skip != 0;
 
-        int numberOfRents = GetNumberOfRents();
-
-        paginatedRents.HasNext = !(skip >= numberOfRents || skip + take >= numberOfRents);
+        int numberOfVehicles = GetNumberOfRents();
+        paginatedRents.TotalNumberOfElements = numberOfVehicles;
+        //paginatedRents.HasNext = !(skip >= numberOfRents || skip + take >= numberOfRents);
 
         return paginatedRents;
     }

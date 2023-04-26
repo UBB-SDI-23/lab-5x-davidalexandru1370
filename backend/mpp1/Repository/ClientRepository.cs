@@ -81,12 +81,10 @@ public class ClientRepository : IClientRepository
         
         var result = await _rentACarDbContext.Clients.Skip(skip).Take(take).ToListAsync() as IEnumerable<Client>;
         clientsPaginated.Elements = result;
-        clientsPaginated.HasPrevious = (skip != 0);
 
-        int numberOfRents = GetNumberOfClients();
+        int numberOfClients = GetNumberOfClients();
+        clientsPaginated.TotalNumberOfElements = numberOfClients;
 
-        clientsPaginated.HasNext = !(skip >= numberOfRents || skip + take >= numberOfRents);
-        
         return clientsPaginated;
     }
 

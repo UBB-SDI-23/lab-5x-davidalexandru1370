@@ -26,3 +26,5 @@ export const convertStringToDate = (date: string) => {
     parseInt(dates[2]) + 1
   );
 };
+
+export const DOTS = "...";

@@ -117,11 +117,8 @@ public class VehicleRentRepository : IVehicleRentRepository
 
         paginatedRents.Elements = result;
 
-        paginatedRents.HasPrevious = skip != 0;
-
         int numberOfRents = GetNumberOfRents();
-
-        paginatedRents.HasNext = !(skip >= numberOfRents || skip + take >= numberOfRents);
+        paginatedRents.TotalNumberOfElements = numberOfRents;
 
         return Task.FromResult(paginatedRents);
     }

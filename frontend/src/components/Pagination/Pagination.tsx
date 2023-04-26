@@ -1,88 +1,59 @@
 import { FC, useState } from "react";
 import styles from "./Pagination.module.css";
+import { usePagination } from "@/hooks/usePagination";
+import { DOTS } from "@/utilities/utilities";
 interface IPaginationComponent {
   onChangePage: (pageNumber: number) => void;
   pageNumber: number;
-  hasNext: boolean;
-  hasPrevious: boolean;
+  totalNumberOfElements: number;
+  neighbourhood?: number;
+  take: number;
   className?: string;
   style?: React.CSSProperties;
 }
 
+const range = (start: number, end: number) => {
+  let length = end - start + 1;
+
+  return Array.from({ length }, (_, index) => index + start);
+};
+
 const Pagination: FC<IPaginationComponent> = ({
   onChangePage,
   pageNumber,
-  hasNext,
-  hasPrevious,
+  totalNumberOfElements,
+  neighbourhood = 4,
+  take,
   className,
   style,
 }) => {
+  const [skip, setSkip] = useState<number>(0);
+  const paginationRange = usePagination({
+    currentPage: pageNumber,
+    pageSize: take,
+    siblingCount: neighbourhood,
+    totalCount: totalNumberOfElements,
+  });
+
+  console.log(paginationRange);
   return (
     <div className={`${styles.content} ${className}`} style={style}>
-      <button
-        className={`${styles.paginationButton}`}
-        disabled={hasPrevious === false}
-        onClick={() => {
-          onChangePage(pageNumber - 1);
-        }}
-      >
-        Previous page
-      </button>
-      {pageNumber >= 3 && (
-        <>
-          <span
+      {paginationRange?.map((pageCount) => {
+        if (pageCount === DOTS) {
+          return <div className={`${styles.pageIndexCard}`}>{DOTS}</div>;
+        }
+        return (
+          <div
             className={`${styles.pageIndexCard} ${styles.cursorPointer}`}
             onClick={() => {
-              onChangePage(1);
+              //@ts-ignore
+              onChangePage(pageCount);
             }}
           >
-            1
-          </span>
-          {pageNumber >= 4 && (
-            <span className={`${styles.pageIndexCard}`}>...</span>
-          )}
-        </>
-      )}
-      {hasPrevious === true && pageNumber > 1 && (
-        <>
-          <span
-            className={`${styles.pageIndexCard} ${styles.cursorPointer}`}
-            onClick={() => {
-              onChangePage(pageNumber - 1);
-            }}
-          >
-            {pageNumber - 1}
-          </span>
-        </>
-      )}
-      <span
-        className={`${styles.pageIndexCard} ${styles.cursorPointer} ${styles.selectedPageIndexCard}`}
-      >
-        {pageNumber}
-      </span>
-
-      {hasNext === true && (
-        <>
-          <span
-            className={`${styles.pageIndexCard} ${styles.cursorPointer}`}
-            onClick={() => {
-              onChangePage(pageNumber + 1);
-            }}
-          >
-            {pageNumber + 1}
-          </span>
-          <span className={`${styles.pageIndexCard}`}>...</span>
-        </>
-      )}
-      <button
-        className={`${styles.paginationButton}`}
-        disabled={hasNext === false}
-        onClick={() => {
-          onChangePage(pageNumber + 1);
-        }}
-      >
-        Next page
-      </button>
+            {pageCount}
+          </div>
+        );
+      })}
     </div>
   );
 };

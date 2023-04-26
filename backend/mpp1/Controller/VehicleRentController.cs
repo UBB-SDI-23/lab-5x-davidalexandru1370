@@ -118,6 +118,20 @@ public class VehicleRentController : ControllerBase
     }
   }
 
+  [HttpGet("get-rents-by-clientId/{clientId}")]
+  public async Task<ActionResult<int>> GetNumberOfRentsByClientId([FromRoute]Guid clientId)
+  {
+    try
+    {
+      var result = await _vehicleRentService.GetNumberOfRentsByClientId(clientId);
+      return Ok(result);
+    }
+    catch (RepositoryException repositoryException)
+    {
+      return BadRequest(repositoryException.Message);
+    }
+  } 
+  
   [HttpGet("get-vehicleRents-paginated/{skip}/{take}")]
   public async Task<ActionResult<Pagination<VehicleRent>>> GetVehicleRentsPaginated(int skip, int take)
   {

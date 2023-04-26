@@ -111,6 +111,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
       clientId: "",
     } as VehicleRentState
   );
+
   const [clients, setClients] = useState<Client[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 

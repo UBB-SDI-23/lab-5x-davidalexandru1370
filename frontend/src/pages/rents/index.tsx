@@ -29,6 +29,7 @@ import {
   updateVehicleRent,
 } from "../api/RentsApi";
 import styles from "./rents.module.css";
+import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
 export default function Rents() {
   const [rents, setRents] = useState<IPagination<VehicleRent>>();
   const [skip, setSkip] = useState<number>(0);
@@ -38,7 +39,7 @@ export default function Rents() {
     useState<boolean>(false);
   const [selectedVehicleRent, setSelectedVehicleRent] = useState<VehicleRent>();
   const parentContainerRef = useRef<HTMLDivElement>(null);
-  const take = 10;
+  const [take, setTake] = useState<number>(12);
 
   useEffect(() => {
     if (rents !== undefined) {
@@ -47,7 +48,13 @@ export default function Rents() {
     getRentsPaginated(skip, take).then((r) => {
       setRents(r);
     });
-  }, [skip, rents]);
+  }, [skip]);
+
+  useEffect(() => {
+    getRentsPaginated(skip, take).then((r) => {
+      setRents(r);
+    });
+  }, [take]);
 
   return (
     <div ref={parentContainerRef}>
@@ -134,6 +141,13 @@ export default function Rents() {
             display="flex"
             justifyContent="end"
           >
+            <PaginationDropDown
+              take={take.toString()}
+              handleOnChange={(e) => {
+                setRents(undefined);
+                setTake(e);
+              }}
+            />
             <Box
               sx={{
                 backgroundColor: "blueviolet",
@@ -215,7 +229,7 @@ export default function Rents() {
                   setRents(undefined);
                   setSkip(take * (pageNumber - 1));
                 }}
-                pageNumber={skip / take + 1}
+                pageNumber={Math.ceil(skip / take) + 1}
                 className={styles.pagination}
               />
             </Box>

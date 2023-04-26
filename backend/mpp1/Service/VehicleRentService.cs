@@ -92,4 +92,9 @@ public class VehicleRentService : IVehicleRentService
     {
         return _vehicleRentRepository.GetNumberOfRents();
     }
+
+    public async Task<int> GetNumberOfRentsByClientId(Guid clientId)
+    {
+        return await _vehicleRentRepository.GetNumberOfRentsByClientId(clientId);
+    }
 }

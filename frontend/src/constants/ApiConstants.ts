@@ -48,6 +48,7 @@ interface RentsEndpoint {
   addRent: string;
   updateRent: string;
   deleteRent: (rentId: string) => string;
+  getNumberOfRentedVehiclesByClientId: (clientId: string) => string;
   getRentsPaginated: (skip: number, take: number) => string;
 }
 
@@ -89,4 +90,6 @@ export const RentEndpoints: RentsEndpoint = {
   deleteRent: (rentId: string) => rentsController + "delete-rent/" + rentId,
   getRentsPaginated: (skip: number, take: number) =>
     rentsController + "get-vehiclerents-paginated" + "/" + skip + "/" + take,
+  getNumberOfRentedVehiclesByClientId: (clientId) =>
+    rentsController + "get-rents-by-clientId/" + clientId,
 };

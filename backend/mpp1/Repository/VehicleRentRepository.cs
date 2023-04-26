@@ -127,4 +127,9 @@ public class VehicleRentRepository : IVehicleRentRepository
     {
         return _rentACarDbContext.Set<VehicleRent>().Count();
     }
+
+    public async Task<int> GetNumberOfRentsByClientId(Guid clientId)
+    {
+        return (await GetVehiclesByClientId(clientId)).Count();
+    }
 }

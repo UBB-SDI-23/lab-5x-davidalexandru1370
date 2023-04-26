@@ -15,5 +15,6 @@ public interface IVehicleRentService
     public Task<IEnumerable<ClientDTO>> GetMostActiveClients();
     public Task<Pagination<VehicleRent>> GetVehicleRentsPaginated(int skip, int take);
     public int GetNumberOfRents();
+    public Task<int> GetNumberOfRentsByClientId(Guid clientId);
 
 }

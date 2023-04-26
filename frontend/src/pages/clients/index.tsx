@@ -30,9 +30,11 @@ import {
   updateClient,
 } from "../api/ClientApi";
 import styles from "./clients.module.css";
+import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
 
 export default function Clients() {
   const [clients, setClients] = useState<IPagination<Client>>();
+  const [numberOfRents, setNumberOfRents] = useState<number[]>([]);
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
   const [selectedClient, setSelectedClient] = useState<Client>();
@@ -40,7 +42,7 @@ export default function Clients() {
     useState<ClientModalMethodsEnum>(ClientModalMethodsEnum.ADD);
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
   const [skip, setSkip] = useState<number>(0);
-  const take = 5;
+  const [take, setTake] = useState<number>(12);
 
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isClientModalOpen === true) {
@@ -49,7 +51,7 @@ export default function Clients() {
     getClientsPaginated(skip, take).then((c) => {
       setClients(c);
     });
-  }, [isClientModalOpen, isAreYouSureModalOpen, skip]);
+  }, [isClientModalOpen, isAreYouSureModalOpen, skip, take]);
 
   return (
     <div>
@@ -109,6 +111,11 @@ export default function Clients() {
             display="flex"
             justifyContent="end"
           >
+            <PaginationDropDown
+              handleOnChange={(e) => {
+                setTake(e);
+              }}
+            />
             <Box
               sx={{
                 backgroundColor: "blueviolet",
@@ -139,12 +146,13 @@ export default function Clients() {
                   <TableCell>CNP</TableCell>
                   <TableCell>Birthday</TableCell>
                   <TableCell>Nationality</TableCell>
+                  <TableCell>Number of rents</TableCell>
                   <TableCell></TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {clients.elements.map((client) => {
+                {clients.elements.map((client, index) => {
                   return (
                     <TableRow key={client.id}>
                       <TableCell>{client.name}</TableCell>
@@ -152,6 +160,7 @@ export default function Clients() {
                       <TableCell>{client.cnp}</TableCell>
                       <TableCell>{client.birthday.toString()}</TableCell>
                       <TableCell>{client.nationality}</TableCell>
+                      <TableCell></TableCell>
                       <TableCell>
                         <ClearIcon
                           sx={{

@@ -53,3 +53,20 @@ export const addVehicleRent = async (vehicleRentDto: VehicleRentDto) => {
     }
   });
 };
+
+export const getNumberOfRentsByClientId = async (clientId: string) => {
+  let url =
+    baseUrl + RentEndpoints.getNumberOfRentedVehiclesByClientId(clientId);
+  let header = createHeader(Methods.GET);
+  const numberOfRents = await fetch(url, header)
+    .then(async (response: Response) => {
+      if (response.status >= 400) {
+      }
+      return await response.json();
+    })
+    .then((rents: number) => {
+      return rents;
+    });
+
+  return numberOfRents;
+};

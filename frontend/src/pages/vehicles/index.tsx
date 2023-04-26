@@ -36,6 +36,7 @@ import {
 } from "../api/VehicleApi";
 import styles from "./vehicles.module.css";
 import { toast } from "react-toastify";
+import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
 
 export default function Vehicles() {
   const [vehicles, setVehicles] = useState<IPagination<Vehicle>>();
@@ -47,7 +48,7 @@ export default function Vehicles() {
     useState<boolean>(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle>();
   const [skip, setSkip] = useState<number>(0);
-  const take = 5;
+  const [take, setTake] = useState<number>(12);
 
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isVehicleModalOpen === true) {
@@ -56,7 +57,7 @@ export default function Vehicles() {
     getVehiclesPaginated(skip, take).then((v) => {
       setVehicles(v);
     });
-  }, [isAreYouSureModalOpen, isVehicleModalOpen, skip]);
+  }, [isAreYouSureModalOpen, isVehicleModalOpen, skip, take]);
 
   return (
     <div>
@@ -158,6 +159,13 @@ export default function Vehicles() {
         </Box>
       ) : (
         <>
+          <Box component={Paper} sx={{ padding: "10px" }}>
+            <PaginationDropDown
+              handleOnChange={(value) => {
+                setTake(value);
+              }}
+            />
+          </Box>
           <Box
             component={Paper}
             sx={{ padding: "32px", textAlign: "right" }}

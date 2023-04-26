@@ -1,4 +1,4 @@
-const PRODUCTION_RentAVehicleApi_URL = "https://104.155.121.9/";
+const PRODUCTION_RentAVehicleApi_URL = "https://mpp-2023.twilightparadox.com/";
 const DEVELOPMENT_RentAVehicleApi_URL = "https://localhost:7037/";
 
 export const baseUrl =

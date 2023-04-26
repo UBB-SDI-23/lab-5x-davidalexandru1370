@@ -35,7 +35,6 @@ const Pagination: FC<IPaginationComponent> = ({
     totalCount: totalNumberOfElements,
   });
 
-  console.log(paginationRange);
   return (
     <div className={`${styles.content} ${className}`} style={style}>
       {paginationRange?.map((pageCount) => {
@@ -46,8 +45,10 @@ const Pagination: FC<IPaginationComponent> = ({
           <div
             className={`${styles.pageIndexCard} ${styles.cursorPointer}`}
             onClick={() => {
-              //@ts-ignore
-              onChangePage(pageCount);
+              if (pageCount !== pageNumber) {
+                //@ts-ignore
+                onChangePage(pageCount);
+              }
             }}
           >
             {pageCount}

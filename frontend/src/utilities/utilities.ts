@@ -9,7 +9,7 @@ export const createHeader = (method: Methods, entity?: any) => {
       "Content-type": "application/json",
       "Access-Control-Allow-Origin": "*",
     },
-    credentials: "include",
+    credentials: "omit",
   };
 
   if (entity !== undefined) {

@@ -112,6 +112,7 @@ export default function Clients() {
             justifyContent="end"
           >
             <PaginationDropDown
+              take={take.toString()}
               handleOnChange={(e) => {
                 setTake(e);
               }}
@@ -197,7 +198,7 @@ export default function Clients() {
                 setClients(undefined);
                 setSkip(take * (pageNumber - 1));
               }}
-              pageNumber={skip / take + 1}
+              pageNumber={Math.ceil(skip / take) + 1}
               className={styles.pagination}
             />
           </Box>

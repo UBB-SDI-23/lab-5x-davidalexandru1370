@@ -161,6 +161,7 @@ export default function Vehicles() {
         <>
           <Box component={Paper} sx={{ padding: "10px" }}>
             <PaginationDropDown
+              take={take.toString()}
               handleOnChange={(value) => {
                 setTake(value);
               }}
@@ -286,7 +287,7 @@ export default function Vehicles() {
                 setVehicles(undefined);
                 setSkip(take * (pageNumber - 1));
               }}
-              pageNumber={skip / take + 1}
+              pageNumber={Math.ceil(skip / take) + 1}
               className={styles.pagination}
             />
           </Box>

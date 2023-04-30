@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using mpp1.Enums;
-
+    
 namespace mpp1.Model;
 
 public class UserProfile

@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 import { login } from "../api/UserApi";
 import { LoginCredentials } from "@/model/LoginCredentials";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const contentStyle = {
   padding: "2rem",
@@ -41,7 +42,7 @@ const MyButton = styled(Button)`
 const Login = () => {
   const [password, setPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-
+  const { push } = useRouter();
   return (
     <div className={`${styles.content}`}>
       <Box sx={contentStyle}>
@@ -71,6 +72,7 @@ const Login = () => {
                 password: password,
               };
               await login(loginCrendetials);
+              push("/clients");
             } catch (error) {
               toast((error as Error).message, {
                 type: "error",

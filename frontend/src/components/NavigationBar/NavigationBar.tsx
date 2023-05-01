@@ -16,10 +16,16 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
     router.pathname.substring(1)
   );
 
+  console.log(
+    navigationItems.find(
+      (v) => v.routeName.localeCompare(selectedNavigationItem) === 0
+    )
+  );
+
   if (
-    navigationItems.find((v) => {
-      v.routeName === selectedNavigationItem;
-    }) === undefined
+    navigationItems.find(
+      (v) => v.routeName.localeCompare(selectedNavigationItem) === 0
+    ) === undefined
   ) {
     return <></>;
   }

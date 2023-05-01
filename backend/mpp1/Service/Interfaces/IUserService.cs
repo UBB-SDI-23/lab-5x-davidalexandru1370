@@ -5,7 +5,7 @@ namespace mpp1.Service.Interfaces;
 
 public interface IUserService
 {
-    public Task<UserDto> AddUser(UserDto user);
+    public Task<User> AddUser(UserDto user);
     public Task<AuthResult> Login(LoginCredentials user);
     public Task<AuthResult> Register(UserDto user);
 }

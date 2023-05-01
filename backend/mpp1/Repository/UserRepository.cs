@@ -48,6 +48,16 @@ public class UserRepository : IUserRepository
         
         return addedUser.Entity;
     }
-    
-    
+
+    public async Task<User?> GetUserByNameAsync(string name)
+    {
+        if (name is null)
+        {
+            throw new RepositoryException("Invalid name");
+        }
+
+        var user =  await _rentACarDbContext.Set<User>().Where(u => u.Name == name).FirstOrDefaultAsync();
+
+        return user;
+    }
 }

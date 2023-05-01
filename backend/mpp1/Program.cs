@@ -44,7 +44,6 @@ builder.Services.AddScoped<IVehicleRentService, VehicleRentService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
-
 var app = builder.Build();
 var frontendBaseUrl = app.Configuration.GetSection("Frontend")
     .GetSection(app.Environment.EnvironmentName)

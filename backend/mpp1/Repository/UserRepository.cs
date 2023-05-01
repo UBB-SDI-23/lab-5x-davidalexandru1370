@@ -44,6 +44,10 @@ public class UserRepository : IUserRepository
             MaritalStatus = user.MaritalStatus
         });
 
+        await _rentACarDbContext.SaveChangesAsync();
+        
         return addedUser.Entity;
     }
+    
+    
 }

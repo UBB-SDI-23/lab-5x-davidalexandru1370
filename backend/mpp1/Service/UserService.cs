@@ -27,17 +27,58 @@ public class UserService : IUserService
         return await _userRepository.AddUserAsync(user);
     }
 
-    public Task<AuthResult> Login(LoginCredentials user)
+    public async Task<AuthResult> Login(LoginCredentials loginCredentials)
     {
-        throw new NotImplementedException();
+        var authResult = new AuthResult();
+        var alreadyExistingUser = await _userRepository.GetUserByNameAsync(loginCredentials.Name);
+
+        if (alreadyExistingUser is null)
+        {
+            authResult.Error = "Invalid name or password!";
+            authResult.Result = false;
+            return authResult;
+        }
+
+        if (BCrypt.Net.BCrypt.Verify(loginCredentials.Password, alreadyExistingUser.Password) is false)
+        {
+            authResult.Error = "Invalid name or password!";
+            authResult.Result = false;
+            return authResult;
+        }
+
+        var token = GenerateJwtTokenForUser(alreadyExistingUser);
+
+        authResult.Result = true;
+        authResult.AccessToken = token;
+        return authResult;
     }
 
-    public Task<AuthResult> Register(UserDto user)
+    public async Task<AuthResult> Register(UserDto user)
     {
-        throw new NotImplementedException();
+        var authResult = new AuthResult();
+
+        //TODO: validate user password 
+        var alreadyExistingUser = await _userRepository.GetUserByNameAsync(user.Name);
+        
+        if (alreadyExistingUser is not null)
+        {
+            authResult.Error = "Invalid name or password!";
+            authResult.Result = false;
+            return authResult;
+        }
+
+        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+        var addedUser = await _userRepository.AddUserAsync(user);
+
+        var token = GenerateJwtTokenForUser(addedUser);
+        
+        authResult.Result = true;
+        authResult.AccessToken = token;
+        
+        return authResult;
     }
 
-    private string generateJwtTokenForUser(User user)
+    private string GenerateJwtTokenForUser(User user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_appSettings["JwtSettings:Key"]);
@@ -47,7 +88,7 @@ public class UserService : IUserService
         {
             Subject = new ClaimsIdentity(new[]
             {
-                new Claim("Id",user.Id.ToString())
+                new Claim("Id", user.Id.ToString())
             }),
             Expires = DateTime.UtcNow.Add(tokenLifetime),
             Audience = _appSettings["JwtSettings:Audience"],

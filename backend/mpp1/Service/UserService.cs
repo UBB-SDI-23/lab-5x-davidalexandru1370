@@ -30,7 +30,7 @@ public class UserService : IUserService
     public async Task<AuthResult> Login(LoginCredentials loginCredentials)
     {
         var authResult = new AuthResult();
-        var alreadyExistingUser = await _userRepository.GetUserByNameAsync(loginCredentials.Name);
+        var alreadyExistingUser = await _userRepository.GetUserByNameAsync(loginCredentials.Username);
 
         if (alreadyExistingUser is null)
         {

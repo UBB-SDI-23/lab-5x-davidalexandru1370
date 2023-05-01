@@ -1,7 +1,10 @@
 import { Box, Button, Paper, TextField } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import styles from "./login.module.css";
 import styled from "@emotion/styled";
+import { login } from "../api/UserApi";
+import { LoginCredentials } from "@/model/LoginCredentials";
+import { toast } from "react-toastify";
 
 const contentStyle = {
   padding: "2rem",
@@ -36,6 +39,9 @@ const MyButton = styled(Button)`
 `;
 
 const Login = () => {
+  const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+
   return (
     <div className={`${styles.content}`}>
       <Box sx={contentStyle}>
@@ -44,13 +50,36 @@ const Login = () => {
           sx={{
             label: { color: "royalblue" },
           }}
+          onChange={(e) => {
+            setUsername(e.target.value);
+          }}
         ></WhiteBorderTextField>
         <WhiteBorderTextField
           label="Password"
           type="password"
           sx={{ label: { color: "royalblue" } }}
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
         ></WhiteBorderTextField>
-        <MyButton variant="contained">Login</MyButton>
+        <MyButton
+          variant="contained"
+          onClick={async () => {
+            try {
+              const loginCrendetials: LoginCredentials = {
+                username: username,
+                password: password,
+              };
+              await login(loginCrendetials);
+            } catch (error) {
+              toast((error as Error).message, {
+                type: "error",
+              });
+            }
+          }}
+        >
+          Login
+        </MyButton>
       </Box>
     </div>
   );

@@ -62,7 +62,7 @@ public class UserService : IUserService
         
         if (alreadyExistingUser is not null)
         {
-            authResult.Error = "Invalid name or password!";
+            authResult.Error = "There exists an account associated with this username";
             authResult.Result = false;
             return authResult;
         }

@@ -16,6 +16,14 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
     router.pathname.substring(1)
   );
 
+  if (
+    navigationItems.find((v) => {
+      v.routeName === selectedNavigationItem;
+    }) === undefined
+  ) {
+    return <></>;
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar

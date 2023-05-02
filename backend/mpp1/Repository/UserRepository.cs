@@ -25,7 +25,7 @@ public class UserRepository : IUserRepository
 
         var addedUser = await _rentACarDbContext.Set<User>().AddAsync(new User
         {
-            Name = user.Name,
+            Name = user.Username,
             Password = user.Password
         });
 

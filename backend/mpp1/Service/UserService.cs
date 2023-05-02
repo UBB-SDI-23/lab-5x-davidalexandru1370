@@ -58,7 +58,7 @@ public class UserService : IUserService
         var authResult = new AuthResult();
 
         //TODO: validate user password 
-        var alreadyExistingUser = await _userRepository.GetUserByNameAsync(user.Name);
+        var alreadyExistingUser = await _userRepository.GetUserByNameAsync(user.Username);
         
         if (alreadyExistingUser is not null)
         {

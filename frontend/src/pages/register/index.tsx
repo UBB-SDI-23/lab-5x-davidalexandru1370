@@ -40,6 +40,17 @@ const Register = () => {
     password: "",
     username: "",
   } as UserDto);
+
+  const checkIfAllInputFieldsAreValid = (): boolean => {
+    return !(
+      userState.bio === "" ||
+      userState.birthday === "" ||
+      userState.location === "" ||
+      userState.password === "" ||
+      userState.username === ""
+    );
+  };
+
   return (
     <div className={`${styles.content}`}>
       <Box sx={contentStyle}>
@@ -111,7 +122,14 @@ const Register = () => {
                   birthday: date,
                 },
               });
-            } catch (error) {}
+            } catch (error) {
+              userDispatch({
+                type: RegisterActionKind.UPDATE,
+                payload: {
+                  birthday: "",
+                },
+              });
+            }
           }}
         />
         <EnumDropDown
@@ -151,6 +169,7 @@ const Register = () => {
               });
             }
           }}
+          disabled={!checkIfAllInputFieldsAreValid()}
         >
           Register
         </MyButton>

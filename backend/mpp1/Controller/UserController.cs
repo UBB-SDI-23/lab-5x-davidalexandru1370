@@ -22,6 +22,7 @@ public class UserController : ControllerBase
     [Route("register")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    
     public async Task<ActionResult<AuthResult>> Register(UserDto user)
     {
         try
@@ -31,7 +32,6 @@ public class UserController : ControllerBase
             {
                 return BadRequest(authResult);
             }
-
             return Ok(authResult);
         }
         catch (RepositoryException repositoryException)

@@ -42,7 +42,7 @@ const MyButton = styled(Button)`
 const Login = () => {
   const [password, setPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-  const { push } = useRouter();
+  const router = useRouter();
   return (
     <div className={`${styles.content}`}>
       <Box sx={contentStyle}>
@@ -72,7 +72,10 @@ const Login = () => {
                 password: password,
               };
               await login(loginCrendetials);
-              push("/clients");
+              router.push("/clients", undefined, {
+                shallow: false,
+              });
+              router.reload();
             } catch (error) {
               toast((error as Error).message, {
                 type: "error",

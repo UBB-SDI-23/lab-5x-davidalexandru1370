@@ -2,24 +2,17 @@ import { Route } from "@/model/Route";
 import { AppBar, Box, Toolbar } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FC, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import styles from "./NavigationBar.module.css";
-import { injectStyle } from "react-toastify/dist/inject-style";
 
 interface INavigationBar {
   navigationItems: Route[];
 }
 
 export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
-  const router = useRouter();
+  let router = useMemo(() => useRouter(), undefined);
   const [selectedNavigationItem, setselectedNavigationItem] = useState<string>(
     router.pathname.substring(1)
-  );
-
-  console.log(
-    navigationItems.find(
-      (v) => v.routeName.localeCompare(selectedNavigationItem) === 0
-    )
   );
 
   if (

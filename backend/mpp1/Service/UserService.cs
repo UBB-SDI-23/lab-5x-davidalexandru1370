@@ -39,6 +39,21 @@ public class UserService : IUserService
             return authResult;
         }
 
+        var isAccountConfirmed = await _userRepository.GetTokenConfirmationAccountByUserIdAsync(alreadyExistingUser.Id);
+        
+        if (isAccountConfirmed is not null)
+        {
+            authResult.Error = "Account is not confirmed!";
+            authResult.Result = false;
+
+            if (isAccountConfirmed.HasExpired)
+            {
+                
+            }
+            
+            return authResult;
+        }
+
         if (BCrypt.Net.BCrypt.Verify(loginCredentials.Password, alreadyExistingUser.Password) is false)
         {
             authResult.Error = "Invalid name or password!";

@@ -60,4 +60,36 @@ public class UserRepository : IUserRepository
 
         return user;
     }
+
+    public async Task<TokenValidationUser?> GetTokenConfirmationAccountByUserIdAsync(Guid userId)
+    {
+        var result = await _rentACarDbContext.Set<TokenValidationUser>().Where(t => t.UserId == userId).FirstOrDefaultAsync();
+        return result;
+    }
+
+    public async Task DeleteTokenConfirmationAccountAsync(Guid tokenId)
+    {
+        var token = await _rentACarDbContext.Set<TokenValidationUser>().FirstOrDefaultAsync(t => t.Id == tokenId);
+
+        if (token is null)
+        {
+            throw new RepositoryException("Invalid token!");
+        }
+
+        _rentACarDbContext.Set<TokenValidationUser>().Remove(token);
+        await _rentACarDbContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteUserByIdAsync(Guid userId)
+    {
+        var user = await _rentACarDbContext.Set<User>().FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user is null)
+        {
+            throw new RepositoryException("Invalid user!");
+        }
+
+        _rentACarDbContext.Set<User>().Remove(user);
+        await _rentACarDbContext.SaveChangesAsync();
+    }
 }

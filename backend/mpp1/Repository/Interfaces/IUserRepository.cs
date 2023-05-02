@@ -5,6 +5,9 @@ namespace mpp1.Repository.Interfaces;
 
 public interface IUserRepository
 {
-    Task<User> AddUserAsync(UserDto user);
-    Task<User?> GetUserByNameAsync(string name);
+    public Task<User> AddUserAsync(UserDto user);
+    public Task<User?> GetUserByNameAsync(string name);
+    public Task<TokenValidationUser?> GetTokenConfirmationAccountByUserIdAsync(Guid userId);
+    public Task DeleteTokenConfirmationAccountAsync(Guid tokenId);
+    public Task DeleteUserByIdAsync(Guid userId);
 }

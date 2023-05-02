@@ -2,6 +2,10 @@ import React from "react";
 import styles from "./register.module.css";
 import styled from "@emotion/styled";
 import { Box, Button, TextField } from "@mui/material";
+import DatePicker from "../../components/DatePicker/DatePicker";
+import EnumDropDown from "@/components/EnumDropDown/EnumDropDown";
+import { GenderEnum } from "@/enums/GenderEnum";
+import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
 const Register = () => {
   return (
     <div className={`${styles.content}`}>
@@ -27,6 +31,26 @@ const Register = () => {
           }}
           onChange={() => {}}
         ></WhiteBorderTextField>
+        <WhiteBorderTextField
+          label="Location"
+          sx={{
+            label: { color: "royalblue" },
+          }}
+          onChange={() => {}}
+        ></WhiteBorderTextField>
+        <DatePicker label="Birthday" />
+        <EnumDropDown
+          dataEnum={GenderEnum}
+          style={{ width: "285px" }}
+          label="Select gender"
+          onChange={() => {}}
+        />
+        <EnumDropDown
+          dataEnum={MaritalStatusEnum}
+          style={{ width: "285px" }}
+          label="Select marital status"
+          onChange={() => {}}
+        />
         <MyButton variant="contained" onClick={async () => {}}>
           Register
         </MyButton>
@@ -47,6 +71,7 @@ const contentStyle = {
 };
 
 const WhiteBorderTextField = styled(TextField)`
+  width: 280px;
   & label.Mui-focused {
     color: white;
   }

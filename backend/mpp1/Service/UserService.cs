@@ -39,18 +39,18 @@ public class UserService : IUserService
             return authResult;
         }
 
-        var isAccountConfirmed = await _userRepository.GetTokenConfirmationAccountByUserIdAsync(alreadyExistingUser.Id);
-        
-        if (isAccountConfirmed is not null)
+        var userTokenConfirmAccount = await _userRepository.GetTokenConfirmationAccountByUserIdAsync(alreadyExistingUser.Id);
+
+        if (userTokenConfirmAccount is not null)
         {
             authResult.Error = "Account is not confirmed!";
             authResult.Result = false;
 
-            if (isAccountConfirmed.HasExpired)
+            if (userTokenConfirmAccount.HasExpired)
             {
-                
+                await _userRepository.DeleteUserByIdAsync(alreadyExistingUser.Id);
             }
-            
+
             return authResult;
         }
 
@@ -74,7 +74,7 @@ public class UserService : IUserService
 
         //TODO: validate user password 
         var alreadyExistingUser = await _userRepository.GetUserByNameAsync(user.Username);
-        
+
         if (alreadyExistingUser is not null)
         {
             authResult.Error = "There exists an account associated with this username";
@@ -84,12 +84,12 @@ public class UserService : IUserService
 
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
         var addedUser = await _userRepository.AddUserAsync(user);
-
-        var token = GenerateJwtTokenForUser(addedUser);
         
+        var token = GenerateJwtTokenForUser(addedUser);
+
         authResult.Result = true;
         authResult.AccessToken = token;
-        
+
         return authResult;
     }
 

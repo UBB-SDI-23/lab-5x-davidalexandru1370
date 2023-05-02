@@ -80,6 +80,26 @@ public class UserRepository : IUserRepository
         await _rentACarDbContext.SaveChangesAsync();
     }
 
+    public async Task<TokenValidationUser> GenerateTokenConfirmationAccountAsync(Guid userId)
+    {
+        var user = await _rentACarDbContext.Set<User>().FirstOrDefaultAsync(u => u.Id == userId);
+        
+        if (user is null)
+        {
+            throw new RepositoryException("Invalid user!");
+        }
+
+        var token = await _rentACarDbContext.Set<TokenValidationUser>().AddAsync(new TokenValidationUser
+        {
+            IssuedAt = DateTime.Now,
+            UserId = userId
+        });
+
+        await _rentACarDbContext.SaveChangesAsync();
+
+        return token.Entity;
+    }
+
     public async Task DeleteUserByIdAsync(Guid userId)
     {
         var user = await _rentACarDbContext.Set<User>().FirstOrDefaultAsync(u => u.Id == userId);

@@ -31,7 +31,7 @@ const EnumDropDown: FC<IEnumDropDown> = ({
         <Select
           labelId="select-label"
           id="simple-select"
-          value={value}
+          value={0}
           label={label}
           onChange={(val) => {
             const selectedValue: string = val.target.value as string;

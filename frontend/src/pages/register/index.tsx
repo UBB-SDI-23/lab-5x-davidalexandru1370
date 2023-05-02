@@ -1,7 +1,7 @@
 import React, { useReducer } from "react";
 import styles from "./register.module.css";
 import styled from "@emotion/styled";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import DatePicker from "../../components/DatePicker/DatePicker";
 import EnumDropDown from "@/components/EnumDropDown/EnumDropDown";
 import { GenderEnum } from "@/enums/GenderEnum";
@@ -9,6 +9,8 @@ import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
 import { UserDto } from "@/model/UserDto";
 import { register } from "../api/UserApi";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+import { computeAge, convertStringToDate } from "@/utilities/utilities";
 
 enum RegisterActionKind {
   UPDATE,
@@ -31,6 +33,7 @@ function handleRegisterDispatch(state: UserDto, action: RegisterAction) {
 }
 
 const Register = () => {
+  const { push, reload } = useRouter();
   const [userState, userDispatch] = useReducer(handleRegisterDispatch, {
     bio: "",
     birthday: "",
@@ -42,12 +45,16 @@ const Register = () => {
   } as UserDto);
 
   const checkIfAllInputFieldsAreValid = (): boolean => {
+    const passwordMinimumLength: number = 5;
+    const minimumAge: number = 14;
+    console.log(computeAge(convertStringToDate(userState.birthday)));
     return !(
       userState.bio === "" ||
       userState.birthday === "" ||
       userState.location === "" ||
-      userState.password === "" ||
-      userState.username === ""
+      userState.password.length < passwordMinimumLength ||
+      userState.username === "" ||
+      computeAge(convertStringToDate(userState.birthday)) < minimumAge
     );
   };
 
@@ -132,6 +139,7 @@ const Register = () => {
             }
           }}
         />
+        <Typography>You must be at least 14 years old!</Typography>
         <EnumDropDown
           dataEnum={GenderEnum}
           style={{ width: "285px" }}
@@ -163,6 +171,10 @@ const Register = () => {
           onClick={async () => {
             try {
               await register(userState);
+              push("/clients", undefined, {
+                shallow: false,
+              });
+              reload();
             } catch (error) {
               toast((error as Error).message, {
                 type: "error",

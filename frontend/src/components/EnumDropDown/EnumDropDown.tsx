@@ -23,7 +23,7 @@ const EnumDropDown: FC<IEnumDropDown> = ({
   dataEnum,
   style,
 }) => {
-  const [value, setValue] = useState<string>(label);
+  const [value, setValue] = useState<number>(0);
   return (
     <div>
       <FormControl sx={style} fullWidth>
@@ -31,7 +31,7 @@ const EnumDropDown: FC<IEnumDropDown> = ({
         <Select
           labelId="select-label"
           id="simple-select"
-          value={0}
+          value={value}
           label={label}
           onChange={(val) => {
             const selectedValue: string = val.target.value as string;

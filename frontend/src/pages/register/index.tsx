@@ -49,12 +49,15 @@ const Register = () => {
   const [token, setToken] = useState<string>("");
   const checkIfAllInputFieldsAreValid = (): boolean => {
     const passwordMinimumLength: number = 5;
+    const bioMinimumLength: number = 5;
+    const locationMinimumLength: number = 4;
+
     const minimumAge: number = 14;
     console.log(computeAge(convertStringToDate(userState.birthday)));
     return !(
-      userState.bio === "" ||
+      userState.bio.length < bioMinimumLength ||
       userState.birthday === "" ||
-      userState.location === "" ||
+      userState.location.length < locationMinimumLength ||
       userState.password.length < passwordMinimumLength ||
       userState.username === "" ||
       computeAge(convertStringToDate(userState.birthday)) < minimumAge
@@ -151,7 +154,7 @@ const Register = () => {
             userDispatch({
               type: RegisterActionKind.UPDATE,
               payload: {
-                gender: e === "" ? 0 : parseInt(e),
+                gender: e,
               },
             });
           }}
@@ -164,7 +167,7 @@ const Register = () => {
             userDispatch({
               type: RegisterActionKind.UPDATE,
               payload: {
-                maritalStatus: e === "" ? 0 : parseInt(e),
+                maritalStatus: e,
               },
             });
           }}
@@ -174,7 +177,9 @@ const Register = () => {
           onClick={async () => {
             try {
               const token = await register(userState);
-              setToken(token);
+              if (typeof token === "string") {
+                setToken(token);
+              }
             } catch (error) {
               toast((error as Error).message, {
                 type: "error",

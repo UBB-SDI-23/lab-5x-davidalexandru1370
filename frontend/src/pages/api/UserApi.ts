@@ -19,6 +19,7 @@ export const login = async (loginCredentials: LoginCredentials) => {
   if (data.result === false) {
     throw new Error(data.error!);
   } else {
+    localStorage.removeItem("token");
     localStorage.setItem("token", data.accessToken!);
   }
 };
@@ -57,6 +58,7 @@ export const validateAccount = async (token: string) => {
   if (data.result === false) {
     throw new Error(data.error!);
   } else {
+    localStorage.removeItem("token");
     localStorage.setItem("token", data.accessToken!);
   }
 };
@@ -70,6 +72,23 @@ export const getUserDataByUsername = async (username: string) => {
     })
     .then((result: UserDto | string) => {
       return result;
+    });
+
+  return data;
+};
+
+export const authorize = async (token: string) => {
+  let url = baseUrl + UserEndpoints.authorize;
+  let header = createHeader(Methods.POST, token);
+  let data: UserDto = await fetch(url, header)
+    .then(async (response: Response) => {
+      if (response.status === 403) {
+        return Promise.reject();
+      }
+      return await response.json();
+    })
+    .then((userDto: UserDto) => {
+      return userDto;
     });
 
   return data;

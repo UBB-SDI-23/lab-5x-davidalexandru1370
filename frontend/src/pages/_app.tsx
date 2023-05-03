@@ -1,4 +1,5 @@
 import { NavigationBar } from "@/components/NavigationBar/NavigationBar";
+import { AuthentificationContextProvider } from "@/context/AuthentificationContext/AuthentificationContext";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { ToastContainer } from "react-toastify";
@@ -14,7 +15,9 @@ export default function App({ Component, pageProps }: AppProps) {
         ]}
       />
       <ToastContainer />
-      <Component {...pageProps} />
+      <AuthentificationContextProvider>
+        <Component {...pageProps} />
+      </AuthentificationContextProvider>
     </div>
   );
 }

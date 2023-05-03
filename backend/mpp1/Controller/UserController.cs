@@ -103,7 +103,7 @@ public class UserController : ControllerBase
         }
     }
 
-    [HttpGet]
+    [HttpPost("authorize")]
     public async Task<ActionResult<UserDto>> Authorize([FromBody] string token)
     {
         try

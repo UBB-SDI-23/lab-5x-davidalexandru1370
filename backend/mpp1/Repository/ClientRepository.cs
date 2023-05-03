@@ -78,8 +78,11 @@ public class ClientRepository : IClientRepository
     public async Task<Pagination<Client>> GetClientsPaginated(int skip, int take)
     {
         Pagination<Client> clientsPaginated = new();
-        
-        var result = await _rentACarDbContext.Clients.Skip(skip).Take(take).ToListAsync() as IEnumerable<Client>;
+
+        var result =
+            await _rentACarDbContext.Clients.Skip(skip).Take(take).Include(c => c.User).ToListAsync() as
+                IEnumerable<Client>;
+
         clientsPaginated.Elements = result;
 
         int numberOfClients = GetNumberOfClients();

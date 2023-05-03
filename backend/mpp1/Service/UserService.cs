@@ -22,7 +22,7 @@ public class UserService : IUserService
         _appSettings = appSettings;
     }
 
-    public async Task<User> AddUser(UserDto user)
+    public async Task<User> AddUser(RegisterCredentials user)
     {
         return await _userRepository.AddUserAsync(user);
     }
@@ -69,7 +69,7 @@ public class UserService : IUserService
         return authResult;
     }
 
-    public async Task<AuthResult> Register(UserDto user)
+    public async Task<AuthResult> Register(RegisterCredentials user)
     {
         var authResult = new AuthResult();
 
@@ -81,7 +81,7 @@ public class UserService : IUserService
             authResult.Result = false;
             return authResult;
         }
-
+        
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
         var addedUser = await _userRepository.AddUserAsync(user);
         var confirmationToken = await _userRepository.GenerateTokenConfirmationAccountAsync(addedUser.Id);

@@ -16,7 +16,7 @@ public class UserRepository : IUserRepository
         _rentACarDbContext = rentACarDbContext;
     }
 
-    public async Task<User> AddUserAsync(UserDto user)
+    public async Task<User> AddUserAsync(RegisterCredentials user)
     {
         if (user is null)
         {

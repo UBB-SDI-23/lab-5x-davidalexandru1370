@@ -13,8 +13,7 @@ public class Client
 
     [RegularExpression(@"[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}")]
     public string CardNumber { get; set; }
-
-    [JsonIgnore] public virtual User User { get; set; } = null!;
+    public virtual User? User { get; set; } = null!;
     [ForeignKey("User")] public Guid UserId { get; set; }
     public string CNP { get; set; }
     [MinimumAge(18)] public DateOnly Birthday { get; set; }

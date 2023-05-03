@@ -10,4 +10,5 @@ public interface IUserService
     public Task<AuthResult> Register(RegisterCredentials user);
     public Task<AuthResult> ValidateAccount(Guid validateCode);
     public Task<UserDto> GetUserDataByUsernameAsync(string username);
+    public Task<UserDto> Authorize(string token);
 }

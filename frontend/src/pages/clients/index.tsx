@@ -32,6 +32,7 @@ import {
 import styles from "./clients.module.css";
 import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Clients() {
   const [clients, setClients] = useState<IPagination<Client>>();
@@ -44,7 +45,7 @@ export default function Clients() {
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
   const [skip, setSkip] = useState<number>(0);
   const [take, setTake] = useState<number>(12);
-
+  const router = useRouter();
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isClientModalOpen === true) {
       return;
@@ -165,7 +166,12 @@ export default function Clients() {
                       <TableCell>{client.nationality}</TableCell>
                       <TableCell>
                         {
-                          <Link href={`/user/${client.ownername}`}>
+                          <Link
+                            href={`/user/${client.ownername}`}
+                            onClick={() => {
+                              router.reload();
+                            }}
+                          >
                             {client.ownername}
                           </Link>
                         }

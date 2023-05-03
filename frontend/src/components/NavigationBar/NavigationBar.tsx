@@ -2,7 +2,7 @@ import { Route } from "@/model/Route";
 import { AppBar, Box, Toolbar } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useState } from "react";
 import styles from "./NavigationBar.module.css";
 
 interface INavigationBar {
@@ -10,7 +10,7 @@ interface INavigationBar {
 }
 
 export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
-  let router = useMemo(() => useRouter(), undefined);
+  let router = useRouter();
   const [selectedNavigationItem, setselectedNavigationItem] = useState<string>(
     router.pathname.substring(1)
   );

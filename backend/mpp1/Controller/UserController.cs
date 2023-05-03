@@ -90,7 +90,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("get-user/{username}")]
-    public async Task<ActionResult<UserDto>> GetUserDataByUsername([FromRoute]string username)
+    public async Task<ActionResult<UserDto>> GetUserDataByUsername([FromRoute] string username)
     {
         try
         {
@@ -100,6 +100,20 @@ public class UserController : ControllerBase
         catch (RepositoryException repositoryException)
         {
             return BadRequest(repositoryException.Message);
+        }
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<UserDto>> Authorize([FromBody] string token)
+    {
+        try
+        {
+            var userData = await _userService.Authorize(token);
+            return Ok(userData);
+        }
+        catch (Exception exception) when (exception is RepositoryException or RentACarException)
+        {
+            return Forbid();
         }
     }
 }

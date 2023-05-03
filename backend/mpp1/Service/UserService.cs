@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using mpp1.Exceptions;
 using mpp1.Model;
 using mpp1.Model.DTO;
 using mpp1.Repository.Interfaces;
@@ -81,7 +82,7 @@ public class UserService : IUserService
             authResult.Result = false;
             return authResult;
         }
-        
+
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
         var addedUser = await _userRepository.AddUserAsync(user);
         var confirmationToken = await _userRepository.GenerateTokenConfirmationAccountAsync(addedUser.Id);
@@ -147,9 +148,54 @@ public class UserService : IUserService
         return jwt;
     }
 
+    private Guid? ValidateToken(string token)
+    {
+        if (token is null)
+        {
+            return null;
+        }
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes(_appSettings["JwtSettings:Key"]);
+
+        try
+        {
+            tokenHandler.ValidateToken(token, new TokenValidationParameters()
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ClockSkew = TimeSpan.Zero
+            }, out SecurityToken validatedToken);
+
+            var jwt = (JwtSecurityToken)validatedToken;
+            var userId = Guid.Parse(jwt.Claims.First(x => x.Type == "Id").Value);
+            return userId;
+        }
+        catch (SecurityTokenValidationException securityTokenValidationException)
+        {
+        }
+
+        return null;
+    }
+
     public async Task<UserDto> GetUserDataByUsernameAsync(string username)
     {
         return await _userRepository.GetUserDataByUsername(username);
     }
 
+    public Task<UserDto> Authorize(string token)
+    {
+        var userId = ValidateToken(token);
+
+        if (userId is null)
+        {
+            throw new RentACarException("Invalid token!");
+        }
+
+        var userDto = _userRepository.GetUserDataByIdAsync(userId.Value);
+
+        return userDto;
+    }
 }

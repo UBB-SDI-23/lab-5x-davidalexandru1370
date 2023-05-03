@@ -14,4 +14,5 @@ public interface IUserRepository
     public Task DeleteUserByIdAsync(Guid userId);
     public Task<User> GetUserById(Guid id);
     public Task<UserDto> GetUserDataByUsername(string username);
+    public Task<UserDto> GetUserDataByIdAsync(Guid userId);
 }

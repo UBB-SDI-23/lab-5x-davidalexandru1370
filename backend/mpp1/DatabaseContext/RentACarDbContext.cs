@@ -22,5 +22,6 @@ public class RentACarDbContext : DbContext
     public virtual DbSet<VehicleRent> VehicleRents { get; set; } = null!;
     public virtual DbSet<User> Users { get; set; } = null!;
     public virtual DbSet<UserProfile> UserProfiles { get; set; } = null!;
+    public virtual DbSet<TokenValidationUser> TokenValidationUser { get; set; } = null!;
 
 }

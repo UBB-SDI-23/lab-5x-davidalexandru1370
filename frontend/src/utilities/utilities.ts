@@ -19,12 +19,26 @@ export const createHeader = (method: Methods, entity?: any) => {
 };
 
 export const convertStringToDate = (date: string) => {
-  const dates = date.split("-");
-  return new Date(
-    parseInt(dates[0]),
-    parseInt(dates[1]) - 1,
-    parseInt(dates[2]) + 1
-  );
+  // const dates = date.split("-");
+  // return new Date(
+  //   parseInt(dates[0]),
+  //   parseInt(dates[1]) - 1,
+  //   parseInt(dates[2]) + 1
+  // );
+  return new Date(date);
 };
 
 export const DOTS = "...";
+
+export function computeAge(birthday: Date) {
+  const today: number = Date.now();
+
+  const differenceInMs: number = today - birthday.getTime();
+
+  const differenceInYears: number =
+    differenceInMs / (1000 * 60 * 60 * 24 * 365);
+
+  const roundedDifference: number = Math.round(differenceInYears);
+
+  return roundedDifference;
+}

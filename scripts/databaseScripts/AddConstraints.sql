@@ -1,10 +1,15 @@
+ALTER TABLE "User" ADD CONSTRAINT "PK_User" PRIMARY KEY("Id");
 ALTER TABLE "Client" ADD CONSTRAINT "PK_Client" PRIMARY KEY("Id");
+ALTER TABLE "Client" ADD CONSTRAINT "FK_Client_UserId" FOREIGN KEY("UserId") REFERENCES "User"("Id") ON DELETE CASCADE;
 ALTER TABLE "Vehicle" ADD CONSTRAINT "PK_Vehicle" PRIMARY KEY("Id");
+ALTER TABLE "Vehicle" ADD CONSTRAINT "FK_Vehicle_UserId" FOREIGN KEY("UserId") REFERENCES "User"("Id") ON DELETE CASCADE;
 ALTER TABLE "Incidents" ADD CONSTRAINT "PK_Incidents" PRIMARY KEY("Id");
+ALTER TABLE "Incidents" ADD CONSTRAINT "FK_Incidents_UserId" FOREIGN KEY("UserId") REFERENCES "User"("Id") ON DELETE CASCADE;
 ALTER TABLE "Incidents" ADD CONSTRAINT "FK_Incidents_VehicleId" FOREIGN KEY("VehicleId") REFERENCES "Vehicle"("Id") ON DELETE CASCADE;
 ALTER TABLE "VehicleRent" ADD CONSTRAINT "PK_VehicleRent" PRIMARY KEY ("Id");
 ALTER TABLE "VehicleRent" ADD CONSTRAINT "FK_VehicleRent_ClientId" FOREIGN KEY("ClientId") REFERENCES "Client"("Id") ON DELETE CASCADE;
 ALTER TABLE "VehicleRent" ADD CONSTRAINT "FK_VehicleRent_VehicleId" FOREIGN KEY("VehicleId") REFERENCES "Vehicle"("Id") ON DELETE CASCADE;
+ALTER TABLE "VehicleRent" ADD CONSTRAINT "FK_VehicleRent_UserId" FOREIGN KEY("UserId") REFERENCES "User"("Id") ON DELETE CASCADE;
 CREATE INDEX "IX_VehicleRent_ClientId" on "VehicleRent"("ClientId");
 CREATE INDEX "IX_VehicleRent_VehicleId" on "VehicleRent"("VehicleId");
 CREATE INDEX "IX_Incidents_VehicleId" on "Incidents"("Id");

@@ -45,7 +45,7 @@ public class UserRepository : IUserRepository
         });
 
         await _rentACarDbContext.SaveChangesAsync();
-        
+
         return addedUser.Entity;
     }
 
@@ -56,14 +56,15 @@ public class UserRepository : IUserRepository
             throw new RepositoryException("Invalid name");
         }
 
-        var user =  await _rentACarDbContext.Set<User>().Where(u => u.Name == name).FirstOrDefaultAsync();
+        var user = await _rentACarDbContext.Set<User>().Where(u => u.Name == name).FirstOrDefaultAsync();
 
         return user;
     }
 
     public async Task<TokenValidationUser?> GetTokenConfirmationAccountByUserIdAsync(Guid userId)
     {
-        var result = await _rentACarDbContext.Set<TokenValidationUser>().Where(t => t.UserId == userId).FirstOrDefaultAsync();
+        var result = await _rentACarDbContext.Set<TokenValidationUser>().Where(t => t.UserId == userId)
+            .FirstOrDefaultAsync();
         return result;
     }
 
@@ -83,7 +84,7 @@ public class UserRepository : IUserRepository
     public async Task<TokenValidationUser> GenerateTokenConfirmationAccountAsync(Guid userId)
     {
         var user = await _rentACarDbContext.Set<User>().FirstOrDefaultAsync(u => u.Id == userId);
-        
+
         if (user is null)
         {
             throw new RepositoryException("Invalid user!");
@@ -135,5 +136,29 @@ public class UserRepository : IUserRepository
         }
 
         return user;
+    }
+
+    public Task<UserDto> GetUserDataByUsername(string username)
+    {
+        var user = from U in _rentACarDbContext.Users
+            where U.Name == username
+            join UP in _rentACarDbContext.UserProfiles on U.Id equals UP.UserId
+                into g
+            select new UserDto()
+            {
+                MaritalStatus = g.ToList()[0].MaritalStatus,
+                Bio = g.ToList()[0].Bio,
+                Birthday = g.ToList()[0].Birthday,
+                Gender = g.ToList()[0].Gender,
+                Location = g.ToList()[0].Location,
+                Username = g.ToList()[0].User.Name
+            };
+
+        if (user.Count() == 0)
+        {
+            throw new RepositoryException("User does not exist!");
+        }
+
+        return Task.FromResult(user.ToList()[0]);
     }
 }

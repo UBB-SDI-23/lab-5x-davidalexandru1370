@@ -9,4 +9,5 @@ public interface IUserService
     public Task<AuthResult> Login(LoginCredentials user);
     public Task<AuthResult> Register(RegisterCredentials user);
     public Task<AuthResult> ValidateAccount(Guid validateCode);
+    public Task<UserDto> GetUserDataByUsernameAsync(string username);
 }

@@ -1,6 +1,7 @@
 import { Methods, UserEndpoints, baseUrl } from "@/constants/ApiConstants";
 import { AuthResult } from "@/model/AuthResult";
 import { LoginCredentials } from "@/model/LoginCredentials";
+import { RegisterCredentials } from "@/model/RegisterCredentials";
 import { UserDto } from "@/model/UserDto";
 import { createHeader } from "@/utilities/utilities";
 
@@ -22,7 +23,9 @@ export const login = async (loginCredentials: LoginCredentials) => {
   }
 };
 
-export const register = async (userDto: UserDto): Promise<string> => {
+export const register = async (
+  userDto: RegisterCredentials
+): Promise<string> => {
   let url = baseUrl + UserEndpoints.register;
   let header = createHeader(Methods.POST, userDto);
   let data: AuthResult = await fetch(url, header)
@@ -56,4 +59,18 @@ export const validateAccount = async (token: string) => {
   } else {
     localStorage.setItem("token", data.accessToken!);
   }
+};
+
+export const getUserDataByUsername = async (username: string) => {
+  let url = baseUrl + UserEndpoints.getUserDataByUsername(username);
+  let header = createHeader(Methods.GET);
+  let data: UserDto | string = await fetch(url, header)
+    .then(async (response: Response) => {
+      return await response.json();
+    })
+    .then((result: UserDto | string) => {
+      return result;
+    });
+
+  return data;
 };

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using mpp1.Exceptions;
 using mpp1.Model;
+using mpp1.Model.DTO;
 using mpp1.Service.Interfaces;
 
 namespace mpp1.Controller;
@@ -80,7 +81,7 @@ public class ClientController : ControllerBase
     }
 
     [HttpGet("get-clients-paginated/{skip}/{take}")]
-    public async Task<ActionResult<Pagination<Client>>> GetClientsPaginated([FromRoute] uint skip,
+    public async Task<ActionResult<Pagination<ClientDTO>>> GetClientsPaginated([FromRoute] uint skip,
         [FromRoute] uint take)
     {
         var result = await _clientService.GetClientsPaginated((int)skip, (int)take);

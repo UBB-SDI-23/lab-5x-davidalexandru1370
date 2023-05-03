@@ -146,4 +146,10 @@ public class UserService : IUserService
 
         return jwt;
     }
+
+    public async Task<UserDto> GetUserDataByUsernameAsync(string username)
+    {
+        return await _userRepository.GetUserDataByUsername(username);
+    }
+
 }

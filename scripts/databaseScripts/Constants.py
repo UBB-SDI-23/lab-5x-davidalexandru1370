@@ -85,3 +85,5 @@ cities= ["Alba",
 ]
 
 descriptions = ["The car hit a deer", "Driver felt asleep while driving during night", "Driver was staying on the phone and hit a car in the buttom"]
+
+bios = ["Borned in 1979 in Zalau", "Being mechanic my entire life","Nurse here"]

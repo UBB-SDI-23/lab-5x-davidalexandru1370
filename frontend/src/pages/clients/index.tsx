@@ -31,6 +31,8 @@ import {
 } from "../api/ClientApi";
 import styles from "./clients.module.css";
 import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Clients() {
   const [clients, setClients] = useState<IPagination<Client>>();
@@ -43,7 +45,7 @@ export default function Clients() {
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
   const [skip, setSkip] = useState<number>(0);
   const [take, setTake] = useState<number>(12);
-
+  const router = useRouter();
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isClientModalOpen === true) {
       return;
@@ -59,12 +61,12 @@ export default function Clients() {
         onSubmitClick={async (client: ClientDto) => {
           if (clientModalMethod === ClientModalMethodsEnum.ADD) {
             await addClient(client);
-          } else {
-            await updateClient({
-              ...client,
-              id: selectedClient!.id,
-            });
-          }
+          } //else {
+          //   await updateClient({
+          //     ...client,
+          //     id: selectedClient!.id,
+          //   });
+          // }
           setSelectedClient(undefined);
           setIsClientModalOpen(false);
         }}
@@ -147,6 +149,7 @@ export default function Clients() {
                   <TableCell>CNP</TableCell>
                   <TableCell>Birthday</TableCell>
                   <TableCell>Nationality</TableCell>
+                  <TableCell>Owner name</TableCell>
                   <TableCell>Number of rents</TableCell>
                   <TableCell></TableCell>
                   <TableCell></TableCell>
@@ -161,6 +164,18 @@ export default function Clients() {
                       <TableCell>{client.cnp}</TableCell>
                       <TableCell>{client.birthday.toString()}</TableCell>
                       <TableCell>{client.nationality}</TableCell>
+                      <TableCell>
+                        {
+                          <Link
+                            href={`/user/${client.ownername}`}
+                            onClick={() => {
+                              router.reload();
+                            }}
+                          >
+                            {client.ownername}
+                          </Link>
+                        }
+                      </TableCell>
                       <TableCell></TableCell>
                       <TableCell>
                         <ClearIcon

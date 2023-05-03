@@ -1,4 +1,5 @@
 using mpp1.Model;
+using mpp1.Model.DTO;
 
 namespace mpp1.Repository.Interfaces;
 
@@ -14,7 +15,7 @@ public interface IClientRepository
 
     public Task<Client> GetClientById(Guid id);
 
-    public Task<Pagination<Client>> GetClientsPaginated(int skip, int take);
+    public Task<Pagination<ClientDTO>> GetClientsPaginated(int skip, int take);
 
     public int GetNumberOfClients();
     

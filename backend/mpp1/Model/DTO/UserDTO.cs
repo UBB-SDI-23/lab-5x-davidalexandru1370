@@ -6,13 +6,9 @@ namespace mpp1.Model.DTO;
 
 public class UserDto
 {
-    
     public string Username { get; set; } = null!;
-    [MinLength(5, ErrorMessage = "Password must be at least 5 characters long!")]
-    public string Password { get; set; } = null!;
     public string Bio { get; set; } = null!;
     public string Location { get; set; } = null!;
-    [MinimumAge(14,ErrorMessage = "You must be at least 14 years old to create an account!")]
     public DateOnly Birthday { get; set; }
     public GendersEnum Gender { get; set; }
     public MaritalStatusEnum MaritalStatus { get; set; }

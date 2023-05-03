@@ -6,7 +6,7 @@ import DatePicker from "../../components/DatePicker/DatePicker";
 import EnumDropDown from "@/components/EnumDropDown/EnumDropDown";
 import { GenderEnum } from "@/enums/GenderEnum";
 import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
-import { UserDto } from "@/model/UserDto";
+import { RegisterCredentials } from "@/model/RegisterCredentials";
 import { register, validateAccount } from "../api/UserApi";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
@@ -18,10 +18,13 @@ enum RegisterActionKind {
 
 interface RegisterAction {
   type: RegisterActionKind;
-  payload: Partial<UserDto>;
+  payload: Partial<RegisterCredentials>;
 }
 
-function handleRegisterDispatch(state: UserDto, action: RegisterAction) {
+function handleRegisterDispatch(
+  state: RegisterCredentials,
+  action: RegisterAction
+) {
   const { type, payload } = action;
   switch (type) {
     case RegisterActionKind.UPDATE:
@@ -42,7 +45,7 @@ const Register = () => {
     maritalStatus: MaritalStatusEnum.NeverMarried,
     password: "",
     username: "",
-  } as UserDto);
+  } as RegisterCredentials);
   const [token, setToken] = useState<string>("");
   const checkIfAllInputFieldsAreValid = (): boolean => {
     const passwordMinimumLength: number = 5;

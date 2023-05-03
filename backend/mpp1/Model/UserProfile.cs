@@ -9,7 +9,7 @@ namespace mpp1.Model;
 public class UserProfile
 {
     [JsonIgnore] public User User { get; set; } = null!;
-    [Key] [ForeignKey("User")] public Guid UserId { get; set; } 
+    [Key] [ForeignKey("User")] public Guid UserId { get; set; }
     [Required] public string Bio { get; set; } = null!;
     [Required] public string Location { get; set; } = null!;
     [Required] public DateOnly Birthday { get; set; }

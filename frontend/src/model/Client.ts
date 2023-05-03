@@ -5,4 +5,5 @@ export interface Client {
   cnp: string;
   birthday: string;
   nationality: string;
+  ownername: string;
 }

@@ -22,8 +22,7 @@ public class UserController : ControllerBase
     [Route("register")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    
-    public async Task<ActionResult<AuthResult>> Register(UserDto user)
+    public async Task<ActionResult<AuthResult>> Register(RegisterCredentials user)
     {
         try
         {
@@ -32,6 +31,7 @@ public class UserController : ControllerBase
             {
                 return BadRequest(authResult);
             }
+
             return Ok(authResult);
         }
         catch (RepositoryException repositoryException)
@@ -86,6 +86,34 @@ public class UserController : ControllerBase
                 Error = repositoryException.Message,
                 Result = false
             });
+        }
+    }
+
+    [HttpGet("get-user/{username}")]
+    public async Task<ActionResult<UserDto>> GetUserDataByUsername([FromRoute] string username)
+    {
+        try
+        {
+            var result = await _userService.GetUserDataByUsernameAsync(username);
+            return Ok(result);
+        }
+        catch (RepositoryException repositoryException)
+        {
+            return BadRequest(repositoryException.Message);
+        }
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<UserDto>> Authorize([FromBody] string token)
+    {
+        try
+        {
+            var userData = await _userService.Authorize(token);
+            return Ok(userData);
+        }
+        catch (Exception exception) when (exception is RepositoryException or RentACarException)
+        {
+            return Forbid();
         }
     }
 }

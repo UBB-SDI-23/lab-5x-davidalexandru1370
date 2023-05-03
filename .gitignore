@@ -290,6 +290,7 @@ InsertClient.sql
 InsertVehicle.sql
 InsertRent.sql
 InsertIncident.sql
+/scripts/databaseScripts/*.sql
 # Visual Studio 6 workspace options file
 *.opt
 

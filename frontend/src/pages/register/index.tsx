@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import styles from "./register.module.css";
 import styled from "@emotion/styled";
 import { Box, Button, TextField, Typography } from "@mui/material";
@@ -7,7 +7,7 @@ import EnumDropDown from "@/components/EnumDropDown/EnumDropDown";
 import { GenderEnum } from "@/enums/GenderEnum";
 import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
 import { UserDto } from "@/model/UserDto";
-import { register } from "../api/UserApi";
+import { register, validateAccount } from "../api/UserApi";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { computeAge, convertStringToDate } from "@/utilities/utilities";
@@ -43,7 +43,7 @@ const Register = () => {
     password: "",
     username: "",
   } as UserDto);
-
+  const [token, setToken] = useState<string>("");
   const checkIfAllInputFieldsAreValid = (): boolean => {
     const passwordMinimumLength: number = 5;
     const minimumAge: number = 14;
@@ -170,11 +170,8 @@ const Register = () => {
           variant="contained"
           onClick={async () => {
             try {
-              await register(userState);
-              push("/clients", undefined, {
-                shallow: false,
-              });
-              reload();
+              const token = await register(userState);
+              setToken(token);
             } catch (error) {
               toast((error as Error).message, {
                 type: "error",
@@ -185,6 +182,26 @@ const Register = () => {
         >
           Register
         </MyButton>
+        {token !== "" && (
+          <span
+            className={styles.activeAccountText}
+            onClick={async () => {
+              try {
+                await validateAccount(token);
+                push("/clients", undefined, {
+                  shallow: false,
+                });
+                reload();
+              } catch (error) {
+                toast((error as Error).message, {
+                  type: "error",
+                });
+              }
+            }}
+          >
+            Press here to activate your account
+          </span>
+        )}
       </Box>
     </div>
   );

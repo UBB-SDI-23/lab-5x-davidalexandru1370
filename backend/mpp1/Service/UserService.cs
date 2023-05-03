@@ -39,7 +39,8 @@ public class UserService : IUserService
             return authResult;
         }
 
-        var userTokenConfirmAccount = await _userRepository.GetTokenConfirmationAccountByUserIdAsync(alreadyExistingUser.Id);
+        var userTokenConfirmAccount =
+            await _userRepository.GetTokenConfirmationAccountByUserIdAsync(alreadyExistingUser.Id);
 
         if (userTokenConfirmAccount is not null)
         {
@@ -72,7 +73,6 @@ public class UserService : IUserService
     {
         var authResult = new AuthResult();
 
-        //TODO: validate user password 
         var alreadyExistingUser = await _userRepository.GetUserByNameAsync(user.Username);
 
         if (alreadyExistingUser is not null)
@@ -84,13 +84,41 @@ public class UserService : IUserService
 
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
         var addedUser = await _userRepository.AddUserAsync(user);
-        
-        var token = GenerateJwtTokenForUser(addedUser);
+        var confirmationToken = await _userRepository.GenerateTokenConfirmationAccountAsync(addedUser.Id);
+
+        //var token = GenerateJwtTokenForUser(addedUser);
 
         authResult.Result = true;
-        authResult.AccessToken = token;
+        authResult.AccessToken = confirmationToken.Id.ToString();
 
         return authResult;
+    }
+
+    public async Task<AuthResult> ValidateAccount(Guid validateCode)
+    {
+        var token = await _userRepository.GetTokenConfirmationAccountById(validateCode);
+
+        //await _userRepository.DeleteTokenConfirmationAccountAsync(validateCode);
+        if (token.HasExpired)
+        {
+            await _userRepository.DeleteUserByIdAsync(token.UserId);
+            return new AuthResult()
+            {
+                Error = "Expired validate account",
+                Result = false
+            };
+        }
+        else
+        {
+            var user = await _userRepository.GetUserById(token.UserId);
+            var accessToken = GenerateJwtTokenForUser(user);
+            await _userRepository.DeleteTokenConfirmationAccountAsync(token.Id);
+            return new AuthResult()
+            {
+                Result = true,
+                AccessToken = accessToken
+            };
+        }
     }
 
     private string GenerateJwtTokenForUser(User user)

@@ -70,4 +70,22 @@ public class UserController : ControllerBase
             return BadRequest(authResult);
         }
     }
+
+    [HttpDelete("validate-account/{ValidationCode:guid}")]
+    public async Task<ActionResult<AuthResult>> ValidateConfirmationCode([FromRoute] Guid ValidationCode)
+    {
+        try
+        {
+            var result = await _userService.ValidateAccount(ValidationCode);
+            return Ok(result);
+        }
+        catch (RepositoryException repositoryException)
+        {
+            return BadRequest(new AuthResult()
+            {
+                Error = repositoryException.Message,
+                Result = false
+            });
+        }
+    }
 }

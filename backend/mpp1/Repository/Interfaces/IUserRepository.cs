@@ -10,5 +10,7 @@ public interface IUserRepository
     public Task<TokenValidationUser?> GetTokenConfirmationAccountByUserIdAsync(Guid userId);
     public Task DeleteTokenConfirmationAccountAsync(Guid tokenId);
     public Task<TokenValidationUser> GenerateTokenConfirmationAccountAsync(Guid userId);
+    public Task<TokenValidationUser> GetTokenConfirmationAccountById(Guid tokenId);
     public Task DeleteUserByIdAsync(Guid userId);
+    public Task<User> GetUserById(Guid id);
 }

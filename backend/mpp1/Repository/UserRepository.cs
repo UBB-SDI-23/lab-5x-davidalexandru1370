@@ -91,13 +91,25 @@ public class UserRepository : IUserRepository
 
         var token = await _rentACarDbContext.Set<TokenValidationUser>().AddAsync(new TokenValidationUser
         {
-            IssuedAt = DateTime.Now,
+            IssuedAt = DateTime.Now.ToUniversalTime(),
             UserId = userId
         });
 
         await _rentACarDbContext.SaveChangesAsync();
 
         return token.Entity;
+    }
+
+    public async Task<TokenValidationUser> GetTokenConfirmationAccountById(Guid tokenId)
+    {
+        var token = await _rentACarDbContext.Set<TokenValidationUser>().FirstOrDefaultAsync(t => t.Id == tokenId);
+
+        if (token is null)
+        {
+            throw new RepositoryException("Invalid token!");
+        }
+
+        return token;
     }
 
     public async Task DeleteUserByIdAsync(Guid userId)
@@ -111,5 +123,17 @@ public class UserRepository : IUserRepository
 
         _rentACarDbContext.Set<User>().Remove(user);
         await _rentACarDbContext.SaveChangesAsync();
+    }
+
+    public async Task<User> GetUserById(Guid id)
+    {
+        var user = await _rentACarDbContext.Set<User>().FirstOrDefaultAsync(u => u.Id == id);
+
+        if (user is null)
+        {
+            throw new RepositoryException("Invalid user");
+        }
+
+        return user;
     }
 }

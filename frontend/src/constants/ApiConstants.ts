@@ -56,6 +56,7 @@ interface RentsEndpoint {
 interface UserEndpoint {
   login: string;
   register: string;
+  validateAccount: (token: string) => string;
 }
 
 export const ClientEndpoints: ClientEndpoint = {
@@ -103,4 +104,6 @@ export const RentEndpoints: RentsEndpoint = {
 export const UserEndpoints: UserEndpoint = {
   login: userController + "login",
   register: userController + "register",
+  validateAccount: (token: string) =>
+    userController + "validate-account/" + token,
 };

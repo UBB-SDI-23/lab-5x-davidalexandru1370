@@ -17,6 +17,8 @@ public class Vehicle
     [Range(0,10)]
     public int NumberOfSeats { get; set; }
     [Range(0,Int32.MaxValue)]
+    [JsonIgnore] public virtual User User { get; set; } = null!;
+    [ForeignKey("User")] public Guid UserId { get; set; }
     public int EngineCapacity { get; set; }
     public DateOnly FabricationDate { get; set; }
     public virtual ICollection<Incident>? Incidents { get; set; } = null!;

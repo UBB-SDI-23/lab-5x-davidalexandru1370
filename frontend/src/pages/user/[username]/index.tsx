@@ -11,6 +11,8 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { toast } from "react-toastify";
 import styles from "../user.module.css";
 import { useRouter } from "next/dist/client/router";
+import { GenderEnum } from "@/enums/GenderEnum";
+import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
 const User = () => {
   const router = useRouter();
   //const username = router.query.username;
@@ -64,6 +66,34 @@ const User = () => {
         multiline
         label="Username"
         defaultValue={user!.username}
+        autoFocus
+      ></TextField>
+      <TextField
+        disabled
+        multiline
+        label="Bio"
+        defaultValue={user!.bio}
+        autoFocus
+      ></TextField>
+      <TextField
+        disabled
+        multiline
+        label="Birthday"
+        defaultValue={user!.birthday}
+        autoFocus
+      ></TextField>
+      <TextField
+        disabled
+        multiline
+        label="Gender"
+        defaultValue={GenderEnum[user!.gender]}
+        autoFocus
+      ></TextField>
+      <TextField
+        disabled
+        multiline
+        label="Marital Status"
+        defaultValue={MaritalStatusEnum[user!.maritalStatus]}
         autoFocus
       ></TextField>
     </div>

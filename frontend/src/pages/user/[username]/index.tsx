@@ -17,14 +17,14 @@ import { useRouter } from "next/dist/client/router";
 import { GenderEnum } from "@/enums/GenderEnum";
 import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
 import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
+import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
 const User = () => {
   const router = useRouter();
   //const username = router.query.username;
   const [user, setUser] = useState<UserDto | null>(null);
   const [isFetching, setIsFetching] = useState<boolean>(true);
-  const { isAuthentificated, userDto, reFetch } = useContext(
-    AuthentificationContext
-  );
+  const { isAuthentificated, userDto, reFetch, skip, take, setSkip, setTake } =
+    useContext(AuthentificationContext);
   useEffect(() => {
     if (!router.isReady) {
       return;
@@ -140,6 +140,14 @@ const User = () => {
           defaultValue={user!.numberOfRents}
           autoFocus
         ></TextField>
+        {isAuthentificated === true && userDto !== null && (
+          <PaginationDropDown
+            take={take.toString()}
+            handleOnChange={(e) => {
+              setTake(e);
+            }}
+          />
+        )}
       </Box>
     </div>
   );

@@ -36,7 +36,6 @@ import Link from "next/link";
 export default function Rents() {
   const router = useRouter();
   const [rents, setRents] = useState<IPagination<VehicleRentDto>>();
-  const [skip, setSkip] = useState<number>(0);
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
   const [isVehicleRentsModalOpen, setIsVehicleRentsModalOpen] =
@@ -44,10 +43,8 @@ export default function Rents() {
   const [selectedVehicleRent, setSelectedVehicleRent] =
     useState<VehicleRentDto>();
   const parentContainerRef = useRef<HTMLDivElement>(null);
-  const [take, setTake] = useState<number>(12);
-  const { isAuthentificated, userDto, reFetch } = useContext(
-    AuthentificationContext
-  );
+  const { isAuthentificated, userDto, reFetch, skip, take, setSkip, setTake } =
+    useContext(AuthentificationContext);
   useEffect(() => {
     if (rents !== undefined) {
       return;
@@ -148,15 +145,6 @@ export default function Rents() {
             display="flex"
             justifyContent="end"
           >
-            {isAuthentificated === true && userDto !== null && (
-              <PaginationDropDown
-                take={take.toString()}
-                handleOnChange={(e) => {
-                  setRents(undefined);
-                  setTake(e);
-                }}
-              />
-            )}
             <Box
               sx={{
                 backgroundColor: "blueviolet",

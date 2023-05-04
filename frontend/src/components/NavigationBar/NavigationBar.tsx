@@ -91,7 +91,7 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
                   <MenuItem
                     onClick={() => {
                       router.push(`/user/${userDto?.username}`);
-                      router.reload();
+                      //router.reload();
                     }}
                   >
                     My account
@@ -113,7 +113,7 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
                 className={`${styles.navigationItem}`}
                 href={"/login"}
                 onClick={() => {
-                  router.reload();
+                  //router.reload();
                 }}
               >
                 Sign in

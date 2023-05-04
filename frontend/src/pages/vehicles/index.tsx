@@ -51,11 +51,8 @@ export default function Vehicles() {
   const [isIncidentModalOpen, setIsIncidentModalOpen] =
     useState<boolean>(false);
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleDto>();
-  const [skip, setSkip] = useState<number>(0);
-  const [take, setTake] = useState<number>(12);
-  const { isAuthentificated, userDto, reFetch } = useContext(
-    AuthentificationContext
-  );
+  const { isAuthentificated, userDto, reFetch, skip, take, setTake, setSkip } =
+    useContext(AuthentificationContext);
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isVehicleModalOpen === true) {
       return;
@@ -165,16 +162,7 @@ export default function Vehicles() {
         </Box>
       ) : (
         <>
-          <Box component={Paper} sx={{ padding: "10px" }}>
-            {isAuthentificated === true && userDto !== null && (
-              <PaginationDropDown
-                take={take.toString()}
-                handleOnChange={(value) => {
-                  setTake(value);
-                }}
-              />
-            )}
-          </Box>
+          <Box component={Paper} sx={{ padding: "10px" }}></Box>
           <Box
             component={Paper}
             sx={{ padding: "32px", textAlign: "right" }}

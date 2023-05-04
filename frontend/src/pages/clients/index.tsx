@@ -44,12 +44,8 @@ export default function Clients() {
   const [clientModalMethod, setClientModalMethod] =
     useState<ClientModalMethodsEnum>(ClientModalMethodsEnum.ADD);
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
-  const [skip, setSkip] = useState<number>(0);
-  const [take, setTake] = useState<number>(12);
   const router = useRouter();
-  const { isAuthentificated, userDto, reFetch } = useContext(
-    AuthentificationContext
-  );
+  const { skip, take, setSkip } = useContext(AuthentificationContext);
 
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isClientModalOpen === true) {
@@ -118,14 +114,6 @@ export default function Clients() {
             display="flex"
             justifyContent="end"
           >
-            {isAuthentificated === true && userDto !== null && (
-              <PaginationDropDown
-                take={take.toString()}
-                handleOnChange={(e) => {
-                  setTake(e);
-                }}
-              />
-            )}
             <Box
               sx={{
                 backgroundColor: "blueviolet",

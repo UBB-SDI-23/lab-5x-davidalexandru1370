@@ -1,18 +1,19 @@
 import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
 import Pagination from "@/components/Pagination/Pagination";
+import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
 import {
   VehicleModalMethodsEnum,
   VehicleRentsModal,
 } from "@/components/VehicleRentsModal/VehicleRentsModal";
+import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
 import IPagination from "@/model/Pagination";
-import VehicleRent from "@/model/VehicleRent";
+import VehicleRentDto from "@/model/VehicleRentDto";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
   CircularProgress,
-  Link,
   Paper,
   Table,
   TableBody,
@@ -21,6 +22,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import {
@@ -30,10 +32,9 @@ import {
   updateVehicleRent,
 } from "../api/RentsApi";
 import styles from "./rents.module.css";
-import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
-import VehicleRentDto from "@/model/VehicleRentDto";
-import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
+import Link from "next/link";
 export default function Rents() {
+  const router = useRouter();
   const [rents, setRents] = useState<IPagination<VehicleRentDto>>();
   const [skip, setSkip] = useState<number>(0);
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
@@ -207,7 +208,16 @@ export default function Rents() {
                       <TableCell>{rent.totalCost}</TableCell>
                       <TableCell>{rent.numberOfTimesRented}</TableCell>
                       <TableCell>
-                        <Link>{rent.ownerName}</Link>
+                        {
+                          <Link
+                            href={`/user/${rent.ownerName}`}
+                            onClick={() => {
+                              router.reload();
+                            }}
+                          >
+                            {rent.ownerName}
+                          </Link>
+                        }
                       </TableCell>
                       <TableCell>
                         <ClearIcon

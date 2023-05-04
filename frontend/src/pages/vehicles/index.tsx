@@ -16,7 +16,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  Link,
   Paper,
   Table,
   TableBody,
@@ -40,6 +39,7 @@ import { toast } from "react-toastify";
 import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
 import { useRouter } from "next/router";
 import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
+import Link from "next/link";
 
 export default function Vehicles() {
   const router = useRouter();
@@ -255,14 +255,16 @@ export default function Vehicles() {
                       <TableCell>{vehicle.fabricationDate}</TableCell>
                       <TableCell>{vehicle.numberOfIncidents}</TableCell>
                       <TableCell>
-                        <Link
-                          href={`/user/${vehicle.ownerName}`}
-                          onClick={() => {
-                            router.reload();
-                          }}
-                        >
-                          {vehicle.ownerName}
-                        </Link>
+                        {
+                          <Link
+                            href={`/user/${vehicle.ownerName}`}
+                            onClick={() => {
+                              router.reload();
+                            }}
+                          >
+                            {vehicle.ownerName}
+                          </Link>
+                        }
                       </TableCell>
                       <TableCell>
                         <ClearIcon

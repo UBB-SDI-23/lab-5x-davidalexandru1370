@@ -12,6 +12,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
   CircularProgress,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -20,7 +21,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import {
   addVehicleRent,
@@ -30,17 +31,22 @@ import {
 } from "../api/RentsApi";
 import styles from "./rents.module.css";
 import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
+import VehicleRentDto from "@/model/VehicleRentDto";
+import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
 export default function Rents() {
-  const [rents, setRents] = useState<IPagination<VehicleRent>>();
+  const [rents, setRents] = useState<IPagination<VehicleRentDto>>();
   const [skip, setSkip] = useState<number>(0);
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
   const [isVehicleRentsModalOpen, setIsVehicleRentsModalOpen] =
     useState<boolean>(false);
-  const [selectedVehicleRent, setSelectedVehicleRent] = useState<VehicleRent>();
+  const [selectedVehicleRent, setSelectedVehicleRent] =
+    useState<VehicleRentDto>();
   const parentContainerRef = useRef<HTMLDivElement>(null);
   const [take, setTake] = useState<number>(12);
-
+  const { isAuthentificated, userDto, reFetch } = useContext(
+    AuthentificationContext
+  );
   useEffect(() => {
     if (rents !== undefined) {
       return;
@@ -141,13 +147,15 @@ export default function Rents() {
             display="flex"
             justifyContent="end"
           >
-            <PaginationDropDown
-              take={take.toString()}
-              handleOnChange={(e) => {
-                setRents(undefined);
-                setTake(e);
-              }}
-            />
+            {isAuthentificated === true && userDto !== null && (
+              <PaginationDropDown
+                take={take.toString()}
+                handleOnChange={(e) => {
+                  setRents(undefined);
+                  setTake(e);
+                }}
+              />
+            )}
             <Box
               sx={{
                 backgroundColor: "blueviolet",
@@ -182,6 +190,8 @@ export default function Rents() {
                   <TableCell>Start Date</TableCell>
                   <TableCell>End Date</TableCell>
                   <TableCell>Total Cost</TableCell>
+                  <TableCell>Rented times</TableCell>
+                  <TableCell>Owner name</TableCell>
                   <TableCell></TableCell>
                   <TableCell></TableCell>
                 </TableRow>
@@ -195,6 +205,10 @@ export default function Rents() {
                       <TableCell>{rent.startDate.toString()}</TableCell>
                       <TableCell>{rent.endDate.toString()}</TableCell>
                       <TableCell>{rent.totalCost}</TableCell>
+                      <TableCell>{rent.numberOfTimesRented}</TableCell>
+                      <TableCell>
+                        <Link>{rent.ownerName}</Link>
+                      </TableCell>
                       <TableCell>
                         <ClearIcon
                           sx={{

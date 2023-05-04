@@ -1,10 +1,10 @@
+import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
 import { Route } from "@/model/Route";
 import { AppBar, Box, Button, Menu, MenuItem, Toolbar } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useContext, useState } from "react";
 import styles from "./NavigationBar.module.css";
-import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
 
 interface INavigationBar {
   navigationItems: Route[];

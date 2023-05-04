@@ -64,4 +64,9 @@ public class IncidentService : IIncidentService
             throw new RentACarException(e.Message);
         }
     }
+
+    public async Task<int> GetNumberOfIncidentsByOwner(string owner)
+    {
+        return await _incidentsRepository.GetIncidentsCountOfUser(owner);
+    }
 }

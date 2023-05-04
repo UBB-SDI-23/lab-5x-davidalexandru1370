@@ -8,4 +8,8 @@ export interface UserDto {
   birthday: string;
   gender: GenderEnum;
   maritalStatus: MaritalStatusEnum;
+  numberOfClients?: number;
+  numberOfVehicles?: number;
+  numberOfIncidents?: number;
+  numberOfRents?: number;
 }

@@ -14,4 +14,7 @@ public interface IIncidentsRepository
     public Task<Incident> GetIncidentById(Guid id);
 
     public Task<IEnumerable<Incident>> GetIncidentsByVehicleId(Guid vehicleId);
+    
+    public Task<int> GetIncidentsCountOfUser(string owner);
+
 }

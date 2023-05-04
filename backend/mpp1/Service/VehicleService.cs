@@ -71,7 +71,7 @@ public class VehicleService : IVehicleService
         return result;
     }
 
-    public async Task<Pagination<Vehicle>> GetVehiclesPaginated(int skip, int take)
+    public async Task<Pagination<VehicleDTO>> GetVehiclesPaginated(int skip, int take)
     {
         return await _vehicleRepository.GetVehiclesPaginated(skip, take);
     }
@@ -80,6 +80,11 @@ public class VehicleService : IVehicleService
     {
         string normalizedCarPlate = normalizeCarPlate(carPlate);
         return _vehicleRepository.GetVehiclesByCarPlate(normalizedCarPlate);
+    }
+
+    public async Task<int> GetNumberOfVehiclesByOwner(string owner)
+    {
+        return await _vehicleRepository.GetNumberOfVehiclesByOwner(owner);
     }
 
     private string normalizeCarPlate(string carPlate)

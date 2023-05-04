@@ -18,4 +18,5 @@ public interface IIncidentService
 
     public Task ChangeIncidentsIdToAnotherVehicleId(Guid vehicleId, IEnumerable<Guid> incidentIds);
 
+    public Task<int> GetNumberOfIncidentsByOwner(string owner);
 }

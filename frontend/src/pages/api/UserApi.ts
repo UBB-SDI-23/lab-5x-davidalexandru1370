@@ -93,3 +93,17 @@ export const authorize = async (token: string) => {
 
   return data;
 };
+
+export const getUserDataWithStatistcs = async (username: string) => {
+  let url = baseUrl + UserEndpoints.getUserDataWithStatistics(username);
+  let header = createHeader(Methods.GET);
+  let data: UserDto | string = await fetch(url, header)
+    .then(async (response: Response) => {
+      return await response.json();
+    })
+    .then((userDto: UserDto | string) => {
+      return userDto;
+    });
+
+  return data;
+};

@@ -1,5 +1,8 @@
 import { UserDto } from "@/model/UserDto";
-import { getUserDataByUsername } from "@/pages/api/UserApi";
+import {
+  getUserDataByUsername,
+  getUserDataWithStatistcs,
+} from "@/pages/api/UserApi";
 import {
   Box,
   CircularProgress,
@@ -7,18 +10,21 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { toast } from "react-toastify";
 import styles from "../user.module.css";
 import { useRouter } from "next/dist/client/router";
 import { GenderEnum } from "@/enums/GenderEnum";
 import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
+import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
 const User = () => {
   const router = useRouter();
   //const username = router.query.username;
   const [user, setUser] = useState<UserDto | null>(null);
   const [isFetching, setIsFetching] = useState<boolean>(true);
-
+  const { isAuthentificated, userDto, reFetch } = useContext(
+    AuthentificationContext
+  );
   useEffect(() => {
     if (!router.isReady) {
       return;
@@ -29,7 +35,7 @@ const User = () => {
     }
     const username = router.query.username?.toString();
     try {
-      getUserDataByUsername(username!.toString()).then((x) => {
+      getUserDataWithStatistcs(username!.toString()).then((x) => {
         if (typeof x === "string") {
           toast(x, {
             type: "error",
@@ -61,41 +67,80 @@ const User = () => {
 
   return (
     <div className={styles.content}>
-      <TextField
-        disabled
-        multiline
-        label="Username"
-        defaultValue={user!.username}
-        autoFocus
-      ></TextField>
-      <TextField
-        disabled
-        multiline
-        label="Bio"
-        defaultValue={user!.bio}
-        autoFocus
-      ></TextField>
-      <TextField
-        disabled
-        multiline
-        label="Birthday"
-        defaultValue={user!.birthday}
-        autoFocus
-      ></TextField>
-      <TextField
-        disabled
-        multiline
-        label="Gender"
-        defaultValue={GenderEnum[user!.gender]}
-        autoFocus
-      ></TextField>
-      <TextField
-        disabled
-        multiline
-        label="Marital Status"
-        defaultValue={MaritalStatusEnum[user!.maritalStatus]}
-        autoFocus
-      ></TextField>
+      <Box>
+        <TextField
+          sx={{ padding: "20px" }}
+          disabled
+          multiline
+          label="Username"
+          defaultValue={user!.username}
+          autoFocus
+        ></TextField>
+        <TextField
+          sx={{ padding: "20px" }}
+          disabled
+          multiline
+          label="Bio"
+          defaultValue={user!.bio}
+          autoFocus
+        ></TextField>
+        <TextField
+          sx={{ padding: "20px" }}
+          disabled
+          multiline
+          label="Birthday"
+          defaultValue={user!.birthday}
+          autoFocus
+        ></TextField>
+        <TextField
+          sx={{ padding: "20px" }}
+          disabled
+          multiline
+          label="Gender"
+          defaultValue={GenderEnum[user!.gender]}
+          autoFocus
+        ></TextField>
+        <TextField
+          sx={{ padding: "20px" }}
+          disabled
+          multiline
+          label="Marital Status"
+          defaultValue={MaritalStatusEnum[user!.maritalStatus]}
+          autoFocus
+        ></TextField>
+        <TextField
+          sx={{ padding: "20px" }}
+          disabled
+          multiline
+          label="Clients added"
+          defaultValue={user!.numberOfClients}
+          autoFocus
+        ></TextField>
+        <TextField
+          sx={{ padding: "20px" }}
+          disabled
+          multiline
+          label="Vehicles added"
+          defaultValue={user!.numberOfVehicles}
+          autoFocus
+        ></TextField>
+        <TextField
+          sx={{ padding: "20px" }}
+          disabled
+          multiline
+          label="Incidents added"
+          defaultValue={user!.numberOfIncidents}
+          autoFocus
+        ></TextField>
+        <TextField
+          sx={{ padding: "20px" }}
+          disabled
+          multiline
+          label="Rents added"
+          defaultValue={user!.numberOfRents}
+          autoFocus
+        ></TextField>
+      </Box>
     </div>
   );
 };

@@ -140,7 +140,7 @@ public class VehicleController : ControllerBase
     }
 
     [HttpGet("get-vehicles-paginated/{skip}/{take}")]
-    public async Task<ActionResult<Pagination<Vehicle>>> GetVehiclesPaginated([FromRoute] int skip,
+    public async Task<ActionResult<Pagination<VehicleDTO>>> GetVehiclesPaginated([FromRoute] int skip,
         [FromRoute] int take)
     {
         var result = await _vehicleService.GetVehiclesPaginated(skip, take);

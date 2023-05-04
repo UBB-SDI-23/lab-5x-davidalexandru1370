@@ -123,4 +123,14 @@ public class ClientRepository : IClientRepository
 
         return Task.FromResult(foundClients);
     }
+
+    public  Task<int> GetClientsCountOfUser(string owner)
+    {
+        var count =  _rentACarDbContext
+            .Set<Client>()
+            .Include(c => c.User)
+            .Count(c => c.User.Name == owner);
+
+        return Task.FromResult(count);
+    }
 }

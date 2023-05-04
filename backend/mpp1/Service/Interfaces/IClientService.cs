@@ -19,4 +19,6 @@ public interface IClientService
 
     public Task<IEnumerable<Client>> GetClientsByName(string name);
 
+    public Task<int> GetClientsCountOfUser(string owner);
+
 }

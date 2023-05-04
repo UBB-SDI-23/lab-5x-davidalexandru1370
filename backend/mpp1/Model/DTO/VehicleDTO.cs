@@ -2,13 +2,15 @@ namespace mpp1.Model.DTO;
 
 public class VehicleDTO
 {
-    public string Brand { get; set; }
+    public Guid Id { get; set; }
+    public string Brand { get; set; } = null!;
     public int HorsePower { get; set; }
-    public string CarPlate { get; set; }
+    public string CarPlate { get; set; } = null!;
     public int NumberOfSeats { get; set; }
     public int EngineCapacity { get; set; }
     public DateOnly FabricationDate { get; set; }
     public int NumberOfIncidents { get; set; }
+    public string OwnerName { get; set; } = null!;
 
     public override bool Equals(object? obj)
     {
@@ -28,7 +30,7 @@ public class VehicleDTO
         {
             return false;
         }
-        
+
         return true;
     }
 }

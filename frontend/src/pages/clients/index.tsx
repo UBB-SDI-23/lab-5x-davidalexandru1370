@@ -22,7 +22,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   addClient,
   deleteClientById,
@@ -33,6 +33,7 @@ import styles from "./clients.module.css";
 import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
 
 export default function Clients() {
   const [clients, setClients] = useState<IPagination<Client>>();
@@ -46,6 +47,10 @@ export default function Clients() {
   const [skip, setSkip] = useState<number>(0);
   const [take, setTake] = useState<number>(12);
   const router = useRouter();
+  const { isAuthentificated, userDto, reFetch } = useContext(
+    AuthentificationContext
+  );
+
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isClientModalOpen === true) {
       return;
@@ -113,12 +118,14 @@ export default function Clients() {
             display="flex"
             justifyContent="end"
           >
-            <PaginationDropDown
-              take={take.toString()}
-              handleOnChange={(e) => {
-                setTake(e);
-              }}
-            />
+            {isAuthentificated === true && userDto !== null && (
+              <PaginationDropDown
+                take={take.toString()}
+                handleOnChange={(e) => {
+                  setTake(e);
+                }}
+              />
+            )}
             <Box
               sx={{
                 backgroundColor: "blueviolet",

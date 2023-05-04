@@ -176,7 +176,7 @@ export default function Clients() {
                           <Link
                             href={`/user/${client.ownername}`}
                             onClick={() => {
-                              router.reload();
+                              //router.reload();
                             }}
                           >
                             {client.ownername}

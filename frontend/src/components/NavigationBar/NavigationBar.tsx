@@ -113,9 +113,7 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
               <Link
                 className={`${styles.navigationItem}`}
                 href={"/login"}
-                onClick={() => {
-                  router.reload();
-                }}
+                onClick={() => {}}
               >
                 Sign in
               </Link>

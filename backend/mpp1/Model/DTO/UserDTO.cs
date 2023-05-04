@@ -12,4 +12,8 @@ public class UserDto
     public DateOnly Birthday { get; set; }
     public GendersEnum Gender { get; set; }
     public MaritalStatusEnum MaritalStatus { get; set; }
+    public int? NumberOfClients { get; set; }
+    public int? NumberOfVehicles { get; set; }
+    public int? NumberOfIncidents { get; set; }
+    public int? NumberOfRents { get; set; }
 }

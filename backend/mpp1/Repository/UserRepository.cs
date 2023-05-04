@@ -164,24 +164,31 @@ public class UserRepository : IUserRepository
 
     public Task<UserDto> GetUserDataByIdAsync(Guid userId)
     {
-        var user = from U in _rentACarDbContext.Users
+        var test = from U in _rentACarDbContext.Users
             join UP in _rentACarDbContext.UserProfiles on U.Id equals UP.UserId
                 into g
-            select new UserDto()
-            {
-                Bio = g.ToList()[0].Bio,
-                Birthday = g.ToList()[0].Birthday,
-                Gender = g.ToList()[0].Gender,
-                Location = g.ToList()[0].Location,
-                Username = g.ToList()[0].User.Name,
-                MaritalStatus = g.ToList()[0].MaritalStatus
-            };
+            select g;
 
-        if (user.Count() == 0)
+        var user = _rentACarDbContext.Set<UserProfile>().Where(u => u.UserId == userId).Include(u => u.User)
+            .FirstOrDefault();
+
+        if (user is null)
         {
-            throw new RepositoryException("User does not exist");
+            throw new RepositoryException("Invalid user");
         }
+        
+        var result = new UserDto()
+        {
+            Bio = user.Bio,
+            Birthday = user.Birthday,
+            Gender = user.Gender,
+            Location = user.Location,
+            Username = user.User.Name,
+            MaritalStatus = user.MaritalStatus
+        };
 
-        return Task.FromResult(user.ToList()[0]);
+        
+
+        return Task.FromResult(result);
     }
 }

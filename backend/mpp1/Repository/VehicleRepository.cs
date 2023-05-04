@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using mpp1.DatabaseContext;
 using mpp1.Exceptions;
 using mpp1.Model;
+using mpp1.Model.DTO;
 using mpp1.Repository.Interfaces;
 
 namespace mpp1.Repository;
@@ -31,7 +32,7 @@ public class VehicleRepository : IVehicleRepository
         }
 
         var foundVehile = _rentACarDbContext.Vehicles.FirstOrDefault(v => v.Id == vehicle.Id);
-        
+
         if (foundVehile is null)
         {
             throw new RepositoryException($"Vehicle with Id={vehicle.Id} does not exists!");
@@ -49,14 +50,15 @@ public class VehicleRepository : IVehicleRepository
         {
             throw new RepositoryException($"Vehicle with Id={id} does not exists!");
         }
-       
+
         _rentACarDbContext.Remove(vehicle);
         await _rentACarDbContext.SaveChangesAsync();
     }
 
     public Task<Vehicle> GetByVehicleIdWithAllData(Guid vehicleId)
     {
-        var result = _rentACarDbContext.Set<Vehicle>().Where(v => v.Id == vehicleId).Include(v => v.Incidents) .FirstOrDefault();
+        var result = _rentACarDbContext.Set<Vehicle>().Where(v => v.Id == vehicleId).Include(v => v.Incidents)
+            .FirstOrDefault();
         if (result is null)
         {
             throw new RepositoryException($"vehicle with id={vehicleId} does not exists!");
@@ -65,7 +67,7 @@ public class VehicleRepository : IVehicleRepository
         return Task.FromResult(result);
     }
 
-    public  Task<IEnumerable<Vehicle>> GetAllVehicles()
+    public Task<IEnumerable<Vehicle>> GetAllVehicles()
     {
         var vehicles = _rentACarDbContext.Vehicles.ToList() as IEnumerable<Vehicle>;
         return Task.FromResult(vehicles);
@@ -95,13 +97,29 @@ public class VehicleRepository : IVehicleRepository
         return Task.FromResult(result);
     }
 
-    public async Task<Pagination<Vehicle>> GetVehiclesPaginated(int skip, int take)
+    public async Task<Pagination<VehicleDTO>> GetVehiclesPaginated(int skip, int take)
     {
-        Pagination<Vehicle> paginatedRents = new();
+        Pagination<VehicleDTO> paginatedRents = new();
 
-        var result = await _rentACarDbContext.Vehicles.Skip(skip).Take(take).ToListAsync();
+        var result = await _rentACarDbContext.Vehicles
+            .Skip(skip)
+            .Take(take)
+            .Include(v => v.User)
+            .Include(v => v.Incidents)
+            .ToListAsync();
 
-        paginatedRents.Elements = result;
+        paginatedRents.Elements = result.Select(x => new VehicleDTO()
+        {
+            Id = x.Id,
+            CarPlate = x.CarPlate,
+            Brand = x.Brand,
+            EngineCapacity = x.EngineCapacity,
+            FabricationDate = x.FabricationDate,
+            HorsePower = x.HorsePower,
+            OwnerName = x.User.Name,
+            NumberOfIncidents = x.Incidents is null ? 0 : x.Incidents!.Count,
+            NumberOfSeats = x.NumberOfSeats
+        });
         //paginatedRents.HasPrevious = skip != 0;
 
         int numberOfVehicles = GetNumberOfRents();
@@ -115,7 +133,7 @@ public class VehicleRepository : IVehicleRepository
     {
         return _rentACarDbContext.Set<Vehicle>().Count();
     }
-    
+
     public Task<IEnumerable<Vehicle>> GetVehiclesByCarPlate(string carPlate)
     {
         if (carPlate is null)
@@ -124,14 +142,23 @@ public class VehicleRepository : IVehicleRepository
         }
 
         const int numberOfVehicles = 15;
-        
+
         var foundVehicles = _rentACarDbContext
-            .Set<Vehicle>()
-            .Where(v => v.CarPlate.Contains(carPlate))
-            .Take(numberOfVehicles)
+                .Set<Vehicle>()
+                .Where(v => v.CarPlate.Contains(carPlate))
+                .Take(numberOfVehicles)
             as IEnumerable<Vehicle>;
 
         return Task.FromResult(foundVehicles);
     }
 
+    public Task<int> GetNumberOfVehiclesByOwner(string owner)
+    {
+        var count = _rentACarDbContext
+            .Set<Vehicle>()
+            .Include(c => c.User)
+            .Count(c => c.User.Name == owner);
+
+        return Task.FromResult(count);
+    }
 }

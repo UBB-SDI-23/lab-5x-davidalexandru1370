@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using mpp1.Exceptions;
 using mpp1.Model;
 using mpp1.Model.DTO;
+using mpp1.Service;
 using mpp1.Service.Interfaces;
 
 namespace mpp1.Controller;
@@ -13,7 +14,10 @@ public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
 
-    public UserController(IUserService userService)
+
+    public UserController(IUserService userService, IClientService clientService,
+        IVehicleRentService vehicleRentService, IVehicleService vehicleService, IIncidentService incidentService
+    )
     {
         _userService = userService;
     }
@@ -103,7 +107,7 @@ public class UserController : ControllerBase
         }
     }
 
-    [HttpGet]
+    [HttpPost("authorize")]
     public async Task<ActionResult<UserDto>> Authorize([FromBody] string token)
     {
         try
@@ -114,6 +118,20 @@ public class UserController : ControllerBase
         catch (Exception exception) when (exception is RepositoryException or RentACarException)
         {
             return Forbid();
+        }
+    }
+
+    [HttpGet("get-user-with-statistics/{username}")]
+    public async Task<ActionResult<UserDto>> GetUserWithAllData([FromRoute] string username)
+    {
+        try
+        {
+            var result = await _userService.GetUserWithStatistics(username);
+            return Ok(result);
+        }
+        catch (RepositoryException repositoryException)
+        {
+            return BadRequest(repositoryException.Message);
         }
     }
 }

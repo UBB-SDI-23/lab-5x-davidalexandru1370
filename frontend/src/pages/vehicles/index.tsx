@@ -26,7 +26,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   addVehicle,
   deleteVehicleById,
@@ -37,19 +37,25 @@ import {
 import styles from "./vehicles.module.css";
 import { toast } from "react-toastify";
 import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
+import { useRouter } from "next/router";
+import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
+import Link from "next/link";
 
 export default function Vehicles() {
-  const [vehicles, setVehicles] = useState<IPagination<Vehicle>>();
+  const router = useRouter();
+  const [vehicles, setVehicles] = useState<IPagination<VehicleDto>>();
   const [filteredCapacity, setFilteredCapacity] = useState<number>(0);
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState<boolean>(false);
   const [isIncidentModalOpen, setIsIncidentModalOpen] =
     useState<boolean>(false);
-  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle>();
+  const [selectedVehicle, setSelectedVehicle] = useState<VehicleDto>();
   const [skip, setSkip] = useState<number>(0);
   const [take, setTake] = useState<number>(12);
-
+  const { isAuthentificated, userDto, reFetch } = useContext(
+    AuthentificationContext
+  );
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isVehicleModalOpen === true) {
       return;
@@ -160,12 +166,14 @@ export default function Vehicles() {
       ) : (
         <>
           <Box component={Paper} sx={{ padding: "10px" }}>
-            <PaginationDropDown
-              take={take.toString()}
-              handleOnChange={(value) => {
-                setTake(value);
-              }}
-            />
+            {isAuthentificated === true && userDto !== null && (
+              <PaginationDropDown
+                take={take.toString()}
+                handleOnChange={(value) => {
+                  setTake(value);
+                }}
+              />
+            )}
           </Box>
           <Box
             component={Paper}
@@ -187,7 +195,7 @@ export default function Vehicles() {
                   );
                 }}
               ></TextField>
-              <Button
+              {/* <Button
                 variant="contained"
                 onClick={async () => {
                   let data = await filterVehiclesByEngineCapacity(
@@ -200,7 +208,7 @@ export default function Vehicles() {
                 }}
               >
                 Filter
-              </Button>
+              </Button> */}
             </Box>
             <Box
               sx={{
@@ -228,6 +236,8 @@ export default function Vehicles() {
                   <TableCell>Seats</TableCell>
                   <TableCell>Engine Capacity</TableCell>
                   <TableCell>Fabrication Date</TableCell>
+                  <TableCell>Number of incidents</TableCell>
+                  <TableCell>Owner name</TableCell>
                   <TableCell></TableCell>
                   <TableCell></TableCell>
                   <TableCell></TableCell>
@@ -243,6 +253,19 @@ export default function Vehicles() {
                       <TableCell>{vehicle.numberOfSeats}</TableCell>
                       <TableCell>{vehicle.engineCapacity}</TableCell>
                       <TableCell>{vehicle.fabricationDate}</TableCell>
+                      <TableCell>{vehicle.numberOfIncidents}</TableCell>
+                      <TableCell>
+                        {
+                          <Link
+                            href={`/user/${vehicle.ownerName}`}
+                            onClick={() => {
+                              router.reload();
+                            }}
+                          >
+                            {vehicle.ownerName}
+                          </Link>
+                        }
+                      </TableCell>
                       <TableCell>
                         <ClearIcon
                           sx={{

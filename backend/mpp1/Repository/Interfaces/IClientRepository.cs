@@ -20,4 +20,6 @@ public interface IClientRepository
     public int GetNumberOfClients();
     
     public Task<IEnumerable<Client>> GetClientsByName(string name);
+
+    public Task<int> GetClientsCountOfUser(string owner);
 }

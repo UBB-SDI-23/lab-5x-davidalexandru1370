@@ -1,4 +1,5 @@
 using mpp1.Model;
+using mpp1.Model.DTO;
 
 namespace mpp1.Repository.Interfaces;
 
@@ -17,9 +18,11 @@ public interface IVehicleRentRepository
 
     public Task<VehicleRent> GetVehicleRentById(Guid vehicleRentId);
 
-    public Task<Pagination<VehicleRent>> GetVehicleRentsPaginated(int skip, int take);
+    public Task<Pagination<VehicleRentDto>> GetVehicleRentsPaginated(int skip, int take);
 
     public int GetNumberOfRents();
 
     public Task<int> GetNumberOfRentsByClientId(Guid clientId);
+
+    public Task<int> GetNumberOfRentsByOwner(string owner);
 }

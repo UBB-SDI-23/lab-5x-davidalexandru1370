@@ -11,4 +11,5 @@ public interface IUserService
     public Task<AuthResult> ValidateAccount(Guid validateCode);
     public Task<UserDto> GetUserDataByUsernameAsync(string username);
     public Task<UserDto> Authorize(string token);
+    public Task<UserDto> GetUserWithStatistics(string username);
 }

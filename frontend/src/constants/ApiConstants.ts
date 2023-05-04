@@ -58,6 +58,8 @@ interface UserEndpoint {
   register: string;
   validateAccount: (token: string) => string;
   getUserDataByUsername: (username: string) => string;
+  authorize: string;
+  getUserDataWithStatistics: (username: string) => string;
 }
 
 export const ClientEndpoints: ClientEndpoint = {
@@ -109,5 +111,9 @@ export const UserEndpoints: UserEndpoint = {
     userController + "validate-account/" + token,
   getUserDataByUsername: (username: string): string => {
     return userController + "get-user/" + username;
+  },
+  authorize: userController + "authorize",
+  getUserDataWithStatistics: (username: string) => {
+    return userController + "get-user-with-statistics/" + username;
   },
 };

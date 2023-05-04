@@ -3,7 +3,6 @@ import IPagination from "@/model/Pagination";
 import VehicleRent from "@/model/VehicleRent";
 import VehicleRentDto from "@/model/VehicleRentDto";
 import { createHeader } from "@/utilities/utilities";
-import { METHODS } from "http";
 
 export const getRentsPaginated = async (skip: number, take: number) => {
   let url = baseUrl + RentEndpoints.getRentsPaginated(skip, take);
@@ -12,7 +11,7 @@ export const getRentsPaginated = async (skip: number, take: number) => {
     .then(async (response: Response) => {
       return await response.json();
     })
-    .then((rents: IPagination<VehicleRent>) => {
+    .then((rents: IPagination<VehicleRentDto>) => {
       return rents;
     });
 
@@ -25,7 +24,7 @@ export const deleteVehicleRentById = async (rentId: string) => {
   await fetch(url, header);
 };
 
-export const updateVehicleRent = async (vehicleRent: VehicleRent) => {
+export const updateVehicleRent = async (vehicleRent: VehicleRentDto) => {
   let url = baseUrl + RentEndpoints.updateRent;
   let header = createHeader(Methods.PUT, vehicleRent);
   let data = await fetch(url, header)
@@ -35,7 +34,7 @@ export const updateVehicleRent = async (vehicleRent: VehicleRent) => {
       }
       return await response.json();
     })
-    .then((updatedVehicleRent: VehicleRent) => {
+    .then((updatedVehicleRent: VehicleRentDto) => {
       return updatedVehicleRent;
     });
 

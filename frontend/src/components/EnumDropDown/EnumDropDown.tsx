@@ -1,17 +1,14 @@
-import { GenderEnum } from "@/enums/GenderEnum";
 import {
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   SxProps,
-  Theme,
 } from "@mui/material";
-import React, { FC, useState } from "react";
-import { EnumDeclaration, EnumMember, EnumType } from "typescript";
+import { FC, useState } from "react";
 
 interface IEnumDropDown {
-  onChange: (value: string) => void;
+  onChange: (value: number) => void;
   label: string;
   dataEnum: object;
   style?: SxProps;
@@ -23,7 +20,7 @@ const EnumDropDown: FC<IEnumDropDown> = ({
   dataEnum,
   style,
 }) => {
-  const [value, setValue] = useState<string>(label);
+  const [value, setValue] = useState<number>(0);
   return (
     <div>
       <FormControl sx={style} fullWidth>
@@ -31,10 +28,10 @@ const EnumDropDown: FC<IEnumDropDown> = ({
         <Select
           labelId="select-label"
           id="simple-select"
-          value={0}
+          value={value}
           label={label}
           onChange={(val) => {
-            const selectedValue: string = val.target.value as string;
+            const selectedValue: number = parseInt(val.target.value.toString());
             setValue(selectedValue);
             onChange(selectedValue);
           }}

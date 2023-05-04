@@ -15,10 +15,19 @@ namespace mpp1.Service;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
+    private readonly IClientService _clientService;
+    private readonly IVehicleRentService _vehicleRentService;
+    private readonly IVehicleService _vehicleService;
+    private readonly IIncidentService _incidentService;
     private readonly IConfiguration _appSettings;
 
-    public UserService(IUserRepository userRepository, IConfiguration appSettings)
+    public UserService(IUserRepository userRepository, IConfiguration appSettings, IClientService clientService,
+        IVehicleRentService vehicleRentService, IVehicleService vehicleService, IIncidentService incidentService)
     {
+        _clientService = clientService;
+        _vehicleService = vehicleService;
+        _vehicleRentService = vehicleRentService;
+        _incidentService = incidentService;
         _userRepository = userRepository;
         _appSettings = appSettings;
     }
@@ -164,8 +173,8 @@ public class UserService : IUserService
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = true,
-                ValidateAudience = true,
+                ValidateIssuer = false,
+                ValidateAudience = false,
                 ClockSkew = TimeSpan.Zero
             }, out SecurityToken validatedToken);
 
@@ -197,5 +206,21 @@ public class UserService : IUserService
         var userDto = _userRepository.GetUserDataByIdAsync(userId.Value);
 
         return userDto;
+    }
+
+    public async Task<UserDto> GetUserWithStatistics(string username)
+    {
+        var user = await GetUserDataByUsernameAsync(username);
+        int numberOfClients = await _clientService.GetClientsCountOfUser(username);
+        int numberOfVehicles = await _vehicleService.GetNumberOfVehiclesByOwner(username);
+        int numberOfRents = await _vehicleRentService.GetNumberOfRentsByOwner(username);
+        int numberOfIncidents = await _incidentService.GetNumberOfIncidentsByOwner(username);
+
+        user.NumberOfClients = numberOfClients;
+        user.NumberOfVehicles = numberOfVehicles;
+        user.NumberOfRents = numberOfRents;
+        user.NumberOfIncidents = numberOfIncidents;
+
+        return user;
     }
 }

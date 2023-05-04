@@ -51,6 +51,11 @@ public class ClientService : IClientService
         return _clientRepository.GetClientsByName(normalizedName);
     }
 
+    public async Task<int> GetClientsCountOfUser(string owner)
+    {
+        return await _clientRepository.GetClientsCountOfUser(owner);
+    }
+
     private string normalizeNameString(string name)
     {
         StringBuilder sb = new StringBuilder();

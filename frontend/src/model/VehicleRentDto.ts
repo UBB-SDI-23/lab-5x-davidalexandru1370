@@ -10,5 +10,5 @@ export default interface VehicleRentDto {
   totalCost: number;
   comments?: string;
   ownerName: string;
-  numberOfTimesRented: string;
+  numberOfTimesRented?: string;
 }

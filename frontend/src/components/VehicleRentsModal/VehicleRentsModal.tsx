@@ -103,12 +103,14 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
 
   const [vehicleRentState, vehicleRentDispatch] = useReducer(
     handleChangeVehicleRentState,
+    //@ts-ignore
     {
       endDate: "",
       totalCost: 0,
       startDate: "",
       vehicleId: "",
       clientId: "",
+      ownerName: "",
     } as VehicleRentState
   );
 
@@ -122,8 +124,8 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
         endDate: vehicleRent === undefined ? "" : vehicleRent.endDate,
         totalCost: vehicleRent === undefined ? 0 : vehicleRent.totalCost,
         startDate: vehicleRent === undefined ? "" : vehicleRent.startDate,
-        vehicleId: vehicleRent === undefined ? "" : vehicleRent.vehicle?.id,
-        clientId: vehicleRent === undefined ? "" : vehicleRent.client?.id,
+        //vehicleId: vehicleRent === undefined ? "" : vehicleRent.vehicle?.id,
+        //clientId: vehicleRent === undefined ? "" : vehicleRent.client?.id,
       },
     });
   }, [vehicleRent]);
@@ -135,8 +137,8 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
         endDate: "",
         totalCost: 0,
         startDate: "",
-        vehicleId: "",
-        clientId: "",
+        //vehicleId: "",
+        //clientId: "",
       },
     });
     onClose();
@@ -181,7 +183,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
               vehicleRentDispatch({
                 type: VehicleRentActionKind.UPDATE,
                 payload: {
-                  clientId: value.id,
+                  //clientId: value.id,
                 },
               });
             }
@@ -203,7 +205,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
               vehicleRentDispatch({
                 type: VehicleRentActionKind.UPDATE,
                 payload: {
-                  vehicleId: value.id,
+                  // vehicleId: value.id,
                 },
               });
             }
@@ -299,8 +301,8 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
           }}
           sx={button}
           disabled={
-            vehicleRentState.vehicleId === "" ||
-            vehicleRentState.clientId === "" ||
+            // vehicleRentState.vehicleId === "" ||
+            // vehicleRentState.clientId === "" ||
             vehicleRentState.endDate === "" ||
             vehicleRentState.startDate === "" ||
             vehicleRentState.totalCost === 0 ||

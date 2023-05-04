@@ -200,7 +200,7 @@ export default function Rents() {
                           <Link
                             href={`/user/${rent.ownerName}`}
                             onClick={() => {
-                              router.reload();
+                              // router.reload();
                             }}
                           >
                             {rent.ownerName}

@@ -247,7 +247,7 @@ export default function Vehicles() {
                           <Link
                             href={`/user/${vehicle.ownerName}`}
                             onClick={() => {
-                              router.reload();
+                              //router.reload();
                             }}
                           >
                             {vehicle.ownerName}

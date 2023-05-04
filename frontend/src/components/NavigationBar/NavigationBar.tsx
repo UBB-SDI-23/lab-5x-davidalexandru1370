@@ -22,11 +22,12 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
+  console.log(selectedNavigationItem);
   if (
     navigationItems.find(
       (v) => v.routeName.localeCompare(selectedNavigationItem) === 0
-    ) === undefined
+    ) === undefined &&
+    selectedNavigationItem.localeCompare("user/[username]") !== 0
   ) {
     return <></>;
   }

@@ -30,10 +30,8 @@ const User = () => {
       return;
     }
 
-    if (isFetching === false) {
-      return;
-    }
     const username = router.query.username?.toString();
+
     try {
       getUserDataWithStatistcs(username!.toString()).then((x) => {
         if (typeof x === "string") {
@@ -47,7 +45,7 @@ const User = () => {
         }
       });
     } catch (error) {}
-  }, [router.isReady]);
+  }, [router.isReady, router.query]);
 
   if (isFetching === true) {
     return (
@@ -140,14 +138,16 @@ const User = () => {
           defaultValue={user!.numberOfRents}
           autoFocus
         ></TextField>
-        {isAuthentificated === true && userDto !== null && (
-          <PaginationDropDown
-            take={take.toString()}
-            handleOnChange={(e) => {
-              setTake(e);
-            }}
-          />
-        )}
+        {isAuthentificated === true &&
+          userDto !== null &&
+          userDto?.username === user?.username && (
+            <PaginationDropDown
+              take={take.toString()}
+              handleOnChange={(e) => {
+                setTake(e);
+              }}
+            />
+          )}
       </Box>
     </div>
   );

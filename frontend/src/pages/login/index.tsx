@@ -75,7 +75,7 @@ const Login = () => {
               router.push("/clients", undefined, {
                 shallow: false,
               });
-              //router.reload();
+              router.reload();
             } catch (error) {
               toast((error as Error).message, {
                 type: "error",

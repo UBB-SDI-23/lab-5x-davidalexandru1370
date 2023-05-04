@@ -21,9 +21,8 @@ export const AuthentificationContextProvider: FC<{ children: any }> = ({
   const [user, setUser] = useState<UserDto | undefined>();
   const [rerender, forceRerender] = useState<number>(0);
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token !== null) {
-      authorize(token).then((x) => {
+    if (localStorage.getItem("token") !== null) {
+      authorize(localStorage.getItem("token")!).then((x) => {
         setUser(x);
         setIsAuthentificated(true);
       });

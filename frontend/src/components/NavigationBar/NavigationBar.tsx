@@ -3,7 +3,7 @@ import { Route } from "@/model/Route";
 import { AppBar, Box, Button, Menu, MenuItem, Toolbar } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FC, useContext, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import styles from "./NavigationBar.module.css";
 
 interface INavigationBar {
@@ -15,6 +15,7 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
   const [selectedNavigationItem, setselectedNavigationItem] = useState<string>(
     router.pathname.substring(1)
   );
+
   const { isAuthentificated, userDto, reFetch } = useContext(
     AuthentificationContext
   );

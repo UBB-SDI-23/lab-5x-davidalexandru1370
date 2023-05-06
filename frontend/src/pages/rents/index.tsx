@@ -32,6 +32,7 @@ import {
   updateVehicleRent,
 } from "../api/RentsApi";
 import styles from "./rents.module.css";
+import VehicleRent from "@/model/VehicleRent";
 export default function Rents() {
   const router = useRouter();
   const [rents, setRents] = useState<IPagination<VehicleRentDto>>();
@@ -92,13 +93,13 @@ export default function Rents() {
             try {
               const updatedRent = await updateVehicleRent({
                 ...vehicleRent,
-                id: selectedVehicleRent!.id,
-                ownerName: userDto?.username!,
+                id: selectedVehicleRent!.id!,
+                userId: vehicleRent.owner.userId,
               });
 
               const rentsWithUpdatedRent =
                 rents?.elements.map((r) =>
-                  r.id === updatedRent.id ? updatedRent : r
+                  r.id === updatedRent.id ? { ...r, ...updatedRent } : r
                 ) || [];
               setRents({ ...rents!, elements: rentsWithUpdatedRent });
               toast("Updated succesfully", {
@@ -198,12 +199,12 @@ export default function Rents() {
                       <TableCell>
                         {
                           <Link
-                            href={`/user/${rent.ownerName}`}
+                            href={`/user/${rent.owner.username}`}
                             onClick={() => {
                               // router.reload();
                             }}
                           >
-                            {rent.ownerName}
+                            {rent.owner.username}
                           </Link>
                         }
                       </TableCell>

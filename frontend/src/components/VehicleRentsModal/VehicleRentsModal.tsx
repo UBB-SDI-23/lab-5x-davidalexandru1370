@@ -123,6 +123,10 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
         startDate: vehicleRent === undefined ? "" : vehicleRent.startDate,
         vehicleId: vehicleRent === undefined ? "" : vehicleRent.vehicle?.id,
         clientId: vehicleRent === undefined ? "" : vehicleRent.client?.id,
+        owner:
+          vehicleRent === undefined
+            ? { userId: "", username: "" }
+            : vehicleRent.owner,
       },
     });
   }, [vehicleRent]);

@@ -125,7 +125,11 @@ public class VehicleRentRepository : IVehicleRentRepository
             Id = v.Id,
             Comments = v.Comments,
             EndDate = v.EndDate,
-            OwnerName = v.User.Name,
+            Owner = new Owner()
+            {
+                UserId = v.User.Id,
+                Username = v.User!.Name
+            },
             StartDate = v.StartDate,
             TotalCost = v.TotalCost
         });

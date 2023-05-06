@@ -1,6 +1,6 @@
 import { Client } from "./Client";
 import { Owner } from "./Owner";
-import { UserDto } from "./UserDto";
+import { User } from "./User";
 import { Vehicle } from "./Vehicle";
 
 export default interface VehicleRent {
@@ -11,5 +11,5 @@ export default interface VehicleRent {
   endDate: string;
   totalCost: number;
   comments?: string;
-  owner: Owner;
+  userId: string;
 }

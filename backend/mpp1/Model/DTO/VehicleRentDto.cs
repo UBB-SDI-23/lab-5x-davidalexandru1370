@@ -11,6 +11,6 @@ public class VehicleRentDto
     public DateOnly EndDate { get; set; }
     public int TotalCost { get; set; }
     public string? Comments { get; set; }
-    public string OwnerName { get; set; }
+    public Owner Owner { get; set; }
     public int NumberOfTimesRented { get; set; }
 }

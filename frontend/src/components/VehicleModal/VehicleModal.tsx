@@ -147,15 +147,14 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
         <Button
           variant="contained"
           onClick={() => {
-            // onSubmitClick({
-
-            //   brand: brand,
-            //   carPlate: carPlate,
-            //   engineCapacity: engineCapacity,
-            //   fabricationDate: fabricationDate!,
-            //   horsePower: horsePower,
-            //   numberOfSeats: numberOfSeats,
-            // });
+            onSubmitClick({
+              brand: brand,
+              carPlate: carPlate,
+              engineCapacity: engineCapacity,
+              fabricationDate: fabricationDate!,
+              horsePower: horsePower,
+              numberOfSeats: numberOfSeats,
+            });
             handleOnClose();
           }}
           disabled={checkIfAllInputFieldsAreCorrect()}

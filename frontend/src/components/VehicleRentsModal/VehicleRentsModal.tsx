@@ -9,8 +9,7 @@ import { getClientsByName } from "@/pages/api/ClientApi";
 import { getVehiclesByCarPlate } from "@/pages/api/VehicleApi";
 //@ts-ignore
 import { debounce } from "lodash";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import DatePicker from "../DatePicker/DatePicker";
 
 interface IVehicleRentsModalProps {
   onSubmitClick: (vehicle: VehicleRentDto) => Promise<void>;
@@ -103,7 +102,6 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
 
   const [vehicleRentState, vehicleRentDispatch] = useReducer(
     handleChangeVehicleRentState,
-    //@ts-ignore
     {
       endDate: "",
       totalCost: 0,
@@ -124,8 +122,8 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
         endDate: vehicleRent === undefined ? "" : vehicleRent.endDate,
         totalCost: vehicleRent === undefined ? 0 : vehicleRent.totalCost,
         startDate: vehicleRent === undefined ? "" : vehicleRent.startDate,
-        //vehicleId: vehicleRent === undefined ? "" : vehicleRent.vehicle?.id,
-        //clientId: vehicleRent === undefined ? "" : vehicleRent.client?.id,
+        vehicleId: vehicleRent === undefined ? "" : vehicleRent.vehicle?.id,
+        clientId: vehicleRent === undefined ? "" : vehicleRent.client?.id,
       },
     });
   }, [vehicleRent]);
@@ -137,8 +135,8 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
         endDate: "",
         totalCost: 0,
         startDate: "",
-        //vehicleId: "",
-        //clientId: "",
+        vehicleId: "",
+        clientId: "",
       },
     });
     onClose();
@@ -183,7 +181,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
               vehicleRentDispatch({
                 type: VehicleRentActionKind.UPDATE,
                 payload: {
-                  //clientId: value.id,
+                  clientId: value.id,
                 },
               });
             }
@@ -201,68 +199,48 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
           filterOptions={(x) => x}
           onInputChange={handleVehicleAutocompleteInputChange}
           onChange={(event, value) => {
-            if (value) {
-              vehicleRentDispatch({
-                type: VehicleRentActionKind.UPDATE,
-                payload: {
-                  // vehicleId: value.id,
-                },
-              });
-            }
-          }}
-        />
-        {/* <TextField
-          label="Start date"
-          size="small"
-          defaultValue={vehicleRent?.startDate}
-          sx={textFieldStyle}
-          onChange={(e) => {
             vehicleRentDispatch({
               type: VehicleRentActionKind.UPDATE,
               payload: {
-                startDate: e.currentTarget.value,
+                vehicleId: value?.id || "",
               },
             });
           }}
-        ></TextField> */}
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            format="YYYY-MM-DD"
-            label="Start date"
-            sx={textFieldStyle}
-            onChange={(e) => {
-              try {
-                //@ts-ignore
-                const date: string = (e.$d as Date).toISOString().split("T")[0];
-                vehicleRentDispatch({
-                  type: VehicleRentActionKind.UPDATE,
-                  payload: {
-                    startDate: date,
-                  },
-                });
-              } catch (error) {}
-            }}
-          />
-        </LocalizationProvider>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            format="YYYY-MM-DD"
-            label="End date"
-            sx={textFieldStyle}
-            onChange={(e) => {
-              try {
-                //@ts-ignore
-                const date: string = (e.$d as Date).toISOString().split("T")[0];
-                vehicleRentDispatch({
-                  type: VehicleRentActionKind.UPDATE,
-                  payload: {
-                    endDate: date,
-                  },
-                });
-              } catch (error) {}
-            }}
-          />
-        </LocalizationProvider>
+        />
+        <DatePicker
+          label="Start date"
+          defaultValue={new Date(vehicleRent?.startDate || "")}
+          sx={textFieldStyle}
+          onChange={() => {
+            try {
+              //@ts-ignore
+              const date: string = (e.$d as Date).toISOString().split("T")[0];
+              vehicleRentDispatch({
+                type: VehicleRentActionKind.UPDATE,
+                payload: {
+                  startDate: date,
+                },
+              });
+            } catch (error) {}
+          }}
+        />
+        <DatePicker
+          label="End date"
+          defaultValue={new Date(vehicleRent?.endDate || "")}
+          sx={textFieldStyle}
+          onChange={(e) => {
+            try {
+              //@ts-ignore
+              const date: string = (e.$d as Date).toISOString().split("T")[0];
+              vehicleRentDispatch({
+                type: VehicleRentActionKind.UPDATE,
+                payload: {
+                  endDate: date,
+                },
+              });
+            } catch (error) {}
+          }}
+        />
         <TextField
           label="Total cost"
           size="small"
@@ -301,8 +279,8 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
           }}
           sx={button}
           disabled={
-            // vehicleRentState.vehicleId === "" ||
-            // vehicleRentState.clientId === "" ||
+            vehicleRentState.vehicleId === "" ||
+            vehicleRentState.clientId === "" ||
             vehicleRentState.endDate === "" ||
             vehicleRentState.startDate === "" ||
             vehicleRentState.totalCost === 0 ||

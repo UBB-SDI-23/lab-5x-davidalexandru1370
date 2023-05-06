@@ -4,6 +4,7 @@ import {
   ClientModalMethodsEnum,
 } from "@/components/ClientModal/ClientModal";
 import Pagination from "@/components/Pagination/Pagination";
+import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
 import { Client } from "@/model/Client";
 import { ClientDto } from "@/model/ClientDto";
 import IPagination from "@/model/Pagination";
@@ -22,6 +23,8 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import {
   addClient,
@@ -30,10 +33,7 @@ import {
   updateClient,
 } from "../api/ClientApi";
 import styles from "./clients.module.css";
-import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
+import { toast } from "react-toastify";
 
 export default function Clients() {
   const [clients, setClients] = useState<IPagination<Client>>();
@@ -45,7 +45,7 @@ export default function Clients() {
     useState<ClientModalMethodsEnum>(ClientModalMethodsEnum.ADD);
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
   const router = useRouter();
-  const { skip, take, setSkip } = useContext(AuthentificationContext);
+  const { skip, take, setSkip, userDto } = useContext(AuthentificationContext);
 
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isClientModalOpen === true) {
@@ -62,12 +62,14 @@ export default function Clients() {
         onSubmitClick={async (client: ClientDto) => {
           if (clientModalMethod === ClientModalMethodsEnum.ADD) {
             await addClient(client);
-          } //else {
-          //   await updateClient({
-          //     ...client,
-          //     id: selectedClient!.id,
-          //   });
-          // }
+          } else {
+            userDto &&
+              (await updateClient({
+                ...client,
+                id: selectedClient!.id,
+                ownername: userDto?.username!,
+              }));
+          }
           setSelectedClient(undefined);
           setIsClientModalOpen(false);
         }}
@@ -87,7 +89,9 @@ export default function Clients() {
           try {
             selectedClient && (await deleteClientById(selectedClient.id));
           } catch (error: unknown) {
-            console.log((error as Error).message);
+            toast((error as Error).message, {
+              type: "error",
+            });
           }
           setIsAreYouSureModalOpen(false);
         }}
@@ -161,12 +165,7 @@ export default function Clients() {
                       <TableCell>{client.nationality}</TableCell>
                       <TableCell>
                         {
-                          <Link
-                            href={`/user/${client.ownername}`}
-                            onClick={() => {
-                              //router.reload();
-                            }}
-                          >
+                          <Link href={`/user/${client.ownername}`}>
                             {client.ownername}
                           </Link>
                         }

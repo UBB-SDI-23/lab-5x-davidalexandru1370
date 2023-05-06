@@ -14,7 +14,7 @@ import DatePicker from "../DatePicker/DatePicker";
 interface IVehicleRentsModalProps {
   onSubmitClick: (vehicle: VehicleRentDto) => Promise<void>;
   onClose: () => void;
-  vehicleRent?: VehicleRent;
+  vehicleRent?: VehicleRentDto;
   method: VehicleModalMethodsEnum;
   isOpen: boolean;
 }
@@ -108,7 +108,6 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
       startDate: "",
       vehicleId: "",
       clientId: "",
-      ownerName: "",
     } as VehicleRentState
   );
 

@@ -116,15 +116,17 @@ public class VehicleRepository : IVehicleRepository
             EngineCapacity = x.EngineCapacity,
             FabricationDate = x.FabricationDate,
             HorsePower = x.HorsePower,
-            OwnerName = x.User.Name,
+            Owner = new Owner()
+            {
+                UserId = x.User.Id,
+                Username = x.User.Name
+            },
             NumberOfIncidents = x.Incidents is null ? 0 : x.Incidents!.Count,
             NumberOfSeats = x.NumberOfSeats
         });
-        //paginatedRents.HasPrevious = skip != 0;
 
         int numberOfVehicles = GetNumberOfRents();
         paginatedRents.TotalNumberOfElements = numberOfVehicles;
-        //paginatedRents.HasNext = !(skip >= numberOfRents || skip + take >= numberOfRents);
 
         return paginatedRents;
     }

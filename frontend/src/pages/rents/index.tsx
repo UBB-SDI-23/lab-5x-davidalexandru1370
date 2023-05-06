@@ -1,6 +1,5 @@
 import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
 import Pagination from "@/components/Pagination/Pagination";
-import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
 import {
   VehicleModalMethodsEnum,
   VehicleRentsModal,
@@ -22,6 +21,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -32,7 +32,6 @@ import {
   updateVehicleRent,
 } from "../api/RentsApi";
 import styles from "./rents.module.css";
-import Link from "next/link";
 export default function Rents() {
   const router = useRouter();
   const [rents, setRents] = useState<IPagination<VehicleRentDto>>();
@@ -71,7 +70,7 @@ export default function Rents() {
           setIsAreYouSureModalOpen(false);
         }}
         onOkClick={async () => {
-          await deleteVehicleRentById(selectedVehicleRent!.id);
+          await deleteVehicleRentById(selectedVehicleRent!.id!);
           setRents(undefined);
           setIsAreYouSureModalOpen(false);
         }}
@@ -94,6 +93,7 @@ export default function Rents() {
               const updatedRent = await updateVehicleRent({
                 ...vehicleRent,
                 id: selectedVehicleRent!.id,
+                ownerName: userDto?.username!,
               });
 
               const rentsWithUpdatedRent =

@@ -118,6 +118,8 @@ public class VehicleRentRepository : IVehicleRentRepository
 
         paginatedRents.Elements = result.Select(v => new VehicleRentDto()
         {
+            ClientId = v.Client!.Id,
+            VehicleId = v.Vehicle!.Id,
             Client = v.Client,
             Vehicle = v.Vehicle,
             Id = v.Id,
@@ -146,7 +148,7 @@ public class VehicleRentRepository : IVehicleRentRepository
 
     public Task<int> GetNumberOfRentsByOwner(string owner)
     {
-        var count =  _rentACarDbContext
+        var count = _rentACarDbContext
             .Set<VehicleRent>()
             .Include(c => c.User)
             .Count(c => c.User.Name == owner);

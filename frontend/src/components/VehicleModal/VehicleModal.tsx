@@ -8,7 +8,7 @@ import DatePicker from "../DatePicker/DatePicker";
 interface IVehicleModalProps {
   onSubmitClick: (vehicle: VehicleDto) => Promise<void>;
   onClose: () => void;
-  vehicle?: Vehicle;
+  vehicle?: VehicleDto;
   method: VehicleModalMethodsEnum;
   isOpen: boolean;
 }
@@ -154,6 +154,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
               fabricationDate: fabricationDate!,
               horsePower: horsePower,
               numberOfSeats: numberOfSeats,
+              ownerName: "",
             });
             handleOnClose();
           }}

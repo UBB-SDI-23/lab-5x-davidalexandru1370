@@ -1,5 +1,6 @@
 import { GenderEnum } from "@/enums/GenderEnum";
 import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
+import { RolesEnum } from "@/enums/RolesEnum";
 
 export interface UserDto {
   username: string;
@@ -7,6 +8,7 @@ export interface UserDto {
   location: string;
   birthday: string;
   gender: GenderEnum;
+  role: RolesEnum;
   maritalStatus: MaritalStatusEnum;
   numberOfClients?: number;
   numberOfVehicles?: number;

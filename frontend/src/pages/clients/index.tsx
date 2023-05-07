@@ -34,6 +34,7 @@ import {
 } from "../api/ClientApi";
 import styles from "./clients.module.css";
 import { toast } from "react-toastify";
+import { RolesEnum } from "@/enums/RolesEnum";
 
 export default function Clients() {
   const [clients, setClients] = useState<IPagination<Client>>();
@@ -45,7 +46,9 @@ export default function Clients() {
     useState<ClientModalMethodsEnum>(ClientModalMethodsEnum.ADD);
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
   const router = useRouter();
-  const { skip, take, setSkip, userDto } = useContext(AuthentificationContext);
+  const { skip, take, setSkip, userDto, isAuthentificated } = useContext(
+    AuthentificationContext
+  );
 
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isClientModalOpen === true) {
@@ -172,16 +175,22 @@ export default function Clients() {
                       </TableCell>
                       <TableCell></TableCell>
                       <TableCell>
-                        <ClearIcon
-                          sx={{
-                            color: "red",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => {
-                            setSelectedClient(client);
-                            setIsAreYouSureModalOpen(true);
-                          }}
-                        />
+                        {isAuthentificated &&
+                          ((userDto?.role === RolesEnum.Regular &&
+                            client.ownername === userDto.username) ||
+                            ((userDto?.role === RolesEnum.Moderator ||
+                              userDto?.role === RolesEnum.Admin) && (
+                              <ClearIcon
+                                sx={{
+                                  color: "red",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => {
+                                  setSelectedClient(client);
+                                  setIsAreYouSureModalOpen(true);
+                                }}
+                              />
+                            )))}
                       </TableCell>
                       <TableCell>
                         <EditIcon

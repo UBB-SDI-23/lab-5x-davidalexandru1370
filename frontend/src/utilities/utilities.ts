@@ -58,11 +58,13 @@ export function isElementVisibleForUser(
     return false;
   }
 
-  if (
-    userDto.role === RolesEnum.Regular &&
-    userDto.username !== ownerEntityName
-  ) {
-    return false;
+  if (ownerEntityName !== undefined) {
+    if (
+      userDto.role === RolesEnum.Regular &&
+      userDto.username !== ownerEntityName
+    ) {
+      return false;
+    }
   }
 
   return true;

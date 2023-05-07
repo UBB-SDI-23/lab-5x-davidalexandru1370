@@ -140,29 +140,31 @@ export default function Rents() {
         </Box>
       ) : (
         <>
-          <Box
-            component={Paper}
-            sx={{ padding: "32px 32px 0px 32px", textAlign: "right" }}
-            display="flex"
-            justifyContent="end"
-          >
+          {isElementVisibleForUser(userDto, isAuthentificated) && (
             <Box
-              sx={{
-                backgroundColor: "blueviolet",
-                borderRadius: "10px",
-                padding: ".35em",
-                cursor: "pointer",
-                display: "flex",
-              }}
-              onClick={() => {
-                setSelectedVehicleRent(undefined);
-                setIsVehicleRentsModalOpen(true);
-              }}
+              component={Paper}
+              sx={{ padding: "32px 32px 0px 32px", textAlign: "right" }}
+              display="flex"
+              justifyContent="end"
             >
-              <AddIcon />
-              <Typography>Add rent</Typography>
+              <Box
+                sx={{
+                  backgroundColor: "blueviolet",
+                  borderRadius: "10px",
+                  padding: ".35em",
+                  cursor: "pointer",
+                  display: "flex",
+                }}
+                onClick={() => {
+                  setSelectedVehicleRent(undefined);
+                  setIsVehicleRentsModalOpen(true);
+                }}
+              >
+                <AddIcon />
+                <Typography>Add rent</Typography>
+              </Box>
             </Box>
-          </Box>
+          )}
           <Box
             component={Paper}
             sx={{
@@ -220,13 +222,19 @@ export default function Rents() {
                         )}
                       </TableCell>
                       <TableCell>
-                        <EditIcon
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => {
-                            setSelectedVehicleRent(rent);
-                            setIsVehicleRentsModalOpen(true);
-                          }}
-                        />
+                        {isElementVisibleForUser(
+                          userDto,
+                          isAuthentificated,
+                          rent.owner.username
+                        ) && (
+                          <EditIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setSelectedVehicleRent(rent);
+                              setIsVehicleRentsModalOpen(true);
+                            }}
+                          />
+                        )}
                       </TableCell>
                     </TableRow>
                   );

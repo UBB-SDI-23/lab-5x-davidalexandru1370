@@ -9,13 +9,12 @@ import { getClientsByName } from "@/pages/api/ClientApi";
 import { getVehiclesByCarPlate } from "@/pages/api/VehicleApi";
 //@ts-ignore
 import { debounce } from "lodash";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import DatePicker from "../DatePicker/DatePicker";
 
 interface IVehicleRentsModalProps {
   onSubmitClick: (vehicle: VehicleRentDto) => Promise<void>;
   onClose: () => void;
-  vehicleRent?: VehicleRent;
+  vehicleRent?: VehicleRentDto;
   method: VehicleModalMethodsEnum;
   isOpen: boolean;
 }
@@ -124,6 +123,10 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
         startDate: vehicleRent === undefined ? "" : vehicleRent.startDate,
         vehicleId: vehicleRent === undefined ? "" : vehicleRent.vehicle?.id,
         clientId: vehicleRent === undefined ? "" : vehicleRent.client?.id,
+        owner:
+          vehicleRent === undefined
+            ? { userId: "", username: "" }
+            : vehicleRent.owner,
       },
     });
   }, [vehicleRent]);
@@ -199,68 +202,48 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
           filterOptions={(x) => x}
           onInputChange={handleVehicleAutocompleteInputChange}
           onChange={(event, value) => {
-            if (value) {
-              vehicleRentDispatch({
-                type: VehicleRentActionKind.UPDATE,
-                payload: {
-                  vehicleId: value.id,
-                },
-              });
-            }
-          }}
-        />
-        {/* <TextField
-          label="Start date"
-          size="small"
-          defaultValue={vehicleRent?.startDate}
-          sx={textFieldStyle}
-          onChange={(e) => {
             vehicleRentDispatch({
               type: VehicleRentActionKind.UPDATE,
               payload: {
-                startDate: e.currentTarget.value,
+                vehicleId: value?.id || "",
               },
             });
           }}
-        ></TextField> */}
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            format="YYYY-MM-DD"
-            label="Start date"
-            sx={textFieldStyle}
-            onChange={(e) => {
-              try {
-                //@ts-ignore
-                const date: string = (e.$d as Date).toISOString().split("T")[0];
-                vehicleRentDispatch({
-                  type: VehicleRentActionKind.UPDATE,
-                  payload: {
-                    startDate: date,
-                  },
-                });
-              } catch (error) {}
-            }}
-          />
-        </LocalizationProvider>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            format="YYYY-MM-DD"
-            label="End date"
-            sx={textFieldStyle}
-            onChange={(e) => {
-              try {
-                //@ts-ignore
-                const date: string = (e.$d as Date).toISOString().split("T")[0];
-                vehicleRentDispatch({
-                  type: VehicleRentActionKind.UPDATE,
-                  payload: {
-                    endDate: date,
-                  },
-                });
-              } catch (error) {}
-            }}
-          />
-        </LocalizationProvider>
+        />
+        <DatePicker
+          label="Start date"
+          defaultValue={new Date(vehicleRent?.startDate || "")}
+          sx={textFieldStyle}
+          onChange={() => {
+            try {
+              //@ts-ignore
+              const date: string = (e.$d as Date).toISOString().split("T")[0];
+              vehicleRentDispatch({
+                type: VehicleRentActionKind.UPDATE,
+                payload: {
+                  startDate: date,
+                },
+              });
+            } catch (error) {}
+          }}
+        />
+        <DatePicker
+          label="End date"
+          defaultValue={new Date(vehicleRent?.endDate || "")}
+          sx={textFieldStyle}
+          onChange={(e) => {
+            try {
+              //@ts-ignore
+              const date: string = (e.$d as Date).toISOString().split("T")[0];
+              vehicleRentDispatch({
+                type: VehicleRentActionKind.UPDATE,
+                payload: {
+                  endDate: date,
+                },
+              });
+            } catch (error) {}
+          }}
+        />
         <TextField
           label="Total cost"
           size="small"

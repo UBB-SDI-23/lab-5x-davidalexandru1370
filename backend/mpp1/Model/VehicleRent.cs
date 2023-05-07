@@ -14,8 +14,13 @@ public class VehicleRent : IValidatableObject
     public virtual Guid ClientId { get; set; }
     public DateOnly StartDate { get; set; }
     public DateOnly EndDate { get; set; }
-    [JsonIgnore] public virtual User User { get; set; } = null!;
+
+    [JsonIgnore]
+    [InverseProperty("VehicleRents")]
+    public virtual User? User { get; set; } = null!;
+
     [ForeignKey("User")] public Guid UserId { get; set; }
+
     public int TotalCost { get; set; }
     public string? Comments { get; set; }
 

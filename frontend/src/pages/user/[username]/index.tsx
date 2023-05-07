@@ -17,23 +17,21 @@ import { useRouter } from "next/dist/client/router";
 import { GenderEnum } from "@/enums/GenderEnum";
 import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
 import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
+import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
 const User = () => {
   const router = useRouter();
   //const username = router.query.username;
   const [user, setUser] = useState<UserDto | null>(null);
   const [isFetching, setIsFetching] = useState<boolean>(true);
-  const { isAuthentificated, userDto, reFetch } = useContext(
-    AuthentificationContext
-  );
+  const { isAuthentificated, userDto, reFetch, skip, take, setSkip, setTake } =
+    useContext(AuthentificationContext);
   useEffect(() => {
     if (!router.isReady) {
       return;
     }
 
-    if (isFetching === false) {
-      return;
-    }
     const username = router.query.username?.toString();
+
     try {
       getUserDataWithStatistcs(username!.toString()).then((x) => {
         if (typeof x === "string") {
@@ -47,7 +45,7 @@ const User = () => {
         }
       });
     } catch (error) {}
-  }, [router.isReady]);
+  }, [router.isReady, router.query]);
 
   if (isFetching === true) {
     return (
@@ -140,6 +138,16 @@ const User = () => {
           defaultValue={user!.numberOfRents}
           autoFocus
         ></TextField>
+        {isAuthentificated === true &&
+          userDto !== null &&
+          userDto?.username === user?.username && (
+            <PaginationDropDown
+              take={take.toString()}
+              handleOnChange={(e) => {
+                setTake(e);
+              }}
+            />
+          )}
       </Box>
     </div>
   );

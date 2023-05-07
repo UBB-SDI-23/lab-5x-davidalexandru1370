@@ -10,7 +10,7 @@ public class VehicleDTO
     public int EngineCapacity { get; set; }
     public DateOnly FabricationDate { get; set; }
     public int NumberOfIncidents { get; set; }
-    public string OwnerName { get; set; } = null!;
+    public Owner Owner { get; set; } = null!;
 
     public override bool Equals(object? obj)
     {

@@ -12,4 +12,7 @@ public class User
     public string Name { get; set; }
     [Required]
     public string Password { get; set; }
+    
+    [InverseProperty(nameof(VehicleRent.User))]
+    public ICollection<VehicleRent> VehicleRents { get; set; }
 }

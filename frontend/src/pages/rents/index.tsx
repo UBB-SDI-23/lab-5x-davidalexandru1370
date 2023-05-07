@@ -1,6 +1,5 @@
 import { AreYouSureModal } from "@/components/AreYouSureModal/AreYouSureModal";
 import Pagination from "@/components/Pagination/Pagination";
-import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
 import {
   VehicleModalMethodsEnum,
   VehicleRentsModal,
@@ -22,6 +21,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -32,11 +32,10 @@ import {
   updateVehicleRent,
 } from "../api/RentsApi";
 import styles from "./rents.module.css";
-import Link from "next/link";
+import VehicleRent from "@/model/VehicleRent";
 export default function Rents() {
   const router = useRouter();
   const [rents, setRents] = useState<IPagination<VehicleRentDto>>();
-  const [skip, setSkip] = useState<number>(0);
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
   const [isVehicleRentsModalOpen, setIsVehicleRentsModalOpen] =
@@ -44,10 +43,8 @@ export default function Rents() {
   const [selectedVehicleRent, setSelectedVehicleRent] =
     useState<VehicleRentDto>();
   const parentContainerRef = useRef<HTMLDivElement>(null);
-  const [take, setTake] = useState<number>(12);
-  const { isAuthentificated, userDto, reFetch } = useContext(
-    AuthentificationContext
-  );
+  const { isAuthentificated, userDto, reFetch, skip, take, setSkip, setTake } =
+    useContext(AuthentificationContext);
   useEffect(() => {
     if (rents !== undefined) {
       return;
@@ -74,7 +71,7 @@ export default function Rents() {
           setIsAreYouSureModalOpen(false);
         }}
         onOkClick={async () => {
-          await deleteVehicleRentById(selectedVehicleRent!.id);
+          await deleteVehicleRentById(selectedVehicleRent!.id!);
           setRents(undefined);
           setIsAreYouSureModalOpen(false);
         }}
@@ -96,12 +93,13 @@ export default function Rents() {
             try {
               const updatedRent = await updateVehicleRent({
                 ...vehicleRent,
-                id: selectedVehicleRent!.id,
+                id: selectedVehicleRent!.id!,
+                userId: vehicleRent.owner.userId,
               });
 
               const rentsWithUpdatedRent =
                 rents?.elements.map((r) =>
-                  r.id === updatedRent.id ? updatedRent : r
+                  r.id === updatedRent.id ? { ...r, ...updatedRent } : r
                 ) || [];
               setRents({ ...rents!, elements: rentsWithUpdatedRent });
               toast("Updated succesfully", {
@@ -148,15 +146,6 @@ export default function Rents() {
             display="flex"
             justifyContent="end"
           >
-            {isAuthentificated === true && userDto !== null && (
-              <PaginationDropDown
-                take={take.toString()}
-                handleOnChange={(e) => {
-                  setRents(undefined);
-                  setTake(e);
-                }}
-              />
-            )}
             <Box
               sx={{
                 backgroundColor: "blueviolet",
@@ -210,12 +199,12 @@ export default function Rents() {
                       <TableCell>
                         {
                           <Link
-                            href={`/user/${rent.ownerName}`}
+                            href={`/user/${rent.owner.username}`}
                             onClick={() => {
-                              router.reload();
+                              // router.reload();
                             }}
                           >
-                            {rent.ownerName}
+                            {rent.owner.username}
                           </Link>
                         }
                       </TableCell>

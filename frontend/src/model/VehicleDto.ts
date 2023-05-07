@@ -1,5 +1,5 @@
 export interface VehicleDto {
-  id: string;
+  id?: string;
   brand: string;
   horsePower: number;
   carPlate: string;
@@ -7,5 +7,5 @@ export interface VehicleDto {
   engineCapacity: number;
   fabricationDate: string;
   ownerName: string;
-  numberOfIncidents: number;
+  numberOfIncidents?: number;
 }

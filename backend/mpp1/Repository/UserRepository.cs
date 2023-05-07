@@ -138,37 +138,32 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public Task<UserDto> GetUserDataByUsername(string username)
+    public async Task<UserDto> GetUserDataByUsername(string username)
     {
-        var user = from U in _rentACarDbContext.Users
-            where U.Name == username
-            join UP in _rentACarDbContext.UserProfiles on U.Id equals UP.UserId
-                into g
-            select new UserDto()
-            {
-                MaritalStatus = g.ToList()[0].MaritalStatus,
-                Bio = g.ToList()[0].Bio,
-                Birthday = g.ToList()[0].Birthday,
-                Gender = g.ToList()[0].Gender,
-                Location = g.ToList()[0].Location,
-                Username = g.ToList()[0].User.Name
-            };
+        var user = await _rentACarDbContext.Set<UserProfile>().Where(u => u.User.Name == username).Include(x => x.User)
+            .FirstOrDefaultAsync();
 
-        if (user.Count() == 0)
+        if (user is null)
         {
             throw new RepositoryException("User does not exist!");
         }
 
-        return Task.FromResult(user.ToList()[0]);
+        var userDto = new UserDto()
+        {
+            Bio = user.Bio,
+            Birthday = user.Birthday,
+            Gender = user.Gender,
+            Location = user.Location,
+            Username = user.User.Name,
+            MaritalStatus = user.MaritalStatus,
+            Role = user.Role
+        };
+
+        return userDto;
     }
 
     public Task<UserDto> GetUserDataByIdAsync(Guid userId)
     {
-        var test = from U in _rentACarDbContext.Users
-            join UP in _rentACarDbContext.UserProfiles on U.Id equals UP.UserId
-                into g
-            select g;
-
         var user = _rentACarDbContext.Set<UserProfile>().Where(u => u.UserId == userId).Include(u => u.User)
             .FirstOrDefault();
 
@@ -176,7 +171,7 @@ public class UserRepository : IUserRepository
         {
             throw new RepositoryException("Invalid user");
         }
-        
+
         var result = new UserDto()
         {
             Bio = user.Bio,
@@ -184,10 +179,10 @@ public class UserRepository : IUserRepository
             Gender = user.Gender,
             Location = user.Location,
             Username = user.User.Name,
-            MaritalStatus = user.MaritalStatus
+            MaritalStatus = user.MaritalStatus,
+            Role = user.Role
         };
 
-        
 
         return Task.FromResult(result);
     }

@@ -22,11 +22,12 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
+  console.log(selectedNavigationItem);
   if (
     navigationItems.find(
       (v) => v.routeName.localeCompare(selectedNavigationItem) === 0
-    ) === undefined
+    ) === undefined &&
+    selectedNavigationItem.localeCompare("user/[username]") !== 0
   ) {
     return <></>;
   }
@@ -91,7 +92,7 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
                   <MenuItem
                     onClick={() => {
                       router.push(`/user/${userDto?.username}`);
-                      router.reload();
+                      //router.reload();
                     }}
                   >
                     My account
@@ -112,9 +113,7 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
               <Link
                 className={`${styles.navigationItem}`}
                 href={"/login"}
-                onClick={() => {
-                  router.reload();
-                }}
+                onClick={() => {}}
               >
                 Sign in
               </Link>

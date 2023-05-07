@@ -24,7 +24,7 @@ export const deleteVehicleRentById = async (rentId: string) => {
   await fetch(url, header);
 };
 
-export const updateVehicleRent = async (vehicleRent: VehicleRentDto) => {
+export const updateVehicleRent = async (vehicleRent: VehicleRent) => {
   let url = baseUrl + RentEndpoints.updateRent;
   let header = createHeader(Methods.PUT, vehicleRent);
   let data = await fetch(url, header)

@@ -184,6 +184,7 @@ public class UserService : IUserService
         }
         catch (SecurityTokenValidationException securityTokenValidationException)
         {
+            
         }
 
         return null;

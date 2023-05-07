@@ -5,8 +5,8 @@ import {
   VehicleModal,
   VehicleModalMethodsEnum,
 } from "@/components/VehicleModal/VehicleModal";
+import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
 import IPagination from "@/model/Pagination";
-import { Vehicle } from "@/model/Vehicle";
 import { VehicleDto } from "@/model/VehicleDto";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -14,7 +14,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import {
   Box,
-  Button,
   CircularProgress,
   Paper,
   Table,
@@ -26,20 +25,18 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
   addVehicle,
   deleteVehicleById,
-  filterVehiclesByEngineCapacity,
   getVehiclesPaginated,
   updateVehicle,
 } from "../api/VehicleApi";
 import styles from "./vehicles.module.css";
-import { toast } from "react-toastify";
-import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
-import { useRouter } from "next/router";
-import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
-import Link from "next/link";
+import { isElementVisibleForUser } from "@/utilities/utilities";
 
 export default function Vehicles() {
   const router = useRouter();
@@ -162,58 +159,30 @@ export default function Vehicles() {
         </Box>
       ) : (
         <>
-          <Box component={Paper} sx={{ padding: "10px" }}></Box>
-          <Box
-            component={Paper}
-            sx={{ padding: "32px", textAlign: "right" }}
-            display="flex"
-            justifyContent="space-between"
-          >
-            <Box>
-              <TextField
-                label="Engine capacity"
-                size="small"
-                onChange={(e) => {
-                  setFilteredCapacity(
-                    parseInt(
-                      e.currentTarget.value.length === 0
-                        ? "0"
-                        : e.currentTarget.value
-                    )
-                  );
+          {isElementVisibleForUser(userDto, isAuthentificated) && (
+            <Box
+              component={Paper}
+              sx={{ padding: "32px", textAlign: "right" }}
+              display="flex"
+              justifyContent="end"
+            >
+              <Box
+                sx={{
+                  backgroundColor: "blueviolet",
+                  borderRadius: "10px",
+                  padding: ".35em",
+                  cursor: "pointer",
+                  display: "flex",
                 }}
-              ></TextField>
-              {/* <Button
-                variant="contained"
-                onClick={async () => {
-                  let data = await filterVehiclesByEngineCapacity(
-                    filteredCapacity
-                  );
-                  setVehicles({
-                    ...vehicles,
-                    elements: data,
-                  });
+                onClick={() => {
+                  setIsVehicleModalOpen(true);
                 }}
               >
-                Filter
-              </Button> */}
+                <AddIcon />
+                <Typography sx={{ marginTop: "3px" }}>Add vehicle</Typography>
+              </Box>
             </Box>
-            <Box
-              sx={{
-                backgroundColor: "blueviolet",
-                borderRadius: "10px",
-                padding: ".35em",
-                cursor: "pointer",
-                display: "flex",
-              }}
-              onClick={() => {
-                setIsVehicleModalOpen(true);
-              }}
-            >
-              <AddIcon />
-              <Typography sx={{ marginTop: "3px" }}>Add vehicle</Typography>
-            </Box>
-          </Box>
+          )}
           <TableContainer component={Paper} sx={{ paddingInline: "2rem" }}>
             <Table>
               <TableHead>
@@ -244,46 +213,49 @@ export default function Vehicles() {
                       <TableCell>{vehicle.numberOfIncidents}</TableCell>
                       <TableCell>
                         {
-                          <Link
-                            href={`/user/${vehicle.ownerName}`}
-                            onClick={() => {
-                              //router.reload();
-                            }}
-                          >
-                            {vehicle.ownerName}
+                          <Link href={`/user/${vehicle.owner.username}`}>
+                            {vehicle.owner.username}
                           </Link>
                         }
                       </TableCell>
-                      <TableCell>
-                        <ClearIcon
-                          sx={{
-                            color: "red",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => {
-                            setSelectedVehicle(vehicle);
-                            setIsAreYouSureModalOpen(true);
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <EditIcon
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => {
-                            setSelectedVehicle(vehicle);
-                            setIsVehicleModalOpen(true);
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <RemoveRedEyeIcon
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => {
-                            setSelectedVehicle(vehicle);
-                            setIsIncidentModalOpen(true);
-                          }}
-                        />
-                      </TableCell>
+                      {isElementVisibleForUser(
+                        userDto,
+                        isAuthentificated,
+                        vehicle.owner.username
+                      ) && (
+                        <>
+                          <TableCell>
+                            <ClearIcon
+                              sx={{
+                                color: "red",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => {
+                                setSelectedVehicle(vehicle);
+                                setIsAreYouSureModalOpen(true);
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <EditIcon
+                              sx={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setSelectedVehicle(vehicle);
+                                setIsVehicleModalOpen(true);
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <RemoveRedEyeIcon
+                              sx={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setSelectedVehicle(vehicle);
+                                setIsIncidentModalOpen(true);
+                              }}
+                            />
+                          </TableCell>
+                        </>
+                      )}
                     </TableRow>
                   );
                 })}

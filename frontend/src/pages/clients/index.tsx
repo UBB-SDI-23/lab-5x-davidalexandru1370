@@ -181,42 +181,37 @@ export default function Clients() {
                         }
                       </TableCell>
                       <TableCell></TableCell>
-                      <TableCell>
-                        {isElementVisibleForUser(
-                          userDto,
-                          isAuthentificated,
-                          client.ownername
-                        ) && (
-                          <ClearIcon
-                            sx={{
-                              color: "red",
-                              cursor: "pointer",
-                            }}
-                            onClick={() => {
-                              setSelectedClient(client);
-                              setIsAreYouSureModalOpen(true);
-                            }}
-                          />
-                        )}
-                      </TableCell>
-
                       {isElementVisibleForUser(
                         userDto,
                         isAuthentificated,
                         client.ownername
                       ) && (
-                        <TableCell>
-                          <EditIcon
-                            sx={{ cursor: "pointer" }}
-                            onClick={() => {
-                              setClientModalMethod(
-                                ClientModalMethodsEnum.UPDATE
-                              );
-                              setSelectedClient(client);
-                              setIsClientModalOpen(true);
-                            }}
-                          />
-                        </TableCell>
+                        <>
+                          <TableCell>
+                            <ClearIcon
+                              sx={{
+                                color: "red",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => {
+                                setSelectedClient(client);
+                                setIsAreYouSureModalOpen(true);
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <EditIcon
+                              sx={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setClientModalMethod(
+                                  ClientModalMethodsEnum.UPDATE
+                                );
+                                setSelectedClient(client);
+                                setIsClientModalOpen(true);
+                              }}
+                            />
+                          </TableCell>
+                        </>
                       )}
                     </TableRow>
                   );

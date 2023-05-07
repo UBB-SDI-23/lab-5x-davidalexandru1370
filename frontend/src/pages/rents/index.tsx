@@ -203,39 +203,35 @@ export default function Rents() {
                           {rent.owner.username}
                         </Link>
                       </TableCell>
-                      <TableCell>
-                        {isElementVisibleForUser(
-                          userDto,
-                          isAuthentificated,
-                          rent.owner.username
-                        ) && (
-                          <ClearIcon
-                            sx={{
-                              color: "red",
-                              cursor: "pointer",
-                            }}
-                            onClick={() => {
-                              setSelectedVehicleRent(rent);
-                              setIsAreYouSureModalOpen(true);
-                            }}
-                          />
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {isElementVisibleForUser(
-                          userDto,
-                          isAuthentificated,
-                          rent.owner.username
-                        ) && (
-                          <EditIcon
-                            sx={{ cursor: "pointer" }}
-                            onClick={() => {
-                              setSelectedVehicleRent(rent);
-                              setIsVehicleRentsModalOpen(true);
-                            }}
-                          />
-                        )}
-                      </TableCell>
+                      {isElementVisibleForUser(
+                        userDto,
+                        isAuthentificated,
+                        rent.owner.username
+                      ) && (
+                        <>
+                          <TableCell>
+                            <ClearIcon
+                              sx={{
+                                color: "red",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => {
+                                setSelectedVehicleRent(rent);
+                                setIsAreYouSureModalOpen(true);
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <EditIcon
+                              sx={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setSelectedVehicleRent(rent);
+                                setIsVehicleRentsModalOpen(true);
+                              }}
+                            />
+                          </TableCell>
+                        </>
+                      )}
                     </TableRow>
                   );
                 })}

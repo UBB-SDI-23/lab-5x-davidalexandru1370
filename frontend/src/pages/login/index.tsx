@@ -1,11 +1,12 @@
 import { Box, Button, Paper, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styles from "./login.module.css";
 import styled from "@emotion/styled";
 import { login } from "../api/UserApi";
 import { LoginCredentials } from "@/model/LoginCredentials";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
 
 const contentStyle = {
   padding: "2rem",
@@ -43,6 +44,7 @@ const Login = () => {
   const [password, setPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const router = useRouter();
+  const { reFetch } = useContext(AuthentificationContext);
   return (
     <div className={`${styles.content}`}>
       <Box sx={contentStyle}>
@@ -75,7 +77,7 @@ const Login = () => {
               router.push("/clients", undefined, {
                 shallow: false,
               });
-              router.reload();
+              reFetch();
             } catch (error) {
               toast((error as Error).message, {
                 type: "error",

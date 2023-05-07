@@ -1,3 +1,5 @@
+import { Owner } from "./Owner";
+
 export interface VehicleDto {
   id?: string;
   brand: string;
@@ -6,6 +8,6 @@ export interface VehicleDto {
   numberOfSeats: number;
   engineCapacity: number;
   fabricationDate: string;
-  ownerName: string;
+  owner: Owner;
   numberOfIncidents?: number;
 }

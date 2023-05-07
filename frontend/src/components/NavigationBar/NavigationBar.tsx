@@ -19,10 +19,16 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
   const { isAuthentificated, userDto, reFetch } = useContext(
     AuthentificationContext
   );
+  useEffect(() => {
+    if (!router.isReady) {
+      return;
+    }
+
+    setselectedNavigationItem(router.pathname.substring(1));
+  }, [router.pathname, router.isReady]);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  console.log(selectedNavigationItem);
   if (
     navigationItems.find(
       (v) => v.routeName.localeCompare(selectedNavigationItem) === 0

@@ -7,6 +7,7 @@ import {
 import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
 import IPagination from "@/model/Pagination";
 import VehicleRentDto from "@/model/VehicleRentDto";
+import { isElementVisibleForUser } from "@/utilities/utilities";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
@@ -32,7 +33,6 @@ import {
   updateVehicleRent,
 } from "../api/RentsApi";
 import styles from "./rents.module.css";
-import VehicleRent from "@/model/VehicleRent";
 export default function Rents() {
   const router = useRouter();
   const [rents, setRents] = useState<IPagination<VehicleRentDto>>();
@@ -197,28 +197,27 @@ export default function Rents() {
                       <TableCell>{rent.totalCost}</TableCell>
                       <TableCell>{rent.numberOfTimesRented}</TableCell>
                       <TableCell>
-                        {
-                          <Link
-                            href={`/user/${rent.owner.username}`}
-                            onClick={() => {
-                              // router.reload();
-                            }}
-                          >
-                            {rent.owner.username}
-                          </Link>
-                        }
+                        <Link href={`/user/${rent.owner.username}`}>
+                          {rent.owner.username}
+                        </Link>
                       </TableCell>
                       <TableCell>
-                        <ClearIcon
-                          sx={{
-                            color: "red",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => {
-                            setSelectedVehicleRent(rent);
-                            setIsAreYouSureModalOpen(true);
-                          }}
-                        />
+                        {isElementVisibleForUser(
+                          userDto,
+                          isAuthentificated,
+                          rent.owner.username
+                        ) && (
+                          <ClearIcon
+                            sx={{
+                              color: "red",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              setSelectedVehicleRent(rent);
+                              setIsAreYouSureModalOpen(true);
+                            }}
+                          />
+                        )}
                       </TableCell>
                       <TableCell>
                         <EditIcon

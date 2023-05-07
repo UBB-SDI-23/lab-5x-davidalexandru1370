@@ -1,4 +1,6 @@
 import { Methods } from "@/constants/ApiConstants";
+import { RolesEnum } from "@/enums/RolesEnum";
+import { UserDto } from "@/model/UserDto";
 
 export const createHeader = (method: Methods, entity?: any) => {
   let headerOptions: RequestInit = {
@@ -41,4 +43,27 @@ export function computeAge(birthday: Date) {
   const roundedDifference: number = Math.round(differenceInYears);
 
   return roundedDifference;
+}
+
+export function isElementVisibleForUser(
+  userDto: UserDto | undefined,
+  isAuthentificated: boolean,
+  ownerEntityName?: string
+): boolean {
+  if (
+    userDto === undefined ||
+    userDto === null ||
+    isAuthentificated === false
+  ) {
+    return false;
+  }
+
+  if (
+    userDto.role === RolesEnum.Regular &&
+    userDto.username !== ownerEntityName
+  ) {
+    return false;
+  }
+
+  return true;
 }

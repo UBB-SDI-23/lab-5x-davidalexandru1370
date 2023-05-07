@@ -35,6 +35,7 @@ import {
 import styles from "./clients.module.css";
 import { toast } from "react-toastify";
 import { RolesEnum } from "@/enums/RolesEnum";
+import { isElementVisibleForUser } from "@/utilities/utilities";
 
 export default function Clients() {
   const [clients, setClients] = useState<IPagination<Client>>();
@@ -115,30 +116,36 @@ export default function Clients() {
         </Box>
       ) : (
         <>
-          <Box
-            component={Paper}
-            sx={{ padding: "32px", textAlign: "right" }}
-            display="flex"
-            justifyContent="end"
-          >
+          {isElementVisibleForUser(
+            userDto,
+            isAuthentificated,
+            userDto?.username
+          ) && (
             <Box
-              sx={{
-                backgroundColor: "blueviolet",
-                borderRadius: "10px",
-                padding: ".35em",
-                cursor: "pointer",
-                display: "flex",
-              }}
-              onClick={() => {
-                setSelectedClient(undefined);
-                setClientModalMethod(ClientModalMethodsEnum.ADD);
-                setIsClientModalOpen(true);
-              }}
+              component={Paper}
+              sx={{ padding: "32px", textAlign: "right" }}
+              display="flex"
+              justifyContent="end"
             >
-              <AddIcon />
-              <Typography sx={{ marginTop: "3px" }}>Add client</Typography>
+              <Box
+                sx={{
+                  backgroundColor: "blueviolet",
+                  borderRadius: "10px",
+                  padding: ".35em",
+                  cursor: "pointer",
+                  display: "flex",
+                }}
+                onClick={() => {
+                  setSelectedClient(undefined);
+                  setClientModalMethod(ClientModalMethodsEnum.ADD);
+                  setIsClientModalOpen(true);
+                }}
+              >
+                <AddIcon />
+                <Typography sx={{ marginTop: "3px" }}>Add client</Typography>
+              </Box>
             </Box>
-          </Box>
+          )}
           <TableContainer
             component={Paper}
             sx={{ paddingInline: "2rem", minHeight: "60vh" }}
@@ -175,33 +182,42 @@ export default function Clients() {
                       </TableCell>
                       <TableCell></TableCell>
                       <TableCell>
-                        {isAuthentificated &&
-                          ((userDto?.role === RolesEnum.Regular &&
-                            client.ownername === userDto.username) ||
-                            ((userDto?.role === RolesEnum.Moderator ||
-                              userDto?.role === RolesEnum.Admin) && (
-                              <ClearIcon
-                                sx={{
-                                  color: "red",
-                                  cursor: "pointer",
-                                }}
-                                onClick={() => {
-                                  setSelectedClient(client);
-                                  setIsAreYouSureModalOpen(true);
-                                }}
-                              />
-                            )))}
+                        {isElementVisibleForUser(
+                          userDto,
+                          isAuthentificated,
+                          client.ownername
+                        ) && (
+                          <ClearIcon
+                            sx={{
+                              color: "red",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              setSelectedClient(client);
+                              setIsAreYouSureModalOpen(true);
+                            }}
+                          />
+                        )}
                       </TableCell>
-                      <TableCell>
-                        <EditIcon
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => {
-                            setClientModalMethod(ClientModalMethodsEnum.UPDATE);
-                            setSelectedClient(client);
-                            setIsClientModalOpen(true);
-                          }}
-                        />
-                      </TableCell>
+
+                      {isElementVisibleForUser(
+                        userDto,
+                        isAuthentificated,
+                        client.ownername
+                      ) && (
+                        <TableCell>
+                          <EditIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setClientModalMethod(
+                                ClientModalMethodsEnum.UPDATE
+                              );
+                              setSelectedClient(client);
+                              setIsClientModalOpen(true);
+                            }}
+                          />
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })}

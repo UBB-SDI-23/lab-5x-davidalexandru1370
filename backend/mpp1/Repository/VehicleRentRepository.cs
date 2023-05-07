@@ -132,6 +132,7 @@ public class VehicleRentRepository : IVehicleRentRepository
             },
             StartDate = v.StartDate,
             TotalCost = v.TotalCost
+            
         });
 
         int numberOfRents = GetNumberOfRents();

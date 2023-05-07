@@ -15,4 +15,5 @@ public class UserProfile
     [Required] public DateOnly Birthday { get; set; }
     [Required] public GendersEnum Gender { get; set; }
     [Required] public MaritalStatusEnum MaritalStatus { get; set; }
+    [Required] public RolesEnum Role { get; set; }
 }

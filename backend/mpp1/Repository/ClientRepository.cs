@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using mpp1.DatabaseContext;
 using mpp1.Exceptions;
 using mpp1.Model;
+using mpp1.Model.DTO;
 using mpp1.Repository.Interfaces;
 
 namespace mpp1.Repository;
@@ -75,11 +76,23 @@ public class ClientRepository : IClientRepository
         return result;
     }
 
-    public async Task<Pagination<Client>> GetClientsPaginated(int skip, int take)
+    public async Task<Pagination<ClientDTO>> GetClientsPaginated(int skip, int take)
     {
-        Pagination<Client> clientsPaginated = new();
-        
-        var result = await _rentACarDbContext.Clients.Skip(skip).Take(take).ToListAsync() as IEnumerable<Client>;
+        Pagination<ClientDTO> clientsPaginated = new();
+
+        var result =
+            (await _rentACarDbContext.Clients.Skip(skip).Take(take).Include(c => c.User).ToListAsync() as
+                IEnumerable<Client>).Select(c => new ClientDTO()
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Birthday = c.Birthday,
+                Nationality = c.Nationality,
+                Ownername = c.User!.Name,
+                CardNumber = c.CardNumber,
+                CNP = c.CNP
+            });
+
         clientsPaginated.Elements = result;
 
         int numberOfClients = GetNumberOfClients();
@@ -109,5 +122,15 @@ public class ClientRepository : IClientRepository
             as IEnumerable<Client>;
 
         return Task.FromResult(foundClients);
+    }
+
+    public  Task<int> GetClientsCountOfUser(string owner)
+    {
+        var count =  _rentACarDbContext
+            .Set<Client>()
+            .Include(c => c.User)
+            .Count(c => c.User.Name == owner);
+
+        return Task.FromResult(count);
     }
 }

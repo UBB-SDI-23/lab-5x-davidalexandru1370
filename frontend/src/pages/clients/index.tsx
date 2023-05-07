@@ -4,6 +4,7 @@ import {
   ClientModalMethodsEnum,
 } from "@/components/ClientModal/ClientModal";
 import Pagination from "@/components/Pagination/Pagination";
+import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
 import { Client } from "@/model/Client";
 import { ClientDto } from "@/model/ClientDto";
 import IPagination from "@/model/Pagination";
@@ -22,7 +23,9 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
 import {
   addClient,
   deleteClientById,
@@ -30,7 +33,9 @@ import {
   updateClient,
 } from "../api/ClientApi";
 import styles from "./clients.module.css";
-import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
+import { toast } from "react-toastify";
+import { RolesEnum } from "@/enums/RolesEnum";
+import { isElementVisibleForUser } from "@/utilities/utilities";
 
 export default function Clients() {
   const [clients, setClients] = useState<IPagination<Client>>();
@@ -41,8 +46,10 @@ export default function Clients() {
   const [clientModalMethod, setClientModalMethod] =
     useState<ClientModalMethodsEnum>(ClientModalMethodsEnum.ADD);
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
-  const [skip, setSkip] = useState<number>(0);
-  const [take, setTake] = useState<number>(12);
+  const router = useRouter();
+  const { skip, take, setSkip, userDto, isAuthentificated } = useContext(
+    AuthentificationContext
+  );
 
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isClientModalOpen === true) {
@@ -60,10 +67,12 @@ export default function Clients() {
           if (clientModalMethod === ClientModalMethodsEnum.ADD) {
             await addClient(client);
           } else {
-            await updateClient({
-              ...client,
-              id: selectedClient!.id,
-            });
+            userDto &&
+              (await updateClient({
+                ...client,
+                id: selectedClient!.id,
+                ownername: userDto?.username!,
+              }));
           }
           setSelectedClient(undefined);
           setIsClientModalOpen(false);
@@ -84,7 +93,9 @@ export default function Clients() {
           try {
             selectedClient && (await deleteClientById(selectedClient.id));
           } catch (error: unknown) {
-            console.log((error as Error).message);
+            toast((error as Error).message, {
+              type: "error",
+            });
           }
           setIsAreYouSureModalOpen(false);
         }}
@@ -105,35 +116,36 @@ export default function Clients() {
         </Box>
       ) : (
         <>
-          <Box
-            component={Paper}
-            sx={{ padding: "32px", textAlign: "right" }}
-            display="flex"
-            justifyContent="end"
-          >
-            <PaginationDropDown
-              handleOnChange={(e) => {
-                setTake(e);
-              }}
-            />
+          {isElementVisibleForUser(
+            userDto,
+            isAuthentificated,
+            userDto?.username
+          ) && (
             <Box
-              sx={{
-                backgroundColor: "blueviolet",
-                borderRadius: "10px",
-                padding: ".35em",
-                cursor: "pointer",
-                display: "flex",
-              }}
-              onClick={() => {
-                setSelectedClient(undefined);
-                setClientModalMethod(ClientModalMethodsEnum.ADD);
-                setIsClientModalOpen(true);
-              }}
+              component={Paper}
+              sx={{ padding: "32px", textAlign: "right" }}
+              display="flex"
+              justifyContent="end"
             >
-              <AddIcon />
-              <Typography sx={{ marginTop: "3px" }}>Add client</Typography>
+              <Box
+                sx={{
+                  backgroundColor: "blueviolet",
+                  borderRadius: "10px",
+                  padding: ".35em",
+                  cursor: "pointer",
+                  display: "flex",
+                }}
+                onClick={() => {
+                  setSelectedClient(undefined);
+                  setClientModalMethod(ClientModalMethodsEnum.ADD);
+                  setIsClientModalOpen(true);
+                }}
+              >
+                <AddIcon />
+                <Typography sx={{ marginTop: "3px" }}>Add client</Typography>
+              </Box>
             </Box>
-          </Box>
+          )}
           <TableContainer
             component={Paper}
             sx={{ paddingInline: "2rem", minHeight: "60vh" }}
@@ -146,6 +158,7 @@ export default function Clients() {
                   <TableCell>CNP</TableCell>
                   <TableCell>Birthday</TableCell>
                   <TableCell>Nationality</TableCell>
+                  <TableCell>Owner name</TableCell>
                   <TableCell>Number of rents</TableCell>
                   <TableCell></TableCell>
                   <TableCell></TableCell>
@@ -160,29 +173,46 @@ export default function Clients() {
                       <TableCell>{client.cnp}</TableCell>
                       <TableCell>{client.birthday.toString()}</TableCell>
                       <TableCell>{client.nationality}</TableCell>
+                      <TableCell>
+                        {
+                          <Link href={`/user/${client.ownername}`}>
+                            {client.ownername}
+                          </Link>
+                        }
+                      </TableCell>
                       <TableCell></TableCell>
-                      <TableCell>
-                        <ClearIcon
-                          sx={{
-                            color: "red",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => {
-                            setSelectedClient(client);
-                            setIsAreYouSureModalOpen(true);
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <EditIcon
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => {
-                            setClientModalMethod(ClientModalMethodsEnum.UPDATE);
-                            setSelectedClient(client);
-                            setIsClientModalOpen(true);
-                          }}
-                        />
-                      </TableCell>
+                      {isElementVisibleForUser(
+                        userDto,
+                        isAuthentificated,
+                        client.ownername
+                      ) && (
+                        <>
+                          <TableCell>
+                            <ClearIcon
+                              sx={{
+                                color: "red",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => {
+                                setSelectedClient(client);
+                                setIsAreYouSureModalOpen(true);
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <EditIcon
+                              sx={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setClientModalMethod(
+                                  ClientModalMethodsEnum.UPDATE
+                                );
+                                setSelectedClient(client);
+                                setIsClientModalOpen(true);
+                              }}
+                            />
+                          </TableCell>
+                        </>
+                      )}
                     </TableRow>
                   );
                 })}
@@ -197,7 +227,7 @@ export default function Clients() {
                 setClients(undefined);
                 setSkip(take * (pageNumber - 1));
               }}
-              pageNumber={skip / take + 1}
+              pageNumber={Math.ceil(skip / take) + 1}
               className={styles.pagination}
             />
           </Box>

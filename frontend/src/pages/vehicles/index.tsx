@@ -5,8 +5,8 @@ import {
   VehicleModal,
   VehicleModalMethodsEnum,
 } from "@/components/VehicleModal/VehicleModal";
+import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
 import IPagination from "@/model/Pagination";
-import { Vehicle } from "@/model/Vehicle";
 import { VehicleDto } from "@/model/VehicleDto";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -14,7 +14,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import {
   Box,
-  Button,
   CircularProgress,
   Paper,
   Table,
@@ -26,30 +25,31 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
   addVehicle,
   deleteVehicleById,
-  filterVehiclesByEngineCapacity,
   getVehiclesPaginated,
   updateVehicle,
 } from "../api/VehicleApi";
 import styles from "./vehicles.module.css";
-import { toast } from "react-toastify";
-import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
+import { isElementVisibleForUser } from "@/utilities/utilities";
 
 export default function Vehicles() {
-  const [vehicles, setVehicles] = useState<IPagination<Vehicle>>();
+  const router = useRouter();
+  const [vehicles, setVehicles] = useState<IPagination<VehicleDto>>();
   const [filteredCapacity, setFilteredCapacity] = useState<number>(0);
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState<boolean>(false);
   const [isIncidentModalOpen, setIsIncidentModalOpen] =
     useState<boolean>(false);
-  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle>();
-  const [skip, setSkip] = useState<number>(0);
-  const [take, setTake] = useState<number>(12);
-
+  const [selectedVehicle, setSelectedVehicle] = useState<VehicleDto>();
+  const { isAuthentificated, userDto, reFetch, skip, take, setTake, setSkip } =
+    useContext(AuthentificationContext);
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isVehicleModalOpen === true) {
       return;
@@ -121,7 +121,7 @@ export default function Vehicles() {
         }}
         onOkClick={async () => {
           try {
-            await deleteVehicleById(selectedVehicle!.id);
+            await deleteVehicleById(selectedVehicle!.id!);
             toast("Deleted succesfully!", {
               type: "success",
             });
@@ -159,64 +159,30 @@ export default function Vehicles() {
         </Box>
       ) : (
         <>
-          <Box component={Paper} sx={{ padding: "10px" }}>
-            <PaginationDropDown
-              handleOnChange={(value) => {
-                setTake(value);
-              }}
-            />
-          </Box>
-          <Box
-            component={Paper}
-            sx={{ padding: "32px", textAlign: "right" }}
-            display="flex"
-            justifyContent="space-between"
-          >
-            <Box>
-              <TextField
-                label="Engine capacity"
-                size="small"
-                onChange={(e) => {
-                  setFilteredCapacity(
-                    parseInt(
-                      e.currentTarget.value.length === 0
-                        ? "0"
-                        : e.currentTarget.value
-                    )
-                  );
+          {isElementVisibleForUser(userDto, isAuthentificated) && (
+            <Box
+              component={Paper}
+              sx={{ padding: "32px", textAlign: "right" }}
+              display="flex"
+              justifyContent="end"
+            >
+              <Box
+                sx={{
+                  backgroundColor: "blueviolet",
+                  borderRadius: "10px",
+                  padding: ".35em",
+                  cursor: "pointer",
+                  display: "flex",
                 }}
-              ></TextField>
-              <Button
-                variant="contained"
-                onClick={async () => {
-                  let data = await filterVehiclesByEngineCapacity(
-                    filteredCapacity
-                  );
-                  setVehicles({
-                    ...vehicles,
-                    elements: data,
-                  });
+                onClick={() => {
+                  setIsVehicleModalOpen(true);
                 }}
               >
-                Filter
-              </Button>
+                <AddIcon />
+                <Typography sx={{ marginTop: "3px" }}>Add vehicle</Typography>
+              </Box>
             </Box>
-            <Box
-              sx={{
-                backgroundColor: "blueviolet",
-                borderRadius: "10px",
-                padding: ".35em",
-                cursor: "pointer",
-                display: "flex",
-              }}
-              onClick={() => {
-                setIsVehicleModalOpen(true);
-              }}
-            >
-              <AddIcon />
-              <Typography sx={{ marginTop: "3px" }}>Add vehicle</Typography>
-            </Box>
-          </Box>
+          )}
           <TableContainer component={Paper} sx={{ paddingInline: "2rem" }}>
             <Table>
               <TableHead>
@@ -227,6 +193,8 @@ export default function Vehicles() {
                   <TableCell>Seats</TableCell>
                   <TableCell>Engine Capacity</TableCell>
                   <TableCell>Fabrication Date</TableCell>
+                  <TableCell>Number of incidents</TableCell>
+                  <TableCell>Owner name</TableCell>
                   <TableCell></TableCell>
                   <TableCell></TableCell>
                   <TableCell></TableCell>
@@ -242,36 +210,52 @@ export default function Vehicles() {
                       <TableCell>{vehicle.numberOfSeats}</TableCell>
                       <TableCell>{vehicle.engineCapacity}</TableCell>
                       <TableCell>{vehicle.fabricationDate}</TableCell>
+                      <TableCell>{vehicle.numberOfIncidents}</TableCell>
                       <TableCell>
-                        <ClearIcon
-                          sx={{
-                            color: "red",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => {
-                            setSelectedVehicle(vehicle);
-                            setIsAreYouSureModalOpen(true);
-                          }}
-                        />
+                        {
+                          <Link href={`/user/${vehicle.owner.username}`}>
+                            {vehicle.owner.username}
+                          </Link>
+                        }
                       </TableCell>
-                      <TableCell>
-                        <EditIcon
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => {
-                            setSelectedVehicle(vehicle);
-                            setIsVehicleModalOpen(true);
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <RemoveRedEyeIcon
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => {
-                            setSelectedVehicle(vehicle);
-                            setIsIncidentModalOpen(true);
-                          }}
-                        />
-                      </TableCell>
+                      {isElementVisibleForUser(
+                        userDto,
+                        isAuthentificated,
+                        vehicle.owner.username
+                      ) && (
+                        <>
+                          <TableCell>
+                            <ClearIcon
+                              sx={{
+                                color: "red",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => {
+                                setSelectedVehicle(vehicle);
+                                setIsAreYouSureModalOpen(true);
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <EditIcon
+                              sx={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setSelectedVehicle(vehicle);
+                                setIsVehicleModalOpen(true);
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <RemoveRedEyeIcon
+                              sx={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setSelectedVehicle(vehicle);
+                                setIsIncidentModalOpen(true);
+                              }}
+                            />
+                          </TableCell>
+                        </>
+                      )}
                     </TableRow>
                   );
                 })}
@@ -286,7 +270,7 @@ export default function Vehicles() {
                 setVehicles(undefined);
                 setSkip(take * (pageNumber - 1));
               }}
-              pageNumber={skip / take + 1}
+              pageNumber={Math.ceil(skip / take) + 1}
               className={styles.pagination}
             />
           </Box>

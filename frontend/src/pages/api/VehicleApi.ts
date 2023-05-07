@@ -68,7 +68,7 @@ export const addVehicle = async (vehicle: VehicleDto) => {
 export const getVehiclesPaginated = async (skip: number, take: number) => {
   let url: string = baseUrl + VehicleEndpoints.getVehiclesPaginated(skip, take);
   let header = createHeader(Methods.GET);
-  let data: IPagination<Vehicle> = await fetch(url, header)
+  let data: IPagination<VehicleDto> = await fetch(url, header)
     .then(async (response: Response) => {
       return await response.json();
     })
@@ -96,10 +96,10 @@ export const getVehiclesByCarPlate = async (carPlate: string) => {
   return data;
 };
 
-export const updateVehicle = async (vehicle: Vehicle) => {
+export const updateVehicle = async (vehicle: VehicleDto) => {
   let url: string = baseUrl + VehicleEndpoints.updateVehicle;
   let header = createHeader(Methods.PUT, vehicle);
-  let data: Vehicle = await fetch(url, header)
+  let data: VehicleDto = await fetch(url, header)
     .then(async (response: Response) => {
       if (response.status >= 400) {
         return response.json().then((e) => {
@@ -108,7 +108,7 @@ export const updateVehicle = async (vehicle: Vehicle) => {
       }
       return await response.json();
     })
-    .then((v: Vehicle) => {
+    .then((v: VehicleDto) => {
       return v;
     });
 

@@ -82,4 +82,14 @@ public class IncidentRepository : IIncidentsRepository
         var incidents = _rentACarDbContext.Incidents.Where(v => v.VehicleId == vehicleId) as IEnumerable<Incident>;
         return Task.FromResult(incidents);
     }
+
+    public Task<int> GetIncidentsCountOfUser(string owner)
+    {
+        var count =  _rentACarDbContext
+            .Set<Incident>()
+            .Include(c => c.User)
+            .Count(c => c.User.Name == owner);
+
+        return Task.FromResult(count);
+    }
 }

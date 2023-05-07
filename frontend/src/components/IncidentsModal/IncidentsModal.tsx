@@ -1,5 +1,5 @@
 import Incident from "@/model/Incident";
-import { Vehicle } from "@/model/Vehicle";
+import { VehicleDto } from "@/model/VehicleDto";
 import { getIncidentsByVehicleId } from "@/pages/api/IncidentApi";
 import {
   Box,
@@ -14,11 +14,11 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 interface IIncidentsModal {
   onClose: () => void;
-  vehicle: Vehicle;
+  vehicle: VehicleDto;
   isOpen: boolean;
 }
 
@@ -33,9 +33,10 @@ export const IncidentsModal: FC<IIncidentsModal> = ({
     if (vehicle === undefined) {
       return;
     }
-    getIncidentsByVehicleId(vehicle.id).then((i) => {
-      setIncidents(i);
-    });
+    vehicle.id &&
+      getIncidentsByVehicleId(vehicle.id).then((i) => {
+        setIncidents(i);
+      });
   }, [vehicle]);
 
   const handleOnClose = () => {

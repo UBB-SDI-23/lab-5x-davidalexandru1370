@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using mpp1.Model;
+using mpp1.Model.DTO;
 
 namespace mpp1.Repository.Interfaces;
 
@@ -13,6 +14,7 @@ public interface IVehicleRepository
     public Task<IEnumerable<Vehicle>> GetAllVehiclesWithAllData();
     public Task<Vehicle> GetVehicleById(Guid id);
     public Task<IEnumerable<Vehicle>> GetVehiclesFiltered(Expression<Func<Vehicle, bool>> condition);
-    public Task<Pagination<Vehicle>> GetVehiclesPaginated(int skip, int take);
+    public Task<Pagination<VehicleDTO>> GetVehiclesPaginated(int skip, int take);
     public Task<IEnumerable<Vehicle>> GetVehiclesByCarPlate(string carPlate);
+    public Task<int> GetNumberOfVehiclesByOwner(string owner);
 }

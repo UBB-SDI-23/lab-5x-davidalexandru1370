@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using mpp1.DatabaseContext;
 using mpp1.Exceptions;
 using mpp1.Model;
+using mpp1.Model.DTO;
 using mpp1.Repository.Interfaces;
 
 namespace mpp1.Repository;
@@ -27,7 +28,6 @@ public class VehicleRentRepository : IVehicleRentRepository
         {
             throw new RepositoryException(e.Message);
         }
-        
     }
 
     public async Task DeleteVehicleRent(Guid vehicleRentId)
@@ -103,19 +103,37 @@ public class VehicleRentRepository : IVehicleRentRepository
         return result;
     }
 
-    public Task<Pagination<VehicleRent>> GetVehicleRentsPaginated(int skip, int take)
+    public Task<Pagination<VehicleRentDto>> GetVehicleRentsPaginated(int skip, int take)
     {
-        Pagination<VehicleRent> paginatedRents = new();
+        Pagination<VehicleRentDto> paginatedRents = new();
 
         var result = _rentACarDbContext
                 .Set<VehicleRent>()
                 .Skip(skip)
                 .Take(take)
+                .Include(r => r.User)
                 .Include(r => r.Client)
                 .Include(r => r.Vehicle)
             as IEnumerable<VehicleRent>;
 
-        paginatedRents.Elements = result;
+        paginatedRents.Elements = result.Select(v => new VehicleRentDto()
+        {
+            ClientId = v.Client!.Id,
+            VehicleId = v.Vehicle!.Id,
+            Client = v.Client,
+            Vehicle = v.Vehicle,
+            Id = v.Id,
+            Comments = v.Comments,
+            EndDate = v.EndDate,
+            Owner = new Owner()
+            {
+                UserId = v.User.Id,
+                Username = v.User!.Name
+            },
+            StartDate = v.StartDate,
+            TotalCost = v.TotalCost
+            
+        });
 
         int numberOfRents = GetNumberOfRents();
         paginatedRents.TotalNumberOfElements = numberOfRents;
@@ -131,5 +149,15 @@ public class VehicleRentRepository : IVehicleRentRepository
     public async Task<int> GetNumberOfRentsByClientId(Guid clientId)
     {
         return (await GetVehiclesByClientId(clientId)).Count();
+    }
+
+    public Task<int> GetNumberOfRentsByOwner(string owner)
+    {
+        var count = _rentACarDbContext
+            .Set<VehicleRent>()
+            .Include(c => c.User)
+            .Count(c => c.User.Name == owner);
+
+        return Task.FromResult(count);
     }
 }

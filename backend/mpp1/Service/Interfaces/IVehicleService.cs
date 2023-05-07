@@ -14,7 +14,9 @@ public interface IVehicleService
     public Task<IEnumerable<Vehicle>> GetVehiclesWithCapacityGreaterThan(int capacity);
     public Task<Vehicle> GetVehicleByIdWithAllData(Guid vehicleId);
     public Task<IEnumerable<VehicleDTO>> GetVehiclesOrderByNumberOfIncidents();
-    public Task<Pagination<Vehicle>> GetVehiclesPaginated(int skip, int take);
+    public Task<Pagination<VehicleDTO>> GetVehiclesPaginated(int skip, int take);
     public Task<IEnumerable<Vehicle>> GetVehiclesByCarPlate(string carPlate);
+
+    public Task<int> GetNumberOfVehiclesByOwner(string owner);
 
 }

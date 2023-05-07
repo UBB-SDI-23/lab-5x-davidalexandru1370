@@ -10,6 +10,7 @@ export const clientController = "client/";
 export const vehicleController = "vehicle/";
 export const incidentController = "incidents/";
 export const rentsController = "vehiclerent/";
+export const userController = "user/";
 
 export enum Methods {
   POST = "POST",
@@ -52,6 +53,15 @@ interface RentsEndpoint {
   getRentsPaginated: (skip: number, take: number) => string;
 }
 
+interface UserEndpoint {
+  login: string;
+  register: string;
+  validateAccount: (token: string) => string;
+  getUserDataByUsername: (username: string) => string;
+  authorize: string;
+  getUserDataWithStatistics: (username: string) => string;
+}
+
 export const ClientEndpoints: ClientEndpoint = {
   getAllClients: clientController + "get-clients",
   addClient: clientController + "add-client",
@@ -92,4 +102,18 @@ export const RentEndpoints: RentsEndpoint = {
     rentsController + "get-vehiclerents-paginated" + "/" + skip + "/" + take,
   getNumberOfRentedVehiclesByClientId: (clientId) =>
     rentsController + "get-rents-by-clientId/" + clientId,
+};
+
+export const UserEndpoints: UserEndpoint = {
+  login: userController + "login",
+  register: userController + "register",
+  validateAccount: (token: string) =>
+    userController + "validate-account/" + token,
+  getUserDataByUsername: (username: string): string => {
+    return userController + "get-user/" + username;
+  },
+  authorize: userController + "authorize",
+  getUserDataWithStatistics: (username: string) => {
+    return userController + "get-user-with-statistics/" + username;
+  },
 };

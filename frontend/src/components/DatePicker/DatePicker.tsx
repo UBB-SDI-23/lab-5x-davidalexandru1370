@@ -1,3 +1,4 @@
+import { SxProps } from "@mui/material";
 import {
   DatePickerProps,
   DatePicker as Datepicker,
@@ -10,6 +11,7 @@ import { FC } from "react";
 interface IDatePicker {
   onChange?: (e?: unknown) => void;
   label: string;
+  sx?: SxProps;
   defaultValue?: Date;
 }
 
@@ -17,6 +19,7 @@ const DatePicker: FC<IDatePicker> = ({
   onChange,
   label,
   defaultValue = "",
+  sx,
 }) => {
   return (
     <>
@@ -25,7 +28,7 @@ const DatePicker: FC<IDatePicker> = ({
           defaultValue={dayjs(defaultValue)}
           format="YYYY-MM-DD"
           label={label}
-          sx={textFieldStyle}
+          sx={{ ...textFieldStyle, ...sx }}
           onChange={(e) => {
             onChange && onChange(e);
           }}

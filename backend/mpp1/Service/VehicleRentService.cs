@@ -83,7 +83,7 @@ public class VehicleRentService : IVehicleRentService
         return result;
     }
     
-    public async  Task<Pagination<VehicleRent>> GetVehicleRentsPaginated(int skip, int take)
+    public async  Task<Pagination<VehicleRentDto>> GetVehicleRentsPaginated(int skip, int take)
     {
         return await _vehicleRentRepository.GetVehicleRentsPaginated(skip, take);
     }
@@ -96,5 +96,10 @@ public class VehicleRentService : IVehicleRentService
     public async Task<int> GetNumberOfRentsByClientId(Guid clientId)
     {
         return await _vehicleRentRepository.GetNumberOfRentsByClientId(clientId);
+    }
+
+    public async Task<int> GetNumberOfRentsByOwner(string owner)
+    {
+        return await _vehicleRentRepository.GetNumberOfRentsByOwner(owner);
     }
 }

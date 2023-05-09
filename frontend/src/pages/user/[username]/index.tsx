@@ -25,6 +25,7 @@ const User = () => {
   const router = useRouter();
   //const username = router.query.username;
   const [user, setUser] = useState<UserDto | null>(null);
+  const [role, setRole] = useState<RolesEnum>();
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const { isAuthentificated, userDto, reFetch, skip, take, setSkip, setTake } =
     useContext(AuthentificationContext);
@@ -44,6 +45,7 @@ const User = () => {
           router.push("/login");
         } else {
           setUser(x);
+          setRole(x.role);
           setIsFetching(false);
         }
       });
@@ -157,10 +159,14 @@ const User = () => {
                   dataEnum={RolesEnum}
                   label={"Role"}
                   style={{ width: "200px" }}
-                  onChange={() => {}}
+                  onChange={(value) => {
+                    setRole(value);
+                  }}
                 ></EnumDropDown>
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  <Button variant="contained">Update profile</Button>
+                  <Button variant="contained" disabled={user?.role === role}>
+                    Update profile
+                  </Button>
                 </Box>
               </>
             )}

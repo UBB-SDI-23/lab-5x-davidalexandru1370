@@ -21,6 +21,7 @@ public class RolesInDbAuthorizationHandler : AuthorizationHandler<RolesAuthoriza
         if (context.User is null || !context.User.Identity.IsAuthenticated)
         {
             context.Fail();
+            return;
         }
 
         var isAuthorized = false;
@@ -31,6 +32,7 @@ public class RolesInDbAuthorizationHandler : AuthorizationHandler<RolesAuthoriza
         }
         else
         {
+           
             try
             {
                 var userId = Guid.Parse(context.User.Claims.FirstOrDefault(c => c.Type == "Id").Value);

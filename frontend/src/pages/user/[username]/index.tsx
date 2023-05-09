@@ -5,6 +5,7 @@ import {
 } from "@/pages/api/UserApi";
 import {
   Box,
+  Button,
   CircularProgress,
   Paper,
   TextField,
@@ -18,6 +19,8 @@ import { GenderEnum } from "@/enums/GenderEnum";
 import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
 import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
 import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
+import { RolesEnum } from "@/enums/RolesEnum";
+import EnumDropDown from "@/components/EnumDropDown/EnumDropDown";
 const User = () => {
   const router = useRouter();
   //const username = router.query.username;
@@ -138,16 +141,31 @@ const User = () => {
           defaultValue={user!.numberOfRents}
           autoFocus
         ></TextField>
-        {isAuthentificated === true &&
-          userDto !== null &&
-          userDto?.username === user?.username && (
-            <PaginationDropDown
-              take={take.toString()}
-              handleOnChange={(e) => {
-                setTake(e);
-              }}
-            />
-          )}
+        {isAuthentificated === true && userDto !== null && (
+          <>
+            {userDto?.username === user?.username && (
+              <PaginationDropDown
+                take={take.toString()}
+                handleOnChange={(e) => {
+                  setTake(e);
+                }}
+              />
+            )}
+            {userDto?.role === RolesEnum.Admin && (
+              <>
+                <EnumDropDown
+                  dataEnum={RolesEnum}
+                  label={"Role"}
+                  style={{ width: "200px" }}
+                  onChange={() => {}}
+                ></EnumDropDown>
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <Button variant="contained">Update profile</Button>
+                </Box>
+              </>
+            )}
+          </>
+        )}
       </Box>
     </div>
   );

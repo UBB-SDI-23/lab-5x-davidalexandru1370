@@ -8,6 +8,7 @@ import { AuthentificationContext } from "@/context/AuthentificationContext/Authe
 import { Client } from "@/model/Client";
 import { ClientDto } from "@/model/ClientDto";
 import IPagination from "@/model/Pagination";
+import { isElementVisibleForUser } from "@/utilities/utilities";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
@@ -26,6 +27,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
   addClient,
   deleteClientById,
@@ -33,9 +35,6 @@ import {
   updateClient,
 } from "../api/ClientApi";
 import styles from "./clients.module.css";
-import { toast } from "react-toastify";
-import { RolesEnum } from "@/enums/RolesEnum";
-import { isElementVisibleForUser } from "@/utilities/utilities";
 
 export default function Clients() {
   const [clients, setClients] = useState<IPagination<Client>>();

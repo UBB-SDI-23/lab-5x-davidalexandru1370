@@ -17,13 +17,13 @@ public class VehicleController : ControllerBase
 {
     private readonly IVehicleService _vehicleService;
     private readonly IIncidentService _incidentService;
-
+    
     public VehicleController(IVehicleService vehicleService, IIncidentService incidentService)
     {
         _vehicleService = vehicleService;
         _incidentService = incidentService;
     }
-
+    
     [HttpPost]
     [Route("add-vehicle")]
     public async Task<ActionResult<Vehicle>> AddVehicle([FromBody] Vehicle vehicle)
@@ -143,7 +143,7 @@ public class VehicleController : ControllerBase
         }
     }
 
-    [Authorize(Roles = nameof(RolesEnum.Admin))]
+    [AllowAnonymous]
     [HttpGet("get-vehicles-paginated/{skip}/{take}")]
     public async Task<ActionResult<Pagination<VehicleDTO>>> GetVehiclesPaginated([FromRoute] int skip,
         [FromRoute] int take)

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using mpp1.DatabaseContext;
+using mpp1.Enums;
 using mpp1.Exceptions;
 using mpp1.Model;
 using mpp1.Model.DTO;
@@ -189,5 +190,14 @@ public class UserRepository : IUserRepository
 
 
         return Task.FromResult(result);
+    }
+
+    public async Task ChangeUserRole(Guid userId, RolesEnum newRole)
+    {
+        var user = await GetUserById(userId);
+
+        user.Role = newRole;
+
+        await _rentACarDbContext.SaveChangesAsync();
     }
 }

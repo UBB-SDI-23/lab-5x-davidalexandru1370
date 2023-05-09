@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using mpp1.Exceptions;
 using mpp1.Model;
@@ -6,6 +7,7 @@ using mpp1.Service.Interfaces;
 
 namespace mpp1.Controller;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ClientController : ControllerBase
@@ -80,6 +82,7 @@ public class ClientController : ControllerBase
         }
     }
 
+    [AllowAnonymous]
     [HttpGet("get-clients-paginated/{skip}/{take}")]
     public async Task<ActionResult<Pagination<ClientDTO>>> GetClientsPaginated([FromRoute] uint skip,
         [FromRoute] uint take)

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using mpp1.Exceptions;
 using mpp1.Model;
@@ -6,6 +7,7 @@ using mpp1.Service.Interfaces;
 
 namespace mpp1.Controller;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class VehicleRentController : ControllerBase
@@ -131,6 +133,7 @@ public class VehicleRentController : ControllerBase
     }
   } 
   
+  [AllowAnonymous]
   [HttpGet("get-vehicleRents-paginated/{skip}/{take}")]
   public async Task<ActionResult<Pagination<VehicleRentDto>>> GetVehicleRentsPaginated(int skip, int take)
   {

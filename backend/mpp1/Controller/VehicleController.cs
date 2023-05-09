@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Extensions;
-using mpp1.Enums;
 using mpp1.Exceptions;
 using mpp1.Model;
 using mpp1.Model.DTO;
@@ -17,13 +15,13 @@ public class VehicleController : ControllerBase
 {
     private readonly IVehicleService _vehicleService;
     private readonly IIncidentService _incidentService;
-    
+
     public VehicleController(IVehicleService vehicleService, IIncidentService incidentService)
     {
         _vehicleService = vehicleService;
         _incidentService = incidentService;
     }
-    
+
     [HttpPost]
     [Route("add-vehicle")]
     public async Task<ActionResult<Vehicle>> AddVehicle([FromBody] Vehicle vehicle)

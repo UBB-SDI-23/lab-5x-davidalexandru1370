@@ -1,5 +1,7 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using mpp1.Enums;
 using mpp1.Exceptions;
 using mpp1.Model;
 using mpp1.Model.DTO;
@@ -15,9 +17,7 @@ public class UserController : ControllerBase
     private readonly IUserService _userService;
 
 
-    public UserController(IUserService userService, IClientService clientService,
-        IVehicleRentService vehicleRentService, IVehicleService vehicleService, IIncidentService incidentService
-    )
+    public UserController(IUserService userService)
     {
         _userService = userService;
     }
@@ -128,6 +128,21 @@ public class UserController : ControllerBase
         {
             var result = await _userService.GetUserWithStatistics(username);
             return Ok(result);
+        }
+        catch (RepositoryException repositoryException)
+        {
+            return BadRequest(repositoryException.Message);
+        }
+    }
+
+    [Authorize(Roles = nameof(RolesEnum.Admin))]
+    [HttpGet("change-user-role/{userId:guid}/{newRole}")]
+    public async Task<IActionResult> ChangeUserRole([FromRoute] Guid userId, [FromRoute] RolesEnum newRole)
+    {
+        try
+        {
+            await _userService.ChangeUserRole(userId, newRole);
+            return Ok();
         }
         catch (RepositoryException repositoryException)
         {

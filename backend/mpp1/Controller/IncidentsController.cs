@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using mpp1.Exceptions;
 using mpp1.Model;
@@ -5,7 +6,7 @@ using mpp1.Service;
 
 namespace mpp1.Controller;
 
-
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class IncidentsController : ControllerBase

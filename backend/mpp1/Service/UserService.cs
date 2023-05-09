@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using mpp1.Enums;
 using mpp1.Exceptions;
 using mpp1.Model;
 using mpp1.Model.DTO;
@@ -223,5 +224,10 @@ public class UserService : IUserService
         user.NumberOfIncidents = numberOfIncidents;
 
         return user;
+    }
+
+    public async Task ChangeUserRole(Guid userId, RolesEnum newRole)
+    {
+        await _userRepository.ChangeUserRole(userId, newRole);
     }
 }

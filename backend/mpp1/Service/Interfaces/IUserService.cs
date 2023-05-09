@@ -1,3 +1,4 @@
+using mpp1.Enums;
 using mpp1.Model;
 using mpp1.Model.DTO;
 
@@ -12,4 +13,5 @@ public interface IUserService
     public Task<UserDto> GetUserDataByUsernameAsync(string username);
     public Task<UserDto> Authorize(string token);
     public Task<UserDto> GetUserWithStatistics(string username);
+    public Task ChangeUserRole(Guid userId, RolesEnum newRole);
 }

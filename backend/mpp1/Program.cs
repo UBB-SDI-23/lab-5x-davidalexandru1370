@@ -1,7 +1,9 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using mpp1.DatabaseContext;
+using mpp1.Identity;
 using mpp1.Repository;
 using mpp1.Repository.Interfaces;
 using mpp1.Serialization;
@@ -43,6 +45,7 @@ builder.Services.AddScoped<IVehicleRentRepository, VehicleRentRepository>();
 builder.Services.AddScoped<IVehicleRentService, VehicleRentService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddTransient<IAuthorizationHandler, RolesInDbAuthorizationHandler>();
 
 var app = builder.Build();
 var frontendBaseUrl = app.Configuration.GetSection("Frontend")
@@ -63,7 +66,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 
 app.UseAuthorization();
- 
+
 app.UseHttpsRedirection();
 
 app.MapControllers();

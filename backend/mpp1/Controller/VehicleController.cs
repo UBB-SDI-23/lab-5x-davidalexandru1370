@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Extensions;
+using mpp1.Enums;
 using mpp1.Exceptions;
 using mpp1.Model;
 using mpp1.Model.DTO;
@@ -141,7 +143,7 @@ public class VehicleController : ControllerBase
         }
     }
 
-    [AllowAnonymous]
+    [Authorize(Roles = nameof(RolesEnum.Admin))]
     [HttpGet("get-vehicles-paginated/{skip}/{take}")]
     public async Task<ActionResult<Pagination<VehicleDTO>>> GetVehiclesPaginated([FromRoute] int skip,
         [FromRoute] int take)

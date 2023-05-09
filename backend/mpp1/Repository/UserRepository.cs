@@ -140,7 +140,9 @@ public class UserRepository : IUserRepository
 
     public async Task<UserDto> GetUserDataByUsername(string username)
     {
-        var user = await _rentACarDbContext.Set<UserProfile>().Where(u => u.User.Name == username).Include(x => x.User)
+        var user = await _rentACarDbContext.Set<UserProfile>()
+            .Where(u => u.User.Name == username)
+            .Include(x => x.User)
             .FirstOrDefaultAsync();
 
         if (user is null)
@@ -156,7 +158,7 @@ public class UserRepository : IUserRepository
             Location = user.Location,
             Username = user.User.Name,
             MaritalStatus = user.MaritalStatus,
-            Role = user.Role
+            Role = user.User.Role
         };
 
         return userDto;
@@ -164,7 +166,9 @@ public class UserRepository : IUserRepository
 
     public Task<UserDto> GetUserDataByIdAsync(Guid userId)
     {
-        var user = _rentACarDbContext.Set<UserProfile>().Where(u => u.UserId == userId).Include(u => u.User)
+        var user = _rentACarDbContext.Set<UserProfile>()
+            .Where(u => u.UserId == userId)
+            .Include(u => u.User)
             .FirstOrDefault();
 
         if (user is null)
@@ -180,7 +184,7 @@ public class UserRepository : IUserRepository
             Location = user.Location,
             Username = user.User.Name,
             MaritalStatus = user.MaritalStatus,
-            Role = user.Role
+            Role = user.User.Role
         };
 
 

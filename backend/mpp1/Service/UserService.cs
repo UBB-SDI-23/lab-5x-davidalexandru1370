@@ -141,7 +141,8 @@ public class UserService : IUserService
         {
             Subject = new ClaimsIdentity(new[]
             {
-                new Claim("Id", user.Id.ToString())
+                new Claim("Id", user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
             }),
             Expires = DateTime.UtcNow.Add(tokenLifetime),
             Audience = _appSettings["JwtSettings:Audience"],
@@ -184,7 +185,6 @@ public class UserService : IUserService
         }
         catch (SecurityTokenValidationException securityTokenValidationException)
         {
-            
         }
 
         return null;

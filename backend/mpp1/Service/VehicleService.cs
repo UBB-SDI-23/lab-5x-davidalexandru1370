@@ -9,16 +9,17 @@ namespace mpp1.Service;
 public class VehicleService : IVehicleService
 {
     private IVehicleRepository _vehicleRepository;
+
     public VehicleService(IVehicleRepository vehicleRepository)
     {
         _vehicleRepository = vehicleRepository;
     }
-    
+
     public async Task AddVehicle(Vehicle vehicle)
     {
         await _vehicleRepository.AddVehicle(vehicle);
     }
-    
+
     public async Task DeleteVehicle(Guid id)
     {
         await _vehicleRepository.RemoveVehicle(id);

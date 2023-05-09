@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using mpp1.Enums;
 using mpp1.Exceptions;
+using mpp1.ExtensionMethods;
 using mpp1.Model;
 using mpp1.Model.DTO;
 using mpp1.Service;
@@ -94,6 +96,11 @@ public class VehicleController : ControllerBase
     [Route("update")]
     public async Task<ActionResult<Vehicle>> UpdateVehicle([FromBody] Vehicle vehicle)
     {
+        if (User.GetUserId() != vehicle.UserId)
+        {
+            return Forbid();
+        }
+
         try
         {
             var result = await _vehicleService.UpdateVehicle(vehicle);

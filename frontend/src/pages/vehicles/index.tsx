@@ -74,6 +74,7 @@ export default function Vehicles() {
             try {
               const updatedVehicle = await updateVehicle({
                 ...vehicle,
+                owner: selectedVehicle.owner,
                 id: selectedVehicle.id,
               });
 

@@ -9,10 +9,12 @@ namespace mpp1.Identity;
 public class RolesInDbAuthorizationHandler : AuthorizationHandler<RolesAuthorizationRequirement>, IAuthorizationHandler
 {
     private readonly IUserRepository _userRepository;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public RolesInDbAuthorizationHandler(IUserRepository userRepository)
+    public RolesInDbAuthorizationHandler(IUserRepository userRepository, IHttpContextAccessor httpContextAccessor)
     {
         _userRepository = userRepository;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context,
@@ -32,13 +34,13 @@ public class RolesInDbAuthorizationHandler : AuthorizationHandler<RolesAuthoriza
         }
         else
         {
-           
             try
             {
                 var userId = Guid.Parse(context.User.Claims.FirstOrDefault(c => c.Type == "Id").Value);
                 var user = await _userRepository.GetUserById(userId);
                 if (requirement.AllowedRoles.Any(x => x == Enum.GetName(typeof(RolesEnum), user.Role)))
                 {
+                    _httpContextAccessor.HttpContext.User = context.User;
                     isAuthorized = true;
                 }
             }

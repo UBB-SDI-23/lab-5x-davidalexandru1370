@@ -4,9 +4,9 @@ import { ClientDto } from "@/model/ClientDto";
 import IPagination from "@/model/Pagination";
 import { createHeader } from "@/utilities/utilities";
 
-export const deleteClientById = async (clientId: string) => {
-  let url = baseUrl + ClientEndpoints.deleteClient + "/" + clientId;
-  let header = createHeader(Methods.DELETE);
+export const deleteClientById = async (client: Client) => {
+  let url = baseUrl + ClientEndpoints.deleteClient;
+  let header = createHeader(Methods.DELETE, client);
   let data = await fetch(url, header).catch((error: Error) => {
     throw new Error(error.message);
   });
@@ -54,11 +54,11 @@ export const updateClient = async (client: Client) => {
 export const getClientsPaginated = async (skip: number, take: number) => {
   let url = baseUrl + ClientEndpoints.getClientsPaginated(skip, take);
   let header = createHeader(Methods.GET);
-  let data: IPagination<Client> = await fetch(url, header)
+  let data: IPagination<ClientDto> = await fetch(url, header)
     .then(async (response: Response) => {
       return await response.json();
     })
-    .then((clients: IPagination<Client>) => {
+    .then((clients: IPagination<ClientDto>) => {
       return clients;
     });
 

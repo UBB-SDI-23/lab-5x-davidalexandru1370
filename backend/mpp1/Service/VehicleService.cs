@@ -20,9 +20,9 @@ public class VehicleService : IVehicleService
         await _vehicleRepository.AddVehicle(vehicle);
     }
 
-    public async Task DeleteVehicle(Guid id)
+    public async Task DeleteVehicle(Vehicle vehicle)
     {
-        await _vehicleRepository.RemoveVehicle(id);
+        await _vehicleRepository.RemoveVehicle(vehicle);
     }
 
     public async Task<VehicleDTO> UpdateVehicle(Vehicle vehicle)

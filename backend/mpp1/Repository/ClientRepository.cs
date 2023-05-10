@@ -27,16 +27,16 @@ public class ClientRepository : IClientRepository
         await _rentACarDbContext.SaveChangesAsync();
     }
 
-    public async Task RemoveClient(Guid id)
+    public async Task RemoveClient(Client client)
     {
-        var client = await GetClientById(id);
+        var foundClient = await GetClientById(client.Id);
 
-        if (client is null)
+        if (foundClient is null)
         {
-            throw new RepositoryException($"Client with Id={id} does not exists!");
+            throw new RepositoryException($"Client does not exists!");
         }
 
-        _rentACarDbContext.Remove(client);
+        _rentACarDbContext.Remove(foundClient);
         await _rentACarDbContext.SaveChangesAsync();
     }
 
@@ -81,16 +81,25 @@ public class ClientRepository : IClientRepository
         Pagination<ClientDTO> clientsPaginated = new();
 
         var result =
-            (await _rentACarDbContext.Clients.Skip(skip).Take(take).Include(c => c.User).ToListAsync() as
+            (await _rentACarDbContext.Clients.Skip(skip).Take(take)
+                    .Include(c => c.User)
+                    .Include(c => c.VehicleRents)
+                    .ToListAsync() as
                 IEnumerable<Client>).Select(c => new ClientDTO()
             {
                 Id = c.Id,
                 Name = c.Name,
                 Birthday = c.Birthday,
                 Nationality = c.Nationality,
-                Ownername = c.User!.Name,
+                Owner = new Owner()
+                {
+                    UserId = c.User.Id,
+                    Role = c.User.Role,
+                    Username = c.User.Name
+                },
                 CardNumber = c.CardNumber,
-                CNP = c.CNP
+                CNP = c.CNP,
+                NumberOfRents = c.VehicleRents.Count
             });
 
         clientsPaginated.Elements = result;
@@ -124,9 +133,9 @@ public class ClientRepository : IClientRepository
         return Task.FromResult(foundClients);
     }
 
-    public  Task<int> GetClientsCountOfUser(string owner)
+    public Task<int> GetClientsCountOfUser(string owner)
     {
-        var count =  _rentACarDbContext
+        var count = _rentACarDbContext
             .Set<Client>()
             .Include(c => c.User)
             .Count(c => c.User.Name == owner);

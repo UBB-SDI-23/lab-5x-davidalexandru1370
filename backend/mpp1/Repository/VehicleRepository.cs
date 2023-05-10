@@ -67,15 +67,16 @@ public class VehicleRepository : IVehicleRepository
         return result;
     }
 
-    public async Task RemoveVehicle(Guid id)
+    public async Task RemoveVehicle(Vehicle vehicle)
     {
-        var vehicle = _rentACarDbContext.Vehicles.FirstOrDefault(v => v.Id == id);
-        if (vehicle is null)
+        var foundVehicle = _rentACarDbContext.Vehicles.FirstOrDefault(v => v.Id == vehicle.Id);
+        
+        if (foundVehicle is null)
         {
-            throw new RepositoryException($"Vehicle with Id={id} does not exists!");
+            throw new RepositoryException($"Vehicle does not exists!");
         }
 
-        _rentACarDbContext.Remove(vehicle);
+        _rentACarDbContext.Remove(foundVehicle);
         await _rentACarDbContext.SaveChangesAsync();
     }
 

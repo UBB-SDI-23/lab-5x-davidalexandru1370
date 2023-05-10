@@ -37,11 +37,11 @@ import {
 import styles from "./clients.module.css";
 
 export default function Clients() {
-  const [clients, setClients] = useState<IPagination<Client>>();
+  const [clients, setClients] = useState<IPagination<ClientDto>>();
   const [numberOfRents, setNumberOfRents] = useState<number[]>([]);
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
-  const [selectedClient, setSelectedClient] = useState<Client>();
+  const [selectedClient, setSelectedClient] = useState<ClientDto>();
   const [clientModalMethod, setClientModalMethod] =
     useState<ClientModalMethodsEnum>(ClientModalMethodsEnum.ADD);
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
@@ -69,8 +69,8 @@ export default function Clients() {
             userDto &&
               (await updateClient({
                 ...client,
-                id: selectedClient!.id,
-                ownername: userDto?.username!,
+                id: selectedClient!.id!,
+                userId: selectedClient!.owner.userId,
               }));
           }
           setSelectedClient(undefined);
@@ -90,7 +90,16 @@ export default function Clients() {
         }}
         onOkClick={async () => {
           try {
-            selectedClient && (await deleteClientById(selectedClient.id));
+            selectedClient &&
+              (await deleteClientById({
+                birthday: selectedClient.birthday,
+                cardNumber: selectedClient.cardNumber,
+                cnp: selectedClient.cnp,
+                name: selectedClient.name,
+                nationality: selectedClient.nationality,
+                userId: selectedClient.owner.userId,
+                id: selectedClient.id,
+              }));
           } catch (error: unknown) {
             toast((error as Error).message, {
               type: "error",
@@ -174,8 +183,8 @@ export default function Clients() {
                       <TableCell>{client.nationality}</TableCell>
                       <TableCell>
                         {
-                          <Link href={`/user/${client.ownername}`}>
-                            {client.ownername}
+                          <Link href={`/user/${client.owner.username}`}>
+                            {client.owner.username}
                           </Link>
                         }
                       </TableCell>
@@ -183,7 +192,7 @@ export default function Clients() {
                       {isElementVisibleForUser(
                         userDto,
                         isAuthentificated,
-                        client.ownername
+                        client.owner.username
                       ) && (
                         <>
                           <TableCell>

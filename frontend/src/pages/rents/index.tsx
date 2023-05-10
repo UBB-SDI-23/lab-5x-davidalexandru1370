@@ -71,7 +71,13 @@ export default function Rents() {
           setIsAreYouSureModalOpen(false);
         }}
         onOkClick={async () => {
-          await deleteVehicleRentById(selectedVehicleRent!.id!);
+          await deleteVehicleRentById({
+            endDate: selectedVehicleRent!.endDate,
+            id: selectedVehicleRent!.id!,
+            startDate: selectedVehicleRent!.startDate,
+            totalCost: selectedVehicleRent!.totalCost,
+            userId: selectedVehicleRent!.owner!.userId!,
+          });
           setRents(undefined);
           setIsAreYouSureModalOpen(false);
         }}

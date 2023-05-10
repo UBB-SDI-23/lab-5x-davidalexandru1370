@@ -86,12 +86,24 @@ public class VehicleController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("delete/{vehicleId}")]
-    public async Task<IActionResult> DeleteVehicle([FromRoute] Guid vehicleId)
+    [Route("delete")]
+    public async Task<IActionResult> DeleteVehicle([FromBody] Vehicle vehicle)
     {
         try
         {
-            await _vehicleService.DeleteVehicle(vehicleId);
+            if (User.GetUserRole() == RolesEnum.Regular && vehicle.UserId != User.GetUserId())
+            {
+                return Forbid();
+            }
+        }
+        catch (RentACarException)
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            await _vehicleService.DeleteVehicle(vehicle);
             return Ok();
         }
         catch (RepositoryException repositoryException)

@@ -18,9 +18,9 @@ export const getRentsPaginated = async (skip: number, take: number) => {
   return data;
 };
 
-export const deleteVehicleRentById = async (rentId: string) => {
-  let url = baseUrl + RentEndpoints.deleteRent(rentId);
-  let header = createHeader(Methods.DELETE);
+export const deleteVehicleRentById = async (vehicleRent: VehicleRent) => {
+  let url = baseUrl + RentEndpoints.deleteRent;
+  let header = createHeader(Methods.DELETE, vehicleRent);
   await fetch(url, header);
 };
 

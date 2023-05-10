@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using mpp1.Enums;
 using mpp1.Exceptions;
+using mpp1.ExtensionMethods;
 using mpp1.Model;
 using mpp1.Model.DTO;
 using mpp1.Service.Interfaces;
@@ -24,6 +26,19 @@ public class ClientController : ControllerBase
     {
         try
         {
+            client.UserId = User.GetUserId();
+            if (User.GetUserRole() == RolesEnum.Regular && client.UserId != User.GetUserId())
+            {
+                return Forbid();
+            }
+        }
+        catch (RentACarException)
+        {
+            return Forbid();
+        }
+        
+        try
+        {
             await _clientService.AddClient(client);
             return Ok(client);
         }
@@ -33,12 +48,12 @@ public class ClientController : ControllerBase
         }
     }
 
-    [HttpDelete("delete-client/{clientId}")]
-    public async Task<IActionResult> DeleteClient([FromRoute] Guid clientId)
+    [HttpDelete("delete-client")]
+    public async Task<IActionResult> DeleteClient([FromBody] Client client)
     {
         try
         {
-            await _clientService.RemoveClient(clientId);
+            await _clientService.RemoveClient(client);
             return Ok();
         }
         catch (RepositoryException repositoryException)
@@ -73,6 +88,18 @@ public class ClientController : ControllerBase
     {
         try
         {
+            if (User.GetUserRole() == RolesEnum.Regular && client.UserId != User.GetUserId())
+            {
+                return Forbid();
+            }
+        }
+        catch (RentACarException)
+        {
+            return Forbid();
+        }
+
+        try
+        {
             var result = await _clientService.UpdateClient(client);
             return Ok(result);
         }
@@ -104,5 +131,4 @@ public class ClientController : ControllerBase
             return BadRequest(repositoryException.Message);
         }
     }
-    
 }

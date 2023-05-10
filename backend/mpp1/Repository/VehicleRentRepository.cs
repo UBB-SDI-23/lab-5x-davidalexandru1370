@@ -30,9 +30,9 @@ public class VehicleRentRepository : IVehicleRentRepository
         }
     }
 
-    public async Task DeleteVehicleRent(Guid vehicleRentId)
+    public async Task DeleteVehicleRent(VehicleRent vehicleRent)
     {
-        var foundVehicleRent = await GetVehicleRentById(vehicleRentId);
+        var foundVehicleRent = await GetVehicleRentById(vehicleRent.Id);
         _rentACarDbContext.Remove(foundVehicleRent);
         await _rentACarDbContext.SaveChangesAsync();
     }

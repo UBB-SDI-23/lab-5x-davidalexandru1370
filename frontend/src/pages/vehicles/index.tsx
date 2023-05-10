@@ -123,7 +123,16 @@ export default function Vehicles() {
         }}
         onOkClick={async () => {
           try {
-            await deleteVehicleById(selectedVehicle!.id!);
+            await deleteVehicleById({
+              brand: selectedVehicle!.brand,
+              carPlate: selectedVehicle!.carPlate,
+              engineCapacity: selectedVehicle!.engineCapacity,
+              fabricationDate: selectedVehicle!.fabricationDate,
+              horsePower: selectedVehicle!.horsePower,
+              id: selectedVehicle!.id!,
+              numberOfSeats: selectedVehicle!.numberOfSeats,
+              userId: selectedVehicle!.owner.userId,
+            });
             toast("Deleted succesfully!", {
               type: "success",
             });

@@ -121,6 +121,7 @@ public class UserController : ControllerBase
         }
     }
 
+    [AllowAnonymous]
     [HttpGet("get-user-with-statistics/{username}")]
     public async Task<ActionResult<UserDto>> GetUserWithAllData([FromRoute] string username)
     {

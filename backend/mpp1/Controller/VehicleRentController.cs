@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using mpp1.Enums;
 using mpp1.Exceptions;
 using mpp1.ExtensionMethods;
 using mpp1.Model;
@@ -13,143 +14,166 @@ namespace mpp1.Controller;
 [Route("api/[controller]")]
 public class VehicleRentController : ControllerBase
 {
+    private IVehicleRentService _vehicleRentService;
 
-  private IVehicleRentService _vehicleRentService;
+    public VehicleRentController(IVehicleRentService vehicleRentService)
+    {
+        _vehicleRentService = vehicleRentService;
+    }
 
-  public VehicleRentController(IVehicleRentService vehicleRentService)
-  {
-    _vehicleRentService = vehicleRentService;
-  }
+    [HttpGet]
+    [Route("get-all")]
+    public ActionResult<IEnumerable<VehicleRent>> GetAllRents()
+    {
+        var result = _vehicleRentService.GetAllRents();
+        return Ok(result);
+    }
 
-  [HttpGet]
-  [Route("get-all")]
-  public ActionResult<IEnumerable<VehicleRent>> GetAllRents()
-  {
-    var result = _vehicleRentService.GetAllRents();
-    return Ok(result);
-  }
+    [HttpPost]
+    [Route("add-rent")]
+    public async Task<IActionResult> AddRent([FromBody] VehicleRent vehicleRent)
+    {
+        try
+        {
+            vehicleRent.UserId = User.GetUserId();
+            await _vehicleRentService.AddVehicleRent(vehicleRent);
+            return Ok();
+        }
+        catch (RepositoryException repositoryException)
+        {
+            return BadRequest(repositoryException.Message);
+        }
+        catch (RentACarException)
+        {
+            return Unauthorized();
+        }
+    }
 
-  [HttpPost]
-  [Route("add-rent")]
-  public async Task<IActionResult> AddRent([FromBody] VehicleRent vehicleRent)
-  {
-    try
+    [HttpGet]
+    [Route("get-by-clientId/{clientId}")]
+    public ActionResult<IEnumerable<Vehicle>> GetVehiclesByClientId([FromRoute] Guid clientId)
     {
-      vehicleRent.UserId = User.GetUserId();
-      await _vehicleRentService.AddVehicleRent(vehicleRent);
-      return Ok();
+        var result = _vehicleRentService.GetVehiclesByClientId(clientId);
+        return Ok(result);
     }
-    catch (RepositoryException repositoryException)
-    {
-      return BadRequest(repositoryException.Message);
-    }
-    catch (RentACarException)
-    {
-      return Unauthorized();
-    }
-  }
 
-  [HttpGet]
-  [Route("get-by-clientId/{clientId}")]
-  public ActionResult<IEnumerable<Vehicle>> GetVehiclesByClientId([FromRoute] Guid clientId)
-  {
-    var result = _vehicleRentService.GetVehiclesByClientId(clientId);
-    return Ok(result);
-  }
+    [HttpGet]
+    [Route("get-by-vehicleId/{vehicleId}")]
+    public ActionResult<IEnumerable<Client>> GetClientsByVehicleId([FromRoute] Guid vehicleId)
+    {
+        var result = _vehicleRentService.GetClientsByVehicleId(vehicleId);
+        return Ok(result);
+    }
 
-  [HttpGet]
-  [Route("get-by-vehicleId/{vehicleId}")]
-  public ActionResult<IEnumerable<Client>> GetClientsByVehicleId([FromRoute] Guid vehicleId)
-  {
-    var result = _vehicleRentService.GetClientsByVehicleId(vehicleId);
-    return Ok(result);
-  }
+    [HttpDelete]
+    [Route("delete-rent")]
+    public async Task<IActionResult> DeleteVehicleRent([FromBody] VehicleRent vehicleRent)
+    {
+        try
+        {
+            if (User.GetUserRole() == RolesEnum.Regular && vehicleRent.UserId != User.GetUserId())
+            {
+                return Forbid();
+            }
+        }
+        catch (RentACarException)
+        {
+            return Forbid();
+        }
 
-  [HttpDelete]
-  [Route("delete-rent/{vehicleRentId}")]
-  public async Task<IActionResult> DeleteVehicleRent([FromRoute] Guid vehicleRentId)
-  {
-    try
-    {
-      await _vehicleRentService.DeleteVehicleRent(vehicleRentId);
-      return Ok();
+        try
+        {
+            await _vehicleRentService.DeleteVehicleRent(vehicleRent);
+            return Ok();
+        }
+        catch (RepositoryException repositoryException)
+        {
+            return BadRequest(repositoryException.Message);
+        }
     }
-    catch (RepositoryException repositoryException)
-    {
-      return BadRequest(repositoryException.Message);
-    }
-  }
 
-  [HttpGet]
-  [Route("get-by-id/{vehicleRentId}")]
-  public async Task<ActionResult<VehicleRent>> GetVehicleRentById([FromRoute] Guid vehicleRentId)
-  {
-    try
+    [HttpGet]
+    [Route("get-by-id/{vehicleRentId}")]
+    public async Task<ActionResult<VehicleRent>> GetVehicleRentById([FromRoute] Guid vehicleRentId)
     {
-      var result = await _vehicleRentService.GetVehicleRentById(vehicleRentId);
-      return Ok(result);
+        try
+        {
+            var result = await _vehicleRentService.GetVehicleRentById(vehicleRentId);
+            return Ok(result);
+        }
+        catch (RepositoryException repositoryException)
+        {
+            return BadRequest(repositoryException.Message);
+        }
     }
-    catch (RepositoryException repositoryException)
-    {
-      return BadRequest(repositoryException.Message);
-    }
-  }
-  
-  [HttpPut]
-  [Route("update-vehicleRent")]
-  public async Task<ActionResult<VehicleRent>> UpdateVehicleRent([FromBody] VehicleRent vehicleRent)
-  {
-    try
-    {
-      var result = await _vehicleRentService.UpdateVehicleRent(vehicleRent);
-      return Ok(result);
-    }
-    catch (RepositoryException repositoryException)
-    {
-      return BadRequest(repositoryException.Message);
-    }
-  }
 
-  [HttpGet]
-  [Route("get-active-clients")]
-  public async Task<ActionResult<IEnumerable<ClientDTO>>> GetMostActiveClients()
-  {
-    try
+    [HttpPut]
+    [Route("update-vehicleRent")]
+    public async Task<ActionResult<VehicleRent>> UpdateVehicleRent([FromBody] VehicleRent vehicleRent)
     {
-      var result = await _vehicleRentService.GetMostActiveClients();
-      return Ok(result);
-    }
-    catch (RepositoryException repositoryException)
-    {
-      return BadRequest(repositoryException.Message);
-    }
-  }
+        try
+        {
+            if (User.GetUserRole() == RolesEnum.Regular && vehicleRent.UserId != User.GetUserId())
+            {
+                return Forbid();
+            }
+        }
+        catch (RentACarException)
+        {
+            return Forbid();
+        }
 
-  [HttpGet("get-rents-by-clientId/{clientId}")]
-  public async Task<ActionResult<int>> GetNumberOfRentsByClientId([FromRoute]Guid clientId)
-  {
-    try
-    {
-      var result = await _vehicleRentService.GetNumberOfRentsByClientId(clientId);
-      return Ok(result);
+        try
+        {
+            var result = await _vehicleRentService.UpdateVehicleRent(vehicleRent);
+            return Ok(result);
+        }
+        catch (RepositoryException repositoryException)
+        {
+            return BadRequest(repositoryException.Message);
+        }
     }
-    catch (RepositoryException repositoryException)
-    {
-      return BadRequest(repositoryException.Message);
-    }
-  } 
-  
-  [AllowAnonymous]
-  [HttpGet("get-vehicleRents-paginated/{skip}/{take}")]
-  public async Task<ActionResult<Pagination<VehicleRentDto>>> GetVehicleRentsPaginated(int skip, int take)
-  {
-    var result = await _vehicleRentService.GetVehicleRentsPaginated(skip, take);
-    return Ok(result);
-  }
 
-  [HttpGet("get-number-of-rents")]
-  public ActionResult<int> GetNumberOfRents()
-  {
-    return Ok(_vehicleRentService.GetNumberOfRents());
-  }
+    [HttpGet]
+    [Route("get-active-clients")]
+    public async Task<ActionResult<IEnumerable<ClientDTO>>> GetMostActiveClients()
+    {
+        try
+        {
+            var result = await _vehicleRentService.GetMostActiveClients();
+            return Ok(result);
+        }
+        catch (RepositoryException repositoryException)
+        {
+            return BadRequest(repositoryException.Message);
+        }
+    }
+
+    [HttpGet("get-rents-by-clientId/{clientId}")]
+    public async Task<ActionResult<int>> GetNumberOfRentsByClientId([FromRoute] Guid clientId)
+    {
+        try
+        {
+            var result = await _vehicleRentService.GetNumberOfRentsByClientId(clientId);
+            return Ok(result);
+        }
+        catch (RepositoryException repositoryException)
+        {
+            return BadRequest(repositoryException.Message);
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpGet("get-vehicleRents-paginated/{skip}/{take}")]
+    public async Task<ActionResult<Pagination<VehicleRentDto>>> GetVehicleRentsPaginated(int skip, int take)
+    {
+        var result = await _vehicleRentService.GetVehicleRentsPaginated(skip, take);
+        return Ok(result);
+    }
+
+    [HttpGet("get-number-of-rents")]
+    public ActionResult<int> GetNumberOfRents()
+    {
+        return Ok(_vehicleRentService.GetNumberOfRents());
+    }
 }

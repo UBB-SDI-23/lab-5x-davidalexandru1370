@@ -282,6 +282,7 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
           onClick={async () => {
             try {
               await onSubmitClick(vehicleRentState);
+              handleOnClose();
             } catch (error) {}
           }}
           sx={button}

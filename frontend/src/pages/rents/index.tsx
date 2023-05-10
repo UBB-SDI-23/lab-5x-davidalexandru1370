@@ -52,7 +52,7 @@ export default function Rents() {
     getRentsPaginated(skip, take).then((r) => {
       setRents(r);
     });
-  }, [skip]);
+  }, [skip, rents]);
 
   useEffect(() => {
     getRentsPaginated(skip, take).then((r) => {

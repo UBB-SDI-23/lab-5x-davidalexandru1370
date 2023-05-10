@@ -14,4 +14,5 @@ public interface IUserService
     public Task<UserDto> Authorize(string token);
     public Task<UserDto> GetUserWithStatistics(string username);
     public Task ChangeUserRole(string userName, RolesEnum newRole);
+    public Task RunDataGenerationScripts();
 }

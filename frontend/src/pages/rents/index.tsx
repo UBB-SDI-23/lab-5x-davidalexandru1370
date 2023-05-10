@@ -203,7 +203,7 @@ export default function Rents() {
                       <TableCell>{rent.startDate.toString()}</TableCell>
                       <TableCell>{rent.endDate.toString()}</TableCell>
                       <TableCell>{rent.totalCost}</TableCell>
-                      <TableCell>{rent.numberOfTimesRented}</TableCell>
+                      <TableCell>{rent.numberOfRents}</TableCell>
                       <TableCell>
                         <Link href={`/user/${rent.owner.username}`}>
                           {rent.owner.username}

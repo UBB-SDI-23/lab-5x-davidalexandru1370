@@ -188,7 +188,7 @@ export default function Clients() {
                           </Link>
                         }
                       </TableCell>
-                      <TableCell></TableCell>
+                      <TableCell>{client.numberOfRents}</TableCell>
                       {isElementVisibleForUser(
                         userDto,
                         isAuthentificated,

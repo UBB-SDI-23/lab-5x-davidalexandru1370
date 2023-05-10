@@ -150,4 +150,19 @@ public class UserController : ControllerBase
             return BadRequest(repositoryException.Message);
         }
     }
+
+    [Authorize(Roles = nameof(RolesEnum.Admin))]
+    [HttpPost("run-data-generation-scripts")]
+    public async Task<IActionResult> RunDataGenerationScripts()
+    {
+        try
+        {
+            await _userService.RunDataGenerationScripts();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 }

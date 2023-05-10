@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -229,5 +230,32 @@ public class UserService : IUserService
     public async Task ChangeUserRole(string userName, RolesEnum newRole)
     {
         await _userRepository.ChangeUserRole(userName, newRole);
+    }
+
+    public Task RunDataGenerationScripts()
+    {
+        var process = new Process
+        {
+            StartInfo =
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                FileName = "../../scripts/databaseScripts/runAllScripts.sh",
+                UseShellExecute = false,
+                WorkingDirectory = ".",
+                CreateNoWindow = true
+            },
+            EnableRaisingEvents = true
+        };
+
+        process.Start();
+        string processOutput;
+        while ((processOutput = process.StandardError.ReadLine()) != null)
+        {
+            Debug.Print(processOutput);
+        }
+
+        process.Dispose();
+        return Task.CompletedTask;
     }
 }

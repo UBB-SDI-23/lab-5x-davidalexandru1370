@@ -63,6 +63,7 @@ interface UserEndpoint {
   authorize: string;
   getUserDataWithStatistics: (username: string) => string;
   changeUserRole: (username: string, role: RolesEnum) => string;
+  runDataGenerationScripts: string;
 }
 
 export const ClientEndpoints: ClientEndpoint = {
@@ -121,4 +122,5 @@ export const UserEndpoints: UserEndpoint = {
   changeUserRole: (username: string, role: RolesEnum) => {
     return userController + "change-user-role/" + username + "/" + role;
   },
+  runDataGenerationScripts: "run-data-generation-scripts",
 };

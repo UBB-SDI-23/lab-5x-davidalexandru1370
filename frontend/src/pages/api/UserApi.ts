@@ -123,3 +123,9 @@ export const changeUserRole = async (username: string, role: RolesEnum) => {
       throw new Error(x);
     });
 };
+
+export const refreshData = async () => {
+  let url = baseUrl + UserEndpoints.runDataGenerationScripts;
+  let header = createHeader(Methods.POST);
+  await fetch(url, header);
+};

@@ -3,6 +3,7 @@ import {
   changeUserRole,
   getUserDataByUsername,
   getUserDataWithStatistcs,
+  refreshData,
 } from "@/pages/api/UserApi";
 import {
   Box,
@@ -165,6 +166,14 @@ const User = () => {
                     setRole(value);
                   }}
                 ></EnumDropDown>
+                <Button
+                  variant="contained"
+                  onClick={async () => {
+                    await refreshData();
+                  }}
+                >
+                  Bulk delete and update
+                </Button>
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
                   <Button
                     variant="contained"

@@ -7,7 +7,7 @@ public interface IClientRepository
 {
     public Task AddClient(Client client);
 
-    public Task RemoveClient(Guid id);
+    public Task RemoveClient(Client client);
 
     public Task<Client> UpdateClient(Client client);
 

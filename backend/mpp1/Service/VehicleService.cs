@@ -9,22 +9,23 @@ namespace mpp1.Service;
 public class VehicleService : IVehicleService
 {
     private IVehicleRepository _vehicleRepository;
+
     public VehicleService(IVehicleRepository vehicleRepository)
     {
         _vehicleRepository = vehicleRepository;
     }
-    
+
     public async Task AddVehicle(Vehicle vehicle)
     {
         await _vehicleRepository.AddVehicle(vehicle);
     }
-    
-    public async Task DeleteVehicle(Guid id)
+
+    public async Task DeleteVehicle(Vehicle vehicle)
     {
-        await _vehicleRepository.RemoveVehicle(id);
+        await _vehicleRepository.RemoveVehicle(vehicle);
     }
 
-    public async Task<Vehicle> UpdateVehicle(Vehicle vehicle)
+    public async Task<VehicleDTO> UpdateVehicle(Vehicle vehicle)
     {
         return await _vehicleRepository.UpdateVehicle(vehicle);
     }

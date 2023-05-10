@@ -8,6 +8,7 @@ import { AuthentificationContext } from "@/context/AuthentificationContext/Authe
 import { Client } from "@/model/Client";
 import { ClientDto } from "@/model/ClientDto";
 import IPagination from "@/model/Pagination";
+import { isElementVisibleForUser } from "@/utilities/utilities";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
@@ -26,6 +27,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
   addClient,
   deleteClientById,
@@ -33,16 +35,13 @@ import {
   updateClient,
 } from "../api/ClientApi";
 import styles from "./clients.module.css";
-import { toast } from "react-toastify";
-import { RolesEnum } from "@/enums/RolesEnum";
-import { isElementVisibleForUser } from "@/utilities/utilities";
 
 export default function Clients() {
-  const [clients, setClients] = useState<IPagination<Client>>();
+  const [clients, setClients] = useState<IPagination<ClientDto>>();
   const [numberOfRents, setNumberOfRents] = useState<number[]>([]);
   const [isAreYouSureModalOpen, setIsAreYouSureModalOpen] =
     useState<boolean>(false);
-  const [selectedClient, setSelectedClient] = useState<Client>();
+  const [selectedClient, setSelectedClient] = useState<ClientDto>();
   const [clientModalMethod, setClientModalMethod] =
     useState<ClientModalMethodsEnum>(ClientModalMethodsEnum.ADD);
   const [isClientModalOpen, setIsClientModalOpen] = useState<boolean>(false);
@@ -70,8 +69,8 @@ export default function Clients() {
             userDto &&
               (await updateClient({
                 ...client,
-                id: selectedClient!.id,
-                ownername: userDto?.username!,
+                id: selectedClient!.id!,
+                userId: selectedClient!.owner.userId,
               }));
           }
           setSelectedClient(undefined);
@@ -91,7 +90,16 @@ export default function Clients() {
         }}
         onOkClick={async () => {
           try {
-            selectedClient && (await deleteClientById(selectedClient.id));
+            selectedClient &&
+              (await deleteClientById({
+                birthday: selectedClient.birthday,
+                cardNumber: selectedClient.cardNumber,
+                cnp: selectedClient.cnp,
+                name: selectedClient.name,
+                nationality: selectedClient.nationality,
+                userId: selectedClient.owner.userId,
+                id: selectedClient.id,
+              }));
           } catch (error: unknown) {
             toast((error as Error).message, {
               type: "error",
@@ -175,16 +183,16 @@ export default function Clients() {
                       <TableCell>{client.nationality}</TableCell>
                       <TableCell>
                         {
-                          <Link href={`/user/${client.ownername}`}>
-                            {client.ownername}
+                          <Link href={`/user/${client.owner.username}`}>
+                            {client.owner.username}
                           </Link>
                         }
                       </TableCell>
-                      <TableCell></TableCell>
+                      <TableCell>{client.numberOfRents}</TableCell>
                       {isElementVisibleForUser(
                         userDto,
                         isAuthentificated,
-                        client.ownername
+                        client.owner.username
                       ) && (
                         <>
                           <TableCell>

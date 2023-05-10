@@ -1,10 +1,12 @@
 import { UserDto } from "@/model/UserDto";
 import {
+  changeUserRole,
   getUserDataByUsername,
   getUserDataWithStatistcs,
 } from "@/pages/api/UserApi";
 import {
   Box,
+  Button,
   CircularProgress,
   Paper,
   TextField,
@@ -18,10 +20,13 @@ import { GenderEnum } from "@/enums/GenderEnum";
 import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
 import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
 import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
+import { RolesEnum } from "@/enums/RolesEnum";
+import EnumDropDown from "@/components/EnumDropDown/EnumDropDown";
 const User = () => {
   const router = useRouter();
   //const username = router.query.username;
-  const [user, setUser] = useState<UserDto | null>(null);
+  const [user, setUser] = useState<UserDto | undefined>(undefined);
+  const [role, setRole] = useState<RolesEnum>();
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const { isAuthentificated, userDto, reFetch, skip, take, setSkip, setTake } =
     useContext(AuthentificationContext);
@@ -41,6 +46,7 @@ const User = () => {
           router.push("/login");
         } else {
           setUser(x);
+          setRole(x.role);
           setIsFetching(false);
         }
       });
@@ -138,16 +144,52 @@ const User = () => {
           defaultValue={user!.numberOfRents}
           autoFocus
         ></TextField>
-        {isAuthentificated === true &&
-          userDto !== null &&
-          userDto?.username === user?.username && (
-            <PaginationDropDown
-              take={take.toString()}
-              handleOnChange={(e) => {
-                setTake(e);
-              }}
-            />
-          )}
+        {isAuthentificated === true && userDto !== null && (
+          <>
+            {userDto?.username === user?.username && (
+              <PaginationDropDown
+                take={take.toString()}
+                handleOnChange={(e) => {
+                  setTake(e);
+                }}
+              />
+            )}
+            {userDto?.role === RolesEnum.Admin && user !== undefined && (
+              <>
+                <EnumDropDown
+                  dataEnum={RolesEnum}
+                  label={"Role"}
+                  defaultValue={user!.role.toString()}
+                  style={{ width: "200px" }}
+                  onChange={(value) => {
+                    setRole(value);
+                  }}
+                ></EnumDropDown>
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <Button
+                    variant="contained"
+                    disabled={user.role === role}
+                    onClick={async () => {
+                      try {
+                        await changeUserRole(user!.username, role!);
+                        toast("Role changed succesfully!", {
+                          type: "success",
+                        });
+                        setUser({ ...user, role: role! });
+                      } catch (error) {
+                        toast((error as Error).message, {
+                          type: "error",
+                        });
+                      }
+                    }}
+                  >
+                    Update profile
+                  </Button>
+                </Box>
+              </>
+            )}
+          </>
+        )}
       </Box>
     </div>
   );

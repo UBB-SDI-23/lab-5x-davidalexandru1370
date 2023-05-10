@@ -71,10 +71,12 @@ export default function Vehicles() {
         vehicle={selectedVehicle}
         onSubmitClick={async (vehicle: VehicleDto) => {
           if (selectedVehicle !== undefined) {
+            console.log(selectedVehicle.owner);
             try {
               const updatedVehicle = await updateVehicle({
                 ...vehicle,
-                id: selectedVehicle.id,
+                userId: selectedVehicle.owner.userId,
+                id: selectedVehicle!.id!,
               });
 
               const updatedVehicleList =
@@ -121,7 +123,16 @@ export default function Vehicles() {
         }}
         onOkClick={async () => {
           try {
-            await deleteVehicleById(selectedVehicle!.id!);
+            await deleteVehicleById({
+              brand: selectedVehicle!.brand,
+              carPlate: selectedVehicle!.carPlate,
+              engineCapacity: selectedVehicle!.engineCapacity,
+              fabricationDate: selectedVehicle!.fabricationDate,
+              horsePower: selectedVehicle!.horsePower,
+              id: selectedVehicle!.id!,
+              numberOfSeats: selectedVehicle!.numberOfSeats,
+              userId: selectedVehicle!.owner.userId,
+            });
             toast("Deleted succesfully!", {
               type: "success",
             });

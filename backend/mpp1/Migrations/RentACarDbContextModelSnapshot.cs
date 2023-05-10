@@ -125,6 +125,9 @@ namespace mpp1.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.ToTable("User");
@@ -150,9 +153,6 @@ namespace mpp1.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("MaritalStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Role")
                         .HasColumnType("integer");
 
                     b.HasKey("UserId");

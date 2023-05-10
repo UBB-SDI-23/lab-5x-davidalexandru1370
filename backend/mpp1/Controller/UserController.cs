@@ -1,5 +1,7 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using mpp1.Enums;
 using mpp1.Exceptions;
 using mpp1.Model;
 using mpp1.Model.DTO;
@@ -15,9 +17,7 @@ public class UserController : ControllerBase
     private readonly IUserService _userService;
 
 
-    public UserController(IUserService userService, IClientService clientService,
-        IVehicleRentService vehicleRentService, IVehicleService vehicleService, IIncidentService incidentService
-    )
+    public UserController(IUserService userService)
     {
         _userService = userService;
     }
@@ -121,6 +121,7 @@ public class UserController : ControllerBase
         }
     }
 
+    [AllowAnonymous]
     [HttpGet("get-user-with-statistics/{username}")]
     public async Task<ActionResult<UserDto>> GetUserWithAllData([FromRoute] string username)
     {
@@ -132,6 +133,36 @@ public class UserController : ControllerBase
         catch (RepositoryException repositoryException)
         {
             return BadRequest(repositoryException.Message);
+        }
+    }
+
+    [Authorize(Roles = nameof(RolesEnum.Admin))]
+    [HttpPut("change-user-role/{userName}/{newRole}")]
+    public async Task<IActionResult> ChangeUserRole([FromRoute] string userName, [FromRoute] RolesEnum newRole)
+    {
+        try
+        {
+            await _userService.ChangeUserRole(userName, newRole);
+            return Ok();
+        }
+        catch (RepositoryException repositoryException)
+        {
+            return BadRequest(repositoryException.Message);
+        }
+    }
+
+    [Authorize(Roles = nameof(RolesEnum.Admin))]
+    [HttpPost("run-data-generation-scripts")]
+    public async Task<IActionResult> RunDataGenerationScripts()
+    {
+        try
+        {
+            await _userService.RunDataGenerationScripts();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
         }
     }
 }

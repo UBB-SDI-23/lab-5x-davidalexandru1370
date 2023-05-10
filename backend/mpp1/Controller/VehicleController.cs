@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using mpp1.Enums;
 using mpp1.Exceptions;
+using mpp1.ExtensionMethods;
 using mpp1.Model;
 using mpp1.Model.DTO;
 using mpp1.Service;
@@ -7,26 +10,36 @@ using mpp1.Service.Interfaces;
 
 namespace mpp1.Controller;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class VehicleController : ControllerBase
 {
     private readonly IVehicleService _vehicleService;
     private readonly IIncidentService _incidentService;
+
     public VehicleController(IVehicleService vehicleService, IIncidentService incidentService)
     {
         _vehicleService = vehicleService;
         _incidentService = incidentService;
     }
-    
+
     [HttpPost]
     [Route("add-vehicle")]
-    public async Task<ActionResult<Vehicle>> AddVehicle([FromBody]Vehicle vehicle)
+    public async Task<ActionResult<Vehicle>> AddVehicle([FromBody] Vehicle vehicle)
     {
-        await _vehicleService.AddVehicle(vehicle);
-        return Ok(vehicle);
+        try
+        {
+            vehicle.UserId = User.GetUserId();
+            await _vehicleService.AddVehicle(vehicle);
+            return Ok(vehicle);
+        }
+        catch (RentACarException)
+        {
+            return Unauthorized();
+        }
     }
-    
+
     [HttpGet]
     [Route("get-all")]
     public async Task<ActionResult<IEnumerable<Vehicle>>> GetAllVehicles()
@@ -40,11 +53,10 @@ public class VehicleController : ControllerBase
         {
             return BadRequest(repositoryException.Message);
         }
-         
     }
 
     [HttpGet]
-    [Route("get/{vehicleId}")]  
+    [Route("get/{vehicleId}")]
     public async Task<ActionResult<Vehicle>> GetVehicleById([FromRoute] Guid vehicleId)
     {
         try
@@ -74,12 +86,24 @@ public class VehicleController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("delete/{vehicleId}")]
-    public async Task<IActionResult> DeleteVehicle([FromRoute] Guid vehicleId)
+    [Route("delete")]
+    public async Task<IActionResult> DeleteVehicle([FromBody] Vehicle vehicle)
     {
         try
         {
-            await _vehicleService.DeleteVehicle(vehicleId);
+            if (User.GetUserRole() == RolesEnum.Regular && vehicle.UserId != User.GetUserId())
+            {
+                return Forbid();
+            }
+        }
+        catch (RentACarException)
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            await _vehicleService.DeleteVehicle(vehicle);
             return Ok();
         }
         catch (RepositoryException repositoryException)
@@ -90,8 +114,21 @@ public class VehicleController : ControllerBase
 
     [HttpPut]
     [Route("update")]
-    public async Task<ActionResult<Vehicle>> UpdateVehicle( [FromBody]Vehicle vehicle)
+    public async Task<ActionResult<VehicleDTO>> UpdateVehicle([FromBody] Vehicle vehicle)
     {
+        try
+        {
+            if (User.GetUserRole() == RolesEnum.Regular && User.GetUserId() != vehicle.UserId)
+            {
+                return Forbid();
+            }
+        }
+        catch (RentACarException)
+        {
+            return Forbid();
+        }
+
+
         try
         {
             var result = await _vehicleService.UpdateVehicle(vehicle);
@@ -101,7 +138,6 @@ public class VehicleController : ControllerBase
         {
             return BadRequest(repositoryException.Message);
         }
-        
     }
 
     [HttpGet("get-vehicles-filtered/{capacity}")]
@@ -112,13 +148,13 @@ public class VehicleController : ControllerBase
     }
 
     [HttpGet("get-all-vehicles-with-data")]
-    public  ActionResult<IEnumerable<Vehicle>> GetAllVehiclesWithAllData()
+    public ActionResult<IEnumerable<Vehicle>> GetAllVehiclesWithAllData()
     {
-        var result =  _vehicleService.GetAllVehiclesWithAllData();
+        var result = _vehicleService.GetAllVehiclesWithAllData();
         return Ok(result);
     }
 
-    [HttpGet("get-by-incidents")]   
+    [HttpGet("get-by-incidents")]
     public async Task<ActionResult<IEnumerable<VehicleDTO>>> GetVehiclesByNumberOfIncidents()
     {
         var result = await _vehicleService.GetVehiclesOrderByNumberOfIncidents();
@@ -126,7 +162,8 @@ public class VehicleController : ControllerBase
     }
 
     [HttpPost("bulk-update/vehicle/{vehicleId}/incidents")]
-    public async Task<IActionResult> UpdateBulkOfIncidentsByVehicleId([FromRoute]Guid vehicleId, [FromBody]IEnumerable<Guid> incidentIds)
+    public async Task<IActionResult> UpdateBulkOfIncidentsByVehicleId([FromRoute] Guid vehicleId,
+        [FromBody] IEnumerable<Guid> incidentIds)
     {
         try
         {
@@ -139,6 +176,7 @@ public class VehicleController : ControllerBase
         }
     }
 
+    [AllowAnonymous]
     [HttpGet("get-vehicles-paginated/{skip}/{take}")]
     public async Task<ActionResult<Pagination<VehicleDTO>>> GetVehiclesPaginated([FromRoute] int skip,
         [FromRoute] int take)

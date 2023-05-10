@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FC, useContext, useEffect, useState } from "react";
 import styles from "./NavigationBar.module.css";
+import { RolesEnum } from "@/enums/RolesEnum";
 
 interface INavigationBar {
   navigationItems: Route[];
@@ -15,6 +16,12 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
   const [selectedNavigationItem, setselectedNavigationItem] = useState<string>(
     router.pathname.substring(1)
   );
+
+  const colorRoles = new Map<number, string>([
+    [RolesEnum.Regular, ""],
+    [RolesEnum.Moderator, "orange"],
+    [RolesEnum.Admin, "red"],
+  ]);
 
   const { isAuthentificated, userDto, reFetch } = useContext(
     AuthentificationContext
@@ -86,7 +93,9 @@ export const NavigationBar: FC<INavigationBar> = ({ navigationItems }) => {
                     setAnchorEl(e.currentTarget);
                   }}
                 >
-                  Hello {userDto!.username}
+                  <span style={{ color: `${colorRoles.get(userDto!.role)}` }}>
+                    Hello &nbsp;{userDto!.username}
+                  </span>
                 </Button>
                 <Menu
                   id="account-menu"

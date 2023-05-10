@@ -1,3 +1,5 @@
+import { RolesEnum } from "@/enums/RolesEnum";
+
 const PRODUCTION_RentAVehicleApi_URL = "https://mpp-2023.twilightparadox.com/";
 const DEVELOPMENT_RentAVehicleApi_URL = "https://localhost:7037/";
 
@@ -35,7 +37,7 @@ interface VehicleEndpoint {
   addVehicle: string;
   updateVehicle: string;
   filterVehiclesByEngineCapacity: (capacity: string) => string;
-  deleteVehicle: (vehicleId: string) => string;
+  deleteVehicle: string;
   getVehiclesPaginated: (skip: number, take: number) => string;
   getVehiclesByCarPlate: (name: string) => string;
 }
@@ -48,7 +50,7 @@ interface RentsEndpoint {
   getAllRents: string;
   addRent: string;
   updateRent: string;
-  deleteRent: (rentId: string) => string;
+  deleteRent: string;
   getNumberOfRentedVehiclesByClientId: (clientId: string) => string;
   getRentsPaginated: (skip: number, take: number) => string;
 }
@@ -60,6 +62,7 @@ interface UserEndpoint {
   getUserDataByUsername: (username: string) => string;
   authorize: string;
   getUserDataWithStatistics: (username: string) => string;
+  changeUserRole: (username: string, role: RolesEnum) => string;
 }
 
 export const ClientEndpoints: ClientEndpoint = {
@@ -80,8 +83,7 @@ export const VehicleEndpoints: VehicleEndpoint = {
   updateVehicle: vehicleController + "update",
   filterVehiclesByEngineCapacity: (capacity) =>
     vehicleController + "get-vehicles-filtered/" + capacity,
-  deleteVehicle: (vehicleId: string) =>
-    vehicleController + "delete/" + vehicleId,
+  deleteVehicle: vehicleController + "delete",
   getVehiclesPaginated: (skip, take) =>
     vehicleController + "get-vehicles-paginated/" + skip + "/" + take,
   getVehiclesByCarPlate: (name: string) =>
@@ -97,7 +99,7 @@ export const RentEndpoints: RentsEndpoint = {
   getAllRents: rentsController + "get-all",
   addRent: rentsController + "add-rent",
   updateRent: rentsController + "update-vehicleRent",
-  deleteRent: (rentId: string) => rentsController + "delete-rent/" + rentId,
+  deleteRent: rentsController + "delete-rent/",
   getRentsPaginated: (skip: number, take: number) =>
     rentsController + "get-vehiclerents-paginated" + "/" + skip + "/" + take,
   getNumberOfRentedVehiclesByClientId: (clientId) =>
@@ -115,5 +117,8 @@ export const UserEndpoints: UserEndpoint = {
   authorize: userController + "authorize",
   getUserDataWithStatistics: (username: string) => {
     return userController + "get-user-with-statistics/" + username;
+  },
+  changeUserRole: (username: string, role: RolesEnum) => {
+    return userController + "change-user-role/" + username + "/" + role;
   },
 };

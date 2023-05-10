@@ -9,7 +9,7 @@ public class ClientDTO
     public DateOnly Birthday { get; set; }
     public string Nationality { get; set; }
     public int NumberOfRents { get; set; }
-    public string Ownername { get; set; }
+    public Owner Owner { get; set; }
 
     public override bool Equals(object? obj)
     {

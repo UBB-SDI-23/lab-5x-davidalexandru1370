@@ -1,9 +1,11 @@
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using mpp1.Enums;
 using mpp1.Exceptions;
 using mpp1.Model;
 using mpp1.Model.DTO;
@@ -141,7 +143,8 @@ public class UserService : IUserService
         {
             Subject = new ClaimsIdentity(new[]
             {
-                new Claim("Id", user.Id.ToString())
+                new Claim("Id", user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
             }),
             Expires = DateTime.UtcNow.Add(tokenLifetime),
             Audience = _appSettings["JwtSettings:Audience"],
@@ -184,7 +187,6 @@ public class UserService : IUserService
         }
         catch (SecurityTokenValidationException securityTokenValidationException)
         {
-            
         }
 
         return null;
@@ -223,5 +225,30 @@ public class UserService : IUserService
         user.NumberOfIncidents = numberOfIncidents;
 
         return user;
+    }
+
+    public async Task ChangeUserRole(string userName, RolesEnum newRole)
+    {
+        await _userRepository.ChangeUserRole(userName, newRole);
+    }
+
+    public async Task RunDataGenerationScripts()
+    {
+        var process = new Process();
+        process.StartInfo.WorkingDirectory = @"dbscripts/";
+        process.StartInfo.FileName = @"runAllScripts.sh";
+
+        try
+        {
+            process.Start();
+            await process.WaitForExitAsync();
+            process.Dispose();
+        }
+        catch (Exception e)
+        {
+            Debug.Print(e.Message);
+        }
+
+
     }
 }

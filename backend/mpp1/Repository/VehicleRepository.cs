@@ -12,10 +12,12 @@ namespace mpp1.Repository;
 public class VehicleRepository : IVehicleRepository
 {
     private readonly RentACarDbContext _rentACarDbContext;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public VehicleRepository(RentACarDbContext rentACarDbContext)
+    public VehicleRepository(RentACarDbContext rentACarDbContext, IHttpContextAccessor httpContextAccessor)
     {
         _rentACarDbContext = rentACarDbContext;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task AddVehicle(Vehicle vehicle)
@@ -24,34 +26,57 @@ public class VehicleRepository : IVehicleRepository
         await _rentACarDbContext.SaveChangesAsync();
     }
 
-    public async Task<Vehicle> UpdateVehicle(Vehicle vehicle)
+    public async Task<VehicleDTO> UpdateVehicle(Vehicle vehicle)
     {
         if (vehicle is null)
         {
             throw new RepositoryException("Invalid vehicle");
         }
 
-        var foundVehile = _rentACarDbContext.Vehicles.FirstOrDefault(v => v.Id == vehicle.Id);
+        var foundVehicle = _rentACarDbContext.Vehicles
+            .Include(v => v.User)
+            .Include(v => v.Incidents)
+            .FirstOrDefault(v => v.Id == vehicle.Id);
 
-        if (foundVehile is null)
+        if (foundVehicle is null)
         {
             throw new RepositoryException($"Vehicle with Id={vehicle.Id} does not exists!");
         }
 
-        _rentACarDbContext.Entry(foundVehile).CurrentValues.SetValues(vehicle);
+
+        _rentACarDbContext.Entry(foundVehicle).CurrentValues.SetValues(vehicle);
         await _rentACarDbContext.SaveChangesAsync();
-        return vehicle;
+
+        var result = new VehicleDTO()
+        {
+            Id = foundVehicle.Id,
+            CarPlate = foundVehicle.CarPlate,
+            Brand = foundVehicle.Brand,
+            Owner = new Owner()
+            {
+                UserId = foundVehicle.User.Id,
+                Username = foundVehicle.User.Name,
+                Role = foundVehicle.User.Role
+            },
+            EngineCapacity = foundVehicle.EngineCapacity,
+            FabricationDate = foundVehicle.FabricationDate,
+            HorsePower = foundVehicle.HorsePower,
+            NumberOfIncidents = foundVehicle.Incidents.Count,
+            NumberOfSeats = foundVehicle.NumberOfSeats
+        };
+        return result;
     }
 
-    public async Task RemoveVehicle(Guid id)
+    public async Task RemoveVehicle(Vehicle vehicle)
     {
-        var vehicle = _rentACarDbContext.Vehicles.FirstOrDefault(v => v.Id == id);
-        if (vehicle is null)
+        var foundVehicle = _rentACarDbContext.Vehicles.FirstOrDefault(v => v.Id == vehicle.Id);
+        
+        if (foundVehicle is null)
         {
-            throw new RepositoryException($"Vehicle with Id={id} does not exists!");
+            throw new RepositoryException($"Vehicle does not exists!");
         }
 
-        _rentACarDbContext.Remove(vehicle);
+        _rentACarDbContext.Remove(foundVehicle);
         await _rentACarDbContext.SaveChangesAsync();
     }
 

@@ -6,7 +6,7 @@ namespace mpp1.Service.Interfaces;
 public interface IVehicleRentService
 {
     public Task AddVehicleRent(VehicleRent vehicleRent);
-    public Task DeleteVehicleRent(Guid vehicleRentId);
+    public Task DeleteVehicleRent(VehicleRent vehicleRent);
     public Task<VehicleRent> UpdateVehicleRent(VehicleRent vehicleRent);
     public Task<IEnumerable<Vehicle>> GetVehiclesByClientId(Guid clientId);
     public Task<IEnumerable<Client>> GetClientsByVehicleId(Guid vehicleId);

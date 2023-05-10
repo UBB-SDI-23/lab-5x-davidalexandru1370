@@ -13,7 +13,7 @@ import { Client } from "@/model/Client";
 interface IClientModalProps {
   onSubmitClick: (client: ClientDto) => Promise<void>;
   onClose: () => void;
-  client?: Client;
+  client?: ClientDto;
   method: ClientModalMethodsEnum;
   isOpen: boolean;
 }
@@ -132,6 +132,10 @@ export const ClientModal: FC<IClientModalProps> = ({
                 cnp: cnp,
                 birthday: birthday,
                 nationality: nationality,
+                owner: {
+                  userId: "",
+                  username: "",
+                },
               });
             } catch (e) {
               setError((e as Error).message);

@@ -1,3 +1,5 @@
+import { RolesEnum } from "@/enums/RolesEnum";
+
 const PRODUCTION_RentAVehicleApi_URL = "https://mpp-2023.twilightparadox.com/";
 const DEVELOPMENT_RentAVehicleApi_URL = "https://localhost:7037/";
 
@@ -60,6 +62,7 @@ interface UserEndpoint {
   getUserDataByUsername: (username: string) => string;
   authorize: string;
   getUserDataWithStatistics: (username: string) => string;
+  changeUserRole: (username: string, role: RolesEnum) => string;
 }
 
 export const ClientEndpoints: ClientEndpoint = {
@@ -114,5 +117,8 @@ export const UserEndpoints: UserEndpoint = {
   authorize: userController + "authorize",
   getUserDataWithStatistics: (username: string) => {
     return userController + "get-user-with-statistics/" + username;
+  },
+  changeUserRole: (username: string, role: RolesEnum) => {
+    return userController + "change-user-role/" + username + "/" + role;
   },
 };

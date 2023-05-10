@@ -137,12 +137,12 @@ public class UserController : ControllerBase
     }
 
     [Authorize(Roles = nameof(RolesEnum.Admin))]
-    [HttpGet("change-user-role/{userId:guid}/{newRole}")]
-    public async Task<IActionResult> ChangeUserRole([FromRoute] Guid userId, [FromRoute] RolesEnum newRole)
+    [HttpPut("change-user-role/{userName}/{newRole}")]
+    public async Task<IActionResult> ChangeUserRole([FromRoute] string userName, [FromRoute] RolesEnum newRole)
     {
         try
         {
-            await _userService.ChangeUserRole(userId, newRole);
+            await _userService.ChangeUserRole(userName, newRole);
             return Ok();
         }
         catch (RepositoryException repositoryException)

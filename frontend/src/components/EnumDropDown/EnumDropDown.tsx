@@ -12,6 +12,7 @@ interface IEnumDropDown {
   label: string;
   dataEnum: object;
   style?: SxProps;
+  defaultValue?: string;
 }
 
 const EnumDropDown: FC<IEnumDropDown> = ({
@@ -19,8 +20,11 @@ const EnumDropDown: FC<IEnumDropDown> = ({
   label,
   dataEnum,
   style,
+  defaultValue,
 }) => {
-  const [value, setValue] = useState<number>(0);
+  const [value, setValue] = useState<number>(
+    defaultValue === undefined ? 0 : parseInt(defaultValue)
+  );
   return (
     <div>
       <FormControl sx={style} fullWidth>

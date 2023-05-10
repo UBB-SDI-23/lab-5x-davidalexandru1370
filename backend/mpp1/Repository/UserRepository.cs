@@ -192,9 +192,9 @@ public class UserRepository : IUserRepository
         return Task.FromResult(result);
     }
 
-    public async Task ChangeUserRole(Guid userId, RolesEnum newRole)
+    public async Task ChangeUserRole(string userName, RolesEnum newRole)
     {
-        var user = await GetUserById(userId);
+        var user = await GetUserByNameAsync(userName);
 
         user.Role = newRole;
 

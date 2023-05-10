@@ -28,7 +28,7 @@ public class RolesInDbAuthorizationHandler : AuthorizationHandler<RolesAuthoriza
 
         var isAuthorized = false;
 
-        if (requirement.AllowedRoles is null || requirement.AllowedRoles.Any() == false)
+            if (requirement.AllowedRoles is null || requirement.AllowedRoles.Any() == false)
         {
             isAuthorized = true;
         }

@@ -1,5 +1,6 @@
 import { UserDto } from "@/model/UserDto";
 import {
+  changeUserRole,
   getUserDataByUsername,
   getUserDataWithStatistcs,
 } from "@/pages/api/UserApi";
@@ -24,7 +25,7 @@ import EnumDropDown from "@/components/EnumDropDown/EnumDropDown";
 const User = () => {
   const router = useRouter();
   //const username = router.query.username;
-  const [user, setUser] = useState<UserDto | null>(null);
+  const [user, setUser] = useState<UserDto | undefined>(undefined);
   const [role, setRole] = useState<RolesEnum>();
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const { isAuthentificated, userDto, reFetch, skip, take, setSkip, setTake } =
@@ -153,18 +154,35 @@ const User = () => {
                 }}
               />
             )}
-            {userDto?.role === RolesEnum.Admin && (
+            {userDto?.role === RolesEnum.Admin && user !== undefined && (
               <>
                 <EnumDropDown
                   dataEnum={RolesEnum}
                   label={"Role"}
+                  defaultValue={user!.role.toString()}
                   style={{ width: "200px" }}
                   onChange={(value) => {
                     setRole(value);
                   }}
                 ></EnumDropDown>
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  <Button variant="contained" disabled={user?.role === role}>
+                  <Button
+                    variant="contained"
+                    disabled={user.role === role}
+                    onClick={async () => {
+                      try {
+                        await changeUserRole(user!.username, role!);
+                        toast("Role changed succesfully!", {
+                          type: "success",
+                        });
+                        setUser({ ...user, role: role! });
+                      } catch (error) {
+                        toast((error as Error).message, {
+                          type: "error",
+                        });
+                      }
+                    }}
+                  >
                     Update profile
                   </Button>
                 </Box>

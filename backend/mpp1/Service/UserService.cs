@@ -226,8 +226,8 @@ public class UserService : IUserService
         return user;
     }
 
-    public async Task ChangeUserRole(Guid userId, RolesEnum newRole)
+    public async Task ChangeUserRole(string userName, RolesEnum newRole)
     {
-        await _userRepository.ChangeUserRole(userId, newRole);
+        await _userRepository.ChangeUserRole(userName, newRole);
     }
 }

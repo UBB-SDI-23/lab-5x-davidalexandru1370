@@ -36,7 +36,7 @@ public class ClientController : ControllerBase
         {
             return Forbid();
         }
-        
+
         try
         {
             await _clientService.AddClient(client);
@@ -51,6 +51,19 @@ public class ClientController : ControllerBase
     [HttpDelete("delete-client")]
     public async Task<IActionResult> DeleteClient([FromBody] Client client)
     {
+        try
+        {
+            client.UserId = User.GetUserId();
+            if (User.GetUserRole() == RolesEnum.Regular && client.UserId != User.GetUserId())
+            {
+                return Forbid();
+            }
+        }
+        catch (RentACarException)
+        {
+            return Forbid();
+        }
+
         try
         {
             await _clientService.RemoveClient(client);

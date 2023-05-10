@@ -1,4 +1,5 @@
 #!/bin/bash
+python3 InsertDatabaseScript.py
 psql -h localhost -d RentACar -U postgres -p 5432 -q -f DropConstraints.sql
 psql -h localhost -d RentACar -U postgres -p 5432 -q -f ClearAllTables.sql
 psql -h localhost -d RentACar -U postgres -p 5432 -q -f InsertUser.sql

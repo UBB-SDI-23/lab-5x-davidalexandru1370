@@ -232,30 +232,23 @@ public class UserService : IUserService
         await _userRepository.ChangeUserRole(userName, newRole);
     }
 
-    public Task RunDataGenerationScripts()
+    public async Task RunDataGenerationScripts()
     {
-        var process = new Process
-        {
-            StartInfo =
-            {
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                FileName = "../../scripts/databaseScripts/runAllScripts.sh",
-                UseShellExecute = false,
-                WorkingDirectory = ".",
-                CreateNoWindow = true
-            },
-            EnableRaisingEvents = true
-        };
+        var process = new Process();
+        process.StartInfo.WorkingDirectory = @"dbscripts/";
+        process.StartInfo.FileName = @"runAllScripts.sh";
 
-        process.Start();
-        string processOutput;
-        while ((processOutput = process.StandardError.ReadLine()) != null)
+        try
         {
-            Debug.Print(processOutput);
+            process.Start();
+            await process.WaitForExitAsync();
+            process.Dispose();
+        }
+        catch (Exception e)
+        {
+            Debug.Print(e.Message);
         }
 
-        process.Dispose();
-        return Task.CompletedTask;
+
     }
 }

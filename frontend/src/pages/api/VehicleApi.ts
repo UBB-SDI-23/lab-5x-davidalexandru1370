@@ -96,7 +96,7 @@ export const getVehiclesByCarPlate = async (carPlate: string) => {
   return data;
 };
 
-export const updateVehicle = async (vehicle: VehicleDto) => {
+export const updateVehicle = async (vehicle: Vehicle) => {
   let url: string = baseUrl + VehicleEndpoints.updateVehicle;
   let header = createHeader(Methods.PUT, vehicle);
   let data: VehicleDto = await fetch(url, header)

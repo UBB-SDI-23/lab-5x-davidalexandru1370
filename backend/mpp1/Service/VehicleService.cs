@@ -25,7 +25,7 @@ public class VehicleService : IVehicleService
         await _vehicleRepository.RemoveVehicle(id);
     }
 
-    public async Task<Vehicle> UpdateVehicle(Vehicle vehicle)
+    public async Task<VehicleDTO> UpdateVehicle(Vehicle vehicle)
     {
         return await _vehicleRepository.UpdateVehicle(vehicle);
     }

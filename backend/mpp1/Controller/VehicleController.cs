@@ -28,8 +28,16 @@ public class VehicleController : ControllerBase
     [Route("add-vehicle")]
     public async Task<ActionResult<Vehicle>> AddVehicle([FromBody] Vehicle vehicle)
     {
-        await _vehicleService.AddVehicle(vehicle);
-        return Ok(vehicle);
+        try
+        {
+            vehicle.UserId = User.GetUserId();
+            await _vehicleService.AddVehicle(vehicle);
+            return Ok(vehicle);
+        }
+        catch (RentACarException)
+        {
+            return Unauthorized();
+        }
     }
 
     [HttpGet]
@@ -94,12 +102,20 @@ public class VehicleController : ControllerBase
 
     [HttpPut]
     [Route("update")]
-    public async Task<ActionResult<Vehicle>> UpdateVehicle([FromBody] Vehicle vehicle)
+    public async Task<ActionResult<VehicleDTO>> UpdateVehicle([FromBody] Vehicle vehicle)
     {
-        if (User.GetUserId() != vehicle.UserId)
+        try
+        {
+            if (User.GetUserRole() == RolesEnum.Regular && User.GetUserId() != vehicle.UserId)
+            {
+                return Forbid();
+            }
+        }
+        catch (RentACarException)
         {
             return Forbid();
         }
+
 
         try
         {

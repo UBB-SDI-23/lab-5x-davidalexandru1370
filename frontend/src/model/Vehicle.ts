@@ -6,7 +6,7 @@ export interface Vehicle {
   horsePower: number;
   carPlate: string;
   numberOfSeats: number;
-  owner: Owner;
+  userId: string;
   engineCapacity: number;
   fabricationDate: string;
 }

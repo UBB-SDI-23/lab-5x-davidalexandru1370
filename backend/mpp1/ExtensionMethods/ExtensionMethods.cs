@@ -33,8 +33,8 @@ public static class ExtensionMethods
 
         try
         {
-            var userRole = Int32.Parse(claimsPrincipal.Claims.FirstOrDefault(c => c.Type == "Role").Value);
-            return (RolesEnum)userRole;
+            var userRole = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+            return (RolesEnum)Enum.Parse(typeof(RolesEnum), userRole);
         }
         catch (Exception exception)
         {

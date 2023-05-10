@@ -13,7 +13,7 @@ public class VehicleRepository : IVehicleRepository
 {
     private readonly RentACarDbContext _rentACarDbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    
+
     public VehicleRepository(RentACarDbContext rentACarDbContext, IHttpContextAccessor httpContextAccessor)
     {
         _rentACarDbContext = rentACarDbContext;
@@ -26,8 +26,8 @@ public class VehicleRepository : IVehicleRepository
         await _rentACarDbContext.SaveChangesAsync();
     }
 
-    public async Task<Vehicle> UpdateVehicle(Vehicle vehicle)
-    { 
+    public async Task<VehicleDTO> UpdateVehicle(Vehicle vehicle)
+    {
         if (vehicle is null)
         {
             throw new RepositoryException("Invalid vehicle");
@@ -35,18 +35,36 @@ public class VehicleRepository : IVehicleRepository
 
         var foundVehicle = _rentACarDbContext.Vehicles
             .Include(v => v.User)
+            .Include(v => v.Incidents)
             .FirstOrDefault(v => v.Id == vehicle.Id);
 
-       // if (foundVehicle.User.Id == _httpContextAccessor.HttpContext.User.Claims. || )
+        if (foundVehicle is null)
+        {
+            throw new RepositoryException($"Vehicle with Id={vehicle.Id} does not exists!");
+        }
 
-            if (foundVehicle is null)
-            {
-                throw new RepositoryException($"Vehicle with Id={vehicle.Id} does not exists!");
-            }
 
         _rentACarDbContext.Entry(foundVehicle).CurrentValues.SetValues(vehicle);
         await _rentACarDbContext.SaveChangesAsync();
-        return vehicle;
+
+        var result = new VehicleDTO()
+        {
+            Id = foundVehicle.Id,
+            CarPlate = foundVehicle.CarPlate,
+            Brand = foundVehicle.Brand,
+            Owner = new Owner()
+            {
+                UserId = foundVehicle.User.Id,
+                Username = foundVehicle.User.Name,
+                Role = foundVehicle.User.Role
+            },
+            EngineCapacity = foundVehicle.EngineCapacity,
+            FabricationDate = foundVehicle.FabricationDate,
+            HorsePower = foundVehicle.HorsePower,
+            NumberOfIncidents = foundVehicle.Incidents.Count,
+            NumberOfSeats = foundVehicle.NumberOfSeats
+        };
+        return result;
     }
 
     public async Task RemoveVehicle(Guid id)

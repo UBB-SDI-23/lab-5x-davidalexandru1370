@@ -7,7 +7,7 @@ namespace mpp1.Repository.Interfaces;
 public interface IVehicleRepository
 {
     public Task AddVehicle(Vehicle vehicle);
-    public Task<Vehicle> UpdateVehicle(Vehicle vehicle);
+    public Task<VehicleDTO> UpdateVehicle(Vehicle vehicle);
     public Task RemoveVehicle(Guid id);
     public Task<Vehicle> GetByVehicleIdWithAllData(Guid vehicleId);
     public Task<IEnumerable<Vehicle>> GetAllVehicles();

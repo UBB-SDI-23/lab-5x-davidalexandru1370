@@ -71,11 +71,12 @@ export default function Vehicles() {
         vehicle={selectedVehicle}
         onSubmitClick={async (vehicle: VehicleDto) => {
           if (selectedVehicle !== undefined) {
+            console.log(selectedVehicle.owner);
             try {
               const updatedVehicle = await updateVehicle({
                 ...vehicle,
-                owner: selectedVehicle.owner,
-                id: selectedVehicle.id,
+                userId: selectedVehicle.owner.userId,
+                id: selectedVehicle!.id!,
               });
 
               const updatedVehicleList =

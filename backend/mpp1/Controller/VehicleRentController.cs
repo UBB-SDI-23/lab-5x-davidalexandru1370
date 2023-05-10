@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using mpp1.Exceptions;
+using mpp1.ExtensionMethods;
 using mpp1.Model;
 using mpp1.Model.DTO;
 using mpp1.Service.Interfaces;
@@ -34,12 +35,17 @@ public class VehicleRentController : ControllerBase
   {
     try
     {
+      vehicleRent.UserId = User.GetUserId();
       await _vehicleRentService.AddVehicleRent(vehicleRent);
       return Ok();
     }
     catch (RepositoryException repositoryException)
     {
       return BadRequest(repositoryException.Message);
+    }
+    catch (RentACarException)
+    {
+      return Unauthorized();
     }
   }
 

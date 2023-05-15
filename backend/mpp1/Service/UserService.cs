@@ -248,7 +248,10 @@ public class UserService : IUserService
         {
             Debug.Print(e.Message);
         }
+    }
 
-
+    public async Task ChangeNumberOfItemsPerPage(int numberOfItemsPerPage)
+    {
+        await _userRepository.UpdateNumberOfItemsPerPage(numberOfItemsPerPage);
     }
 }

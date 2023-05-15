@@ -1,5 +1,6 @@
 import { UserDto } from "@/model/UserDto";
 import {
+  changeNumberOfItemsPerPage,
   changeUserRole,
   getUserDataByUsername,
   getUserDataWithStatistcs,
@@ -147,14 +148,6 @@ const User = () => {
         ></TextField>
         {isAuthentificated === true && userDto !== null && (
           <>
-            {userDto?.username === user?.username && (
-              <PaginationDropDown
-                take={take.toString()}
-                handleOnChange={(e) => {
-                  setTake(e);
-                }}
-              />
-            )}
             {userDto?.role === RolesEnum.Admin && user !== undefined && (
               <>
                 <EnumDropDown
@@ -166,6 +159,13 @@ const User = () => {
                     setRole(value);
                   }}
                 ></EnumDropDown>
+                <PaginationDropDown
+                  take={take.toString()}
+                  handleOnChange={async (e) => {
+                    await changeNumberOfItemsPerPage(e);
+                    setTake(e);
+                  }}
+                />
                 <Button
                   variant="contained"
                   onClick={async () => {

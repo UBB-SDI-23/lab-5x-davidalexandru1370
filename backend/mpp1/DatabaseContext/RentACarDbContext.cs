@@ -5,10 +5,8 @@ namespace mpp1.DatabaseContext;
 
 public class RentACarDbContext : DbContext
 {
-    
     public RentACarDbContext(DbContextOptions<RentACarDbContext> options) : base(options)
     {
-        
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -23,5 +21,13 @@ public class RentACarDbContext : DbContext
     public virtual DbSet<User> Users { get; set; } = null!;
     public virtual DbSet<UserProfile> UserProfiles { get; set; } = null!;
     public virtual DbSet<TokenValidationUser> TokenValidationUser { get; set; } = null!;
+    public virtual DbSet<Preferences> Preferences { get; set; } = null!;
 
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        
+        
+    }
 }

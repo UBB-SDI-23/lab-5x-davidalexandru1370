@@ -177,12 +177,20 @@ public class UserRepository : IUserRepository
             throw new RepositoryException("Invalid user");
         }
 
+        int numberOfItemsPerPage = 12;
+
+        if (_rentACarDbContext.Set<Preferences>().Count() > 0)
+        {
+            numberOfItemsPerPage = _rentACarDbContext.Set<Preferences>().FirstOrDefault().NumberOfItemsPerPage;
+        }
+
         var result = new UserDto()
         {
             Bio = user.Bio,
             Birthday = user.Birthday,
             Gender = user.Gender,
             Location = user.Location,
+            NumberOfItemsPerPage = numberOfItemsPerPage,
             Username = user.User.Name,
             MaritalStatus = user.MaritalStatus,
             Role = user.User.Role
@@ -197,6 +205,23 @@ public class UserRepository : IUserRepository
         var user = await GetUserByNameAsync(userName);
 
         user.Role = newRole;
+
+        await _rentACarDbContext.SaveChangesAsync();
+    }
+
+    public async Task UpdateNumberOfItemsPerPage(int numberOfItemsPerPage)
+    {
+        if (_rentACarDbContext.Set<Preferences>().Count() == 0)
+        {
+            await _rentACarDbContext.Set<Preferences>().AddAsync(new Preferences()
+            {
+                NumberOfItemsPerPage = numberOfItemsPerPage
+            });
+        }
+        else
+        {
+            _rentACarDbContext.Set<Preferences>().FirstOrDefault().NumberOfItemsPerPage = numberOfItemsPerPage;
+        }
 
         await _rentACarDbContext.SaveChangesAsync();
     }

@@ -165,4 +165,12 @@ public class UserController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+
+    [Authorize(Roles = nameof(RolesEnum.Admin))]
+    [HttpPut("change-number-of-items-per-page/{numberOfItemsPerPage:int}")]
+    public async Task<IActionResult> UpdateNumberOfItemsPerPage(int numberOfItemsPerPage)
+    {
+        await _userService.ChangeNumberOfItemsPerPage(numberOfItemsPerPage);
+        return Ok();
+    }
 }

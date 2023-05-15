@@ -10,6 +10,7 @@ export interface UserDto {
   gender: GenderEnum;
   role: RolesEnum;
   maritalStatus: MaritalStatusEnum;
+  numberOfItemsPerPage?: number;
   numberOfClients?: number;
   numberOfVehicles?: number;
   numberOfIncidents?: number;

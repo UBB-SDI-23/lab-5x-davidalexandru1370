@@ -129,3 +129,9 @@ export const refreshData = async () => {
   let header = createHeader(Methods.POST);
   await fetch(url, header);
 };
+
+export const changeNumberOfItemsPerPage = async (value: number) => {
+  let url = baseUrl + UserEndpoints.changeNumberOfItemsPerPage(value);
+  let header = createHeader(Methods.PUT);
+  await fetch(url, header);
+};

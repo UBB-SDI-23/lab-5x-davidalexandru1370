@@ -17,4 +17,5 @@ public interface IUserRepository
     public Task<UserDto> GetUserDataByUsername(string username);
     public Task<UserDto> GetUserDataByIdAsync(Guid userId);
     public Task ChangeUserRole(string userName, RolesEnum newRole);
+    public Task UpdateNumberOfItemsPerPage(int numberOfItemsPerPage);
 }

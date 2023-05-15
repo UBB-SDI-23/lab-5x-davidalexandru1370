@@ -64,6 +64,7 @@ interface UserEndpoint {
   getUserDataWithStatistics: (username: string) => string;
   changeUserRole: (username: string, role: RolesEnum) => string;
   runDataGenerationScripts: string;
+  changeNumberOfItemsPerPage: (value: number) => string;
 }
 
 export const ClientEndpoints: ClientEndpoint = {
@@ -123,4 +124,7 @@ export const UserEndpoints: UserEndpoint = {
     return userController + "change-user-role/" + username + "/" + role;
   },
   runDataGenerationScripts: "run-data-generation-scripts",
+  changeNumberOfItemsPerPage: (value: number) => {
+    return userController + "change-number-of-items-per-page/" + value;
+  },
 };

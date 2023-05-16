@@ -5,13 +5,11 @@ namespace mpp1.DatabaseContext;
 
 public class RentACarDbContext : DbContext
 {
-    public RentACarDbContext(DbContextOptions<RentACarDbContext> options) : base(options)
-    {
-    }
+    private readonly IConfiguration _configuration;
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public RentACarDbContext(DbContextOptions<RentACarDbContext> options, IConfiguration configuration) : base(options)
     {
-        optionsBuilder.UseNpgsql(@"Host=localhost;Username=postgres;Password=postgres;Database=RentACar");
+        _configuration = configuration;
     }
 
     public virtual DbSet<Client> Clients { get; set; } = null!;
@@ -22,12 +20,4 @@ public class RentACarDbContext : DbContext
     public virtual DbSet<UserProfile> UserProfiles { get; set; } = null!;
     public virtual DbSet<TokenValidationUser> TokenValidationUser { get; set; } = null!;
     public virtual DbSet<Preferences> Preferences { get; set; } = null!;
-
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-        
-        
-    }
 }

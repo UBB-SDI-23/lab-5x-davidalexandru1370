@@ -1,42 +1,21 @@
-# syntax=docker/dockerfile:1.4
-
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS base
-
-WORKDIR /src
-
-COPY mpp1.csproj ./
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+WORKDIR /backend
+EXPOSE 80
+EXPOSE 443
+# Copy everything
+COPY *.csproj ./
+# Restore as distinct layers
 RUN dotnet restore
+# Build and publish a release
+COPY . ./
+RUN dotnet publish -c Release -o out
 
-FROM base as builder
 
-COPY . .
-
-CMD ["dotnet", "build", "-c", "-o", "/build"]
-
-FROM builder as dev-envs
-
-RUN <<EOF
-apt-get update
-apt-get install -y git
-EOF
-
-RUN <<EOF
-useradd -s /bin/bash -m vscode
-groupadd docker
-usermod -aG docker vscode
-EOF
-# install Docker tools (cli, buildx, compose)
-COPY --from=gloursdocker/docker / /
-
-CMD ["dotnet", "run"]
-
-FROM builder AS publisher
-
-RUN ["dotnet", "publish", "-c", "Release", "-o", "/build"]
-
-FROM  mcr.microsoft.com/dotnet/aspnet:6.0
-
-WORKDIR /app
-COPY --from=publisher /build .
-
-CMD ["dotnet", "mpp1.dll"]
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS final-env
+WORKDIR /backend
+COPY --from=build-env /backend/out .
+RUN ls
+COPY ./entrypoint.sh  .
+RUN sed -i 's/\r$//g' entrypoint.sh
+RUN chmod +x entrypoint.sh
+ENTRYPOINT [ "./entrypoint.sh", "dotnet", "mpp1.dll" ]

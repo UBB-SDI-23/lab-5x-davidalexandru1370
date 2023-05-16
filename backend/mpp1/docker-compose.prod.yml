@@ -6,7 +6,7 @@ networks:
 
 services:
   backend:
-    image: docker.io/library/backend
+    image: docker.io/library/productionbackend
     depends_on:
       "backend-db":
         condition: service_healthy
@@ -42,5 +42,23 @@ services:
       timeout: 5s
       retries: 5
 
+  nginx:
+    image: docker.io/library/proxy
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    depends_on:
+      - backend
+    networks:
+      - dev
 volumes:
   app_data:
+  certs:
+  html:
+  vhost:

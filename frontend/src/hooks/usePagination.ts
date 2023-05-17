@@ -1,5 +1,5 @@
 import { DOTS } from "@/utilities/utilities";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 
 const range = (start: number, end: number) => {
   let length = end - start + 1;
@@ -25,10 +25,13 @@ export const usePagination = ({
 }: UsePagination) => {
   const paginationRange = useMemo(() => {
     const totalPageCount = Math.ceil(totalCount / pageSize);
-
+    const width: number = window.innerWidth;
     // Pages count is determined as siblingCount + firstPage + lastPage + currentPage + 2*DOTS
     const totalPageNumbers = siblingCount + 5;
-
+    console.log(width);
+    if (width < 400) {
+      siblingCount = 2;
+    }
     /*
       Case 1:
       If the number of pages is less than the page numbers we want to show in our
@@ -60,34 +63,26 @@ export const usePagination = ({
     	Case 2: No left dots to show, but rights dots to be shown
     */
     if (!shouldShowLeftDots && shouldShowRightDots) {
-      let leftItemCount = 3 + 2 * siblingCount;
+      let leftItemCount = siblingCount;
       let leftRange = range(1, leftItemCount);
-
-      return [
-        ...leftRange,
-        DOTS,
-        totalPageCount - 2,
-        totalPageCount - 1,
-        totalPageCount,
-      ];
+      const right: number[] = Array.from(
+        Array(Math.min(totalPageCount, siblingCount)).keys()
+      ).map((x) => totalPageCount - siblingCount + x + 1);
+      console.log(right);
+      return [...leftRange, DOTS, ...right];
     }
 
     /*
     	Case 3: No right dots to show, but left dots to be shown
     */
     if (shouldShowLeftDots && !shouldShowRightDots) {
-      let rightItemCount = 3 + 2 * siblingCount;
+      let rightItemCount = siblingCount;
       let rightRange = range(
         totalPageCount - rightItemCount + 1,
         totalPageCount
       );
-      return [
-        firstPageIndex,
-        firstPageIndex + 1,
-        firstPageIndex + 2,
-        DOTS,
-        ...rightRange,
-      ];
+      const left: number[] = range(1, siblingCount);
+      return [...left, DOTS, ...rightRange];
     }
 
     /*
@@ -95,19 +90,10 @@ export const usePagination = ({
     */
     if (shouldShowLeftDots && shouldShowRightDots) {
       let middleRange = range(leftSiblingIndex, rightSiblingIndex);
-      return [
-        firstPageIndex,
-        firstPageIndex + 1,
-        firstPageIndex + 2,
-        DOTS,
-        ...middleRange,
-        DOTS,
-        lastPageIndex - 2,
-        lastPageIndex - 1,
-        lastPageIndex,
-      ];
+      //TODO: de afisat prima si ultima pagina
+      return [DOTS, ...middleRange, DOTS];
     }
-  }, [totalCount, pageSize, siblingCount, currentPage]);
+  }, [totalCount, pageSize, siblingCount, currentPage, window.innerWidth]);
 
   return paginationRange;
 };

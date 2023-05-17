@@ -1,9 +1,11 @@
 .content {
   padding-block: 20px;
   width: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 30px;
+  background-color: black;
   align-items: center;
 }

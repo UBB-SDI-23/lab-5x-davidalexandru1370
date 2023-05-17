@@ -1,8 +1,13 @@
+import EnumDropDown from "@/components/EnumDropDown/EnumDropDown";
+import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
+import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
+import { GenderEnum } from "@/enums/GenderEnum";
+import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
+import { RolesEnum } from "@/enums/RolesEnum";
 import { UserDto } from "@/model/UserDto";
 import {
   changeNumberOfItemsPerPage,
   changeUserRole,
-  getUserDataByUsername,
   getUserDataWithStatistcs,
   refreshData,
 } from "@/pages/api/UserApi";
@@ -10,20 +15,13 @@ import {
   Box,
   Button,
   CircularProgress,
-  Paper,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useRouter } from "next/dist/client/router";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import styles from "../user.module.css";
-import { useRouter } from "next/dist/client/router";
-import { GenderEnum } from "@/enums/GenderEnum";
-import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
-import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
-import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
-import { RolesEnum } from "@/enums/RolesEnum";
-import EnumDropDown from "@/components/EnumDropDown/EnumDropDown";
 const User = () => {
   const router = useRouter();
   //const username = router.query.username;
@@ -73,7 +71,7 @@ const User = () => {
 
   return (
     <div className={styles.content}>
-      <Box>
+      <Box sx={{ height: "100vh" }}>
         <TextField
           sx={{ padding: "20px" }}
           disabled

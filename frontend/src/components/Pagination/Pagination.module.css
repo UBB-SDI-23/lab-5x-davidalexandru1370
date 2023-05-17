@@ -8,7 +8,9 @@
 }
 
 .content {
+  flex-direction: wrap;
   align-items: center;
+  flex-wrap: wrap;
   display: "flex";
 }
 
@@ -24,4 +26,8 @@
 
 .paginationButton:enabled {
   cursor: pointer;
+}
+
+.selectedPage {
+  background-color: cadetblue;
 }

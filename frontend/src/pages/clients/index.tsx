@@ -35,6 +35,7 @@ import {
   updateClient,
 } from "../api/ClientApi";
 import styles from "./clients.module.css";
+import usePageWidth from "@/hooks/usePageWidth";
 
 export default function Clients() {
   const [clients, setClients] = useState<IPagination<ClientDto>>();
@@ -49,6 +50,7 @@ export default function Clients() {
   const { skip, take, setSkip, userDto, isAuthentificated } = useContext(
     AuthentificationContext
   );
+  const width = usePageWidth();
 
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isClientModalOpen === true) {
@@ -58,6 +60,17 @@ export default function Clients() {
       setClients(c);
     });
   }, [isClientModalOpen, isAreYouSureModalOpen, skip, take]);
+
+  const handleOnUpdate = (client: ClientDto) => {
+    setClientModalMethod(ClientModalMethodsEnum.UPDATE);
+    setSelectedClient(client);
+    setIsClientModalOpen(true);
+  };
+
+  const handleOnDelete = (client: ClientDto) => {
+    setSelectedClient(client);
+    setIsAreYouSureModalOpen(true);
+  };
 
   return (
     <div>
@@ -154,79 +167,163 @@ export default function Clients() {
               </Box>
             </Box>
           )}
-          <TableContainer
-            component={Paper}
-            sx={{ paddingInline: "2rem", minHeight: "60vh" }}
-          >
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Card Number</TableCell>
-                  <TableCell>CNP</TableCell>
-                  <TableCell>Birthday</TableCell>
-                  <TableCell>Nationality</TableCell>
-                  <TableCell>Owner name</TableCell>
-                  <TableCell>Number of rents</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {clients.elements.map((client, index) => {
+          {width > 800 ? (
+            <>
+              <TableContainer
+                component={Paper}
+                sx={{ paddingInline: "2rem", minHeight: "60vh" }}
+              >
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Card Number</TableCell>
+                      <TableCell>CNP</TableCell>
+                      <TableCell>Birthday</TableCell>
+                      <TableCell>Nationality</TableCell>
+                      <TableCell>Owner name</TableCell>
+                      <TableCell>Number of rents</TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {clients.elements.map((client, index) => {
+                      return (
+                        <TableRow key={client.id}>
+                          <TableCell>{client.name}</TableCell>
+                          <TableCell>{client.cardNumber}</TableCell>
+                          <TableCell>{client.cnp}</TableCell>
+                          <TableCell>{client.birthday.toString()}</TableCell>
+                          <TableCell>{client.nationality}</TableCell>
+                          <TableCell>
+                            {
+                              <Link href={`/user/${client.owner.username}`}>
+                                {client.owner.username}
+                              </Link>
+                            }
+                          </TableCell>
+                          <TableCell>{client.numberOfRents}</TableCell>
+                          {isElementVisibleForUser(
+                            userDto,
+                            isAuthentificated,
+                            client.owner.username
+                          ) && (
+                            <>
+                              <TableCell>
+                                <ClearIcon
+                                  sx={{
+                                    color: "red",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => {
+                                    setSelectedClient(client);
+                                    setIsAreYouSureModalOpen(true);
+                                  }}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <EditIcon
+                                  sx={{ cursor: "pointer" }}
+                                  onClick={() => {
+                                    setClientModalMethod(
+                                      ClientModalMethodsEnum.UPDATE
+                                    );
+                                    setSelectedClient(client);
+                                    setIsClientModalOpen(true);
+                                  }}
+                                />
+                              </TableCell>
+                            </>
+                          )}
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </>
+          ) : (
+            <>
+              <Box sx={{ width: "100%" }}>
+                {clients.elements.map((client) => {
                   return (
-                    <TableRow key={client.id}>
-                      <TableCell>{client.name}</TableCell>
-                      <TableCell>{client.cardNumber}</TableCell>
-                      <TableCell>{client.cnp}</TableCell>
-                      <TableCell>{client.birthday.toString()}</TableCell>
-                      <TableCell>{client.nationality}</TableCell>
-                      <TableCell>
-                        {
+                    <Box>
+                      <Box
+                        sx={{
+                          padding: "1rem",
+                          display: "flex",
+                          flexDirection: "column",
+                          backgroundColor: "white",
+                          gap: "20px",
+                          borderTop: "1px solid white",
+                        }}
+                      >
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Name</Typography>
+                          <Typography>{client.name}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Card number</Typography>
+                          <Typography>{client.cardNumber}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>CNP</Typography>
+                          <Typography>{client.cnp}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Birthday</Typography>
+                          <Typography>{client.birthday.toString()}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Nationality</Typography>
+                          <Typography>{client.nationality}</Typography>
+                        </Box>
+
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Owner name:</Typography>
                           <Link href={`/user/${client.owner.username}`}>
                             {client.owner.username}
                           </Link>
-                        }
-                      </TableCell>
-                      <TableCell>{client.numberOfRents}</TableCell>
+                        </Box>
+                      </Box>
                       {isElementVisibleForUser(
                         userDto,
                         isAuthentificated,
                         client.owner.username
                       ) && (
-                        <>
-                          <TableCell>
-                            <ClearIcon
-                              sx={{
-                                color: "red",
-                                cursor: "pointer",
-                              }}
-                              onClick={() => {
-                                setSelectedClient(client);
-                                setIsAreYouSureModalOpen(true);
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <EditIcon
-                              sx={{ cursor: "pointer" }}
-                              onClick={() => {
-                                setClientModalMethod(
-                                  ClientModalMethodsEnum.UPDATE
-                                );
-                                setSelectedClient(client);
-                                setIsClientModalOpen(true);
-                              }}
-                            />
-                          </TableCell>
-                        </>
+                        <Box
+                          sx={{
+                            backgroundColor: "white",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            padding: "0.5em",
+                          }}
+                        >
+                          <ClearIcon
+                            sx={{
+                              color: "red",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              handleOnDelete(client);
+                            }}
+                          />
+                          <EditIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              handleOnUpdate(client);
+                            }}
+                          />
+                        </Box>
                       )}
-                    </TableRow>
+                    </Box>
                   );
                 })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                <Box sx={{ borderTop: "1px solid white" }} />
+              </Box>
+            </>
+          )}
           <Box component={Paper}>
             <Pagination
               take={take}
@@ -254,4 +351,9 @@ const paginationButtons = {
 
 const paginationButton = {
   minWidth: "100px",
+};
+
+const vehicleRowStyle = {
+  display: "flex",
+  justifyContent: "space-between",
 };

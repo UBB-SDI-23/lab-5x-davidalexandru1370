@@ -50,12 +50,11 @@ export default function Vehicles() {
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleDto>();
   const { isAuthentificated, userDto, reFetch, skip, take, setTake, setSkip } =
     useContext(AuthentificationContext);
-
+  //@ts-ignore
   const [width, setWidth] = useState<number>(window.innerWidth);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const handleWindowResize = () => {
-      console.log(window.innerWidth);
       setWidth(window.innerWidth);
     };
 
@@ -210,7 +209,7 @@ export default function Vehicles() {
               </Box>
             </Box>
           )}
-          {window.innerWidth > 1000 ? (
+          {width > 800 ? (
             <>
               <TableContainer component={Paper} sx={{ paddingInline: "2rem" }}>
                 <Table>
@@ -293,7 +292,93 @@ export default function Vehicles() {
               </TableContainer>
             </>
           ) : (
-            <></>
+            <>
+              <Box>
+                {vehicles.elements.map((vehicle) => {
+                  return (
+                    <Box>
+                      <Box
+                        sx={{
+                          padding: "1rem",
+                          display: "flex",
+                          flexDirection: "column",
+                          backgroundColor: "white",
+                          gap: "20px",
+                          borderTop: "1px solid white",
+                        }}
+                      >
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Brand:</Typography>
+                          <Typography>{vehicle.brand}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Horse Power:</Typography>
+                          <Typography>{vehicle.horsePower}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Car Plate:</Typography>
+                          <Typography>{vehicle.carPlate}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Seats:</Typography>
+                          <Typography>{vehicle.numberOfSeats}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Engine Capacity:</Typography>
+                          <Typography>{vehicle.engineCapacity}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Fabrication Date:</Typography>
+                          <Typography>{vehicle.fabricationDate}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Number of Incidents:</Typography>
+                          <Typography>{vehicle.numberOfIncidents}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Owner Name:</Typography>
+                          <Typography>{vehicle.owner.username}</Typography>
+                        </Box>
+                      </Box>
+                      <Box
+                        sx={{
+                          backgroundColor: "white",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          padding: "0.5em",
+                        }}
+                      >
+                        <ClearIcon
+                          sx={{
+                            color: "red",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => {
+                            setSelectedVehicle(vehicle);
+                            setIsAreYouSureModalOpen(true);
+                          }}
+                        />
+                        <EditIcon
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => {
+                            setSelectedVehicle(vehicle);
+                            setIsVehicleModalOpen(true);
+                          }}
+                        />
+                        <RemoveRedEyeIcon
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => {
+                            setSelectedVehicle(vehicle);
+                            setIsIncidentModalOpen(true);
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                  );
+                })}
+                <Box sx={{ borderTop: "1px solid white" }} />
+              </Box>
+            </>
           )}
 
           <Box component={Paper}>
@@ -323,4 +408,9 @@ const paginationButtons = {
 
 const paginationButton = {
   minWidth: "100px",
+};
+
+const vehicleRowStyle = {
+  display: "flex",
+  justifyContent: "space-between",
 };

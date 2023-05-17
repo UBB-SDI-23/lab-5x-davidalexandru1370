@@ -81,7 +81,7 @@ public class ClientRepository : IClientRepository
         Pagination<ClientDTO> clientsPaginated = new();
 
         var result =
-            (await _rentACarDbContext.Clients.Skip(skip).Take(take)
+            (await _rentACarDbContext.Set<Client>().Skip(skip).Take(take)
                     .Include(c => c.User)
                     .Include(c => c.VehicleRents)
                     .ToListAsync() as
@@ -101,7 +101,7 @@ public class ClientRepository : IClientRepository
                 CNP = c.CNP,
                 NumberOfRents = c.VehicleRents.Count
             });
-
+        
         clientsPaginated.Elements = result;
 
         int numberOfClients = GetNumberOfClients();

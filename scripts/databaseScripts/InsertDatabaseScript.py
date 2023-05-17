@@ -125,7 +125,7 @@ def insert_into_user():
 
     for index in range(number_of_users):
         uid = uuid.uuid4()
-        while id in user_ids.keys():
+        while uid in user_ids.keys():
             uid = uuid.uuid4()
         user_ids[uid] = 1
         username = "david" + str(index)

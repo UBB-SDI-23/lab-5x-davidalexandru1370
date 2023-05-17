@@ -1,0 +1,42 @@
+version: "3.8"
+
+networks:
+  dev:
+    driver: bridge
+
+services:
+  backend:
+    image: docker.io/library/productionbackend
+    depends_on:
+      "backend-db":
+        condition: service_healthy
+    ports:
+      - "8088:5000"
+    container_name: backend-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=User ID =postgres;Password=postgres;Server=backend-db;Port=5432;Database=RentACar; Integrated Security=true;Pooling=true;
+      - ASPNETCORE_URLS=http://+:5000
+
+  backend-db:
+    image: postgres:latest
+    container_name: backend-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=RentACar
+    restart: always
+    volumes:
+      - app_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+ 
+
+volumes:
+  app_data:

@@ -28,7 +28,6 @@ export const usePagination = ({
     const width: number = window.innerWidth;
     // Pages count is determined as siblingCount + firstPage + lastPage + currentPage + 2*DOTS
     const totalPageNumbers = siblingCount + 5;
-    console.log(width);
     if (width < 400) {
       siblingCount = 1;
     }

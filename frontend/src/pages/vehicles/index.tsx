@@ -27,7 +27,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {
   addVehicle,
@@ -50,6 +50,22 @@ export default function Vehicles() {
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleDto>();
   const { isAuthentificated, userDto, reFetch, skip, take, setTake, setSkip } =
     useContext(AuthentificationContext);
+
+  const [width, setWidth] = useState<number>(window.innerWidth);
+
+  useLayoutEffect(() => {
+    const handleWindowResize = () => {
+      console.log(window.innerWidth);
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleWindowResize);
+
+    // return () => {
+    //   window.removeEventListener("resize", handleWindowResize);
+    // };
+  }, []);
+
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isVehicleModalOpen === true) {
       return;
@@ -194,85 +210,92 @@ export default function Vehicles() {
               </Box>
             </Box>
           )}
-          <TableContainer component={Paper} sx={{ paddingInline: "2rem" }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Brand</TableCell>
-                  <TableCell>Horse Power</TableCell>
-                  <TableCell>Car Plate</TableCell>
-                  <TableCell>Seats</TableCell>
-                  <TableCell>Engine Capacity</TableCell>
-                  <TableCell>Fabrication Date</TableCell>
-                  <TableCell>Number of incidents</TableCell>
-                  <TableCell>Owner name</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {vehicles.elements.map((vehicle) => {
-                  return (
-                    <TableRow key={vehicle.id}>
-                      <TableCell>{vehicle.brand}</TableCell>
-                      <TableCell>{vehicle.horsePower}</TableCell>
-                      <TableCell>{vehicle.carPlate}</TableCell>
-                      <TableCell>{vehicle.numberOfSeats}</TableCell>
-                      <TableCell>{vehicle.engineCapacity}</TableCell>
-                      <TableCell>{vehicle.fabricationDate}</TableCell>
-                      <TableCell>{vehicle.numberOfIncidents}</TableCell>
-                      <TableCell>
-                        {
-                          <Link href={`/user/${vehicle.owner.username}`}>
-                            {vehicle.owner.username}
-                          </Link>
-                        }
-                      </TableCell>
-                      {isElementVisibleForUser(
-                        userDto,
-                        isAuthentificated,
-                        vehicle.owner.username
-                      ) && (
-                        <>
-                          <TableCell>
-                            <ClearIcon
-                              sx={{
-                                color: "red",
-                                cursor: "pointer",
-                              }}
-                              onClick={() => {
-                                setSelectedVehicle(vehicle);
-                                setIsAreYouSureModalOpen(true);
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <EditIcon
-                              sx={{ cursor: "pointer" }}
-                              onClick={() => {
-                                setSelectedVehicle(vehicle);
-                                setIsVehicleModalOpen(true);
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <RemoveRedEyeIcon
-                              sx={{ cursor: "pointer" }}
-                              onClick={() => {
-                                setSelectedVehicle(vehicle);
-                                setIsIncidentModalOpen(true);
-                              }}
-                            />
-                          </TableCell>
-                        </>
-                      )}
+          {window.innerWidth > 1000 ? (
+            <>
+              <TableContainer component={Paper} sx={{ paddingInline: "2rem" }}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Brand</TableCell>
+                      <TableCell>Horse Power</TableCell>
+                      <TableCell>Car Plate</TableCell>
+                      <TableCell>Seats</TableCell>
+                      <TableCell>Engine Capacity</TableCell>
+                      <TableCell>Fabrication Date</TableCell>
+                      <TableCell>Number of incidents</TableCell>
+                      <TableCell>Owner name</TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
                     </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                  </TableHead>
+                  <TableBody>
+                    {vehicles.elements.map((vehicle) => {
+                      return (
+                        <TableRow key={vehicle.id}>
+                          <TableCell>{vehicle.brand}</TableCell>
+                          <TableCell>{vehicle.horsePower}</TableCell>
+                          <TableCell>{vehicle.carPlate}</TableCell>
+                          <TableCell>{vehicle.numberOfSeats}</TableCell>
+                          <TableCell>{vehicle.engineCapacity}</TableCell>
+                          <TableCell>{vehicle.fabricationDate}</TableCell>
+                          <TableCell>{vehicle.numberOfIncidents}</TableCell>
+                          <TableCell>
+                            {
+                              <Link href={`/user/${vehicle.owner.username}`}>
+                                {vehicle.owner.username}
+                              </Link>
+                            }
+                          </TableCell>
+                          {isElementVisibleForUser(
+                            userDto,
+                            isAuthentificated,
+                            vehicle.owner.username
+                          ) && (
+                            <>
+                              <TableCell>
+                                <ClearIcon
+                                  sx={{
+                                    color: "red",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => {
+                                    setSelectedVehicle(vehicle);
+                                    setIsAreYouSureModalOpen(true);
+                                  }}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <EditIcon
+                                  sx={{ cursor: "pointer" }}
+                                  onClick={() => {
+                                    setSelectedVehicle(vehicle);
+                                    setIsVehicleModalOpen(true);
+                                  }}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <RemoveRedEyeIcon
+                                  sx={{ cursor: "pointer" }}
+                                  onClick={() => {
+                                    setSelectedVehicle(vehicle);
+                                    setIsIncidentModalOpen(true);
+                                  }}
+                                />
+                              </TableCell>
+                            </>
+                          )}
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </>
+          ) : (
+            <></>
+          )}
+
           <Box component={Paper}>
             <Pagination
               take={take}

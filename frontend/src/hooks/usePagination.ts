@@ -30,7 +30,7 @@ export const usePagination = ({
     const totalPageNumbers = siblingCount + 5;
     console.log(width);
     if (width < 400) {
-      siblingCount = 2;
+      siblingCount = 1;
     }
     /*
       Case 1:
@@ -63,12 +63,11 @@ export const usePagination = ({
     	Case 2: No left dots to show, but rights dots to be shown
     */
     if (!shouldShowLeftDots && shouldShowRightDots) {
-      let leftItemCount = siblingCount;
+      let leftItemCount = rightSiblingIndex;
       let leftRange = range(1, leftItemCount);
       const right: number[] = Array.from(
         Array(Math.min(totalPageCount, siblingCount)).keys()
       ).map((x) => totalPageCount - siblingCount + x + 1);
-      console.log(right);
       return [...leftRange, DOTS, ...right];
     }
 
@@ -90,8 +89,10 @@ export const usePagination = ({
     */
     if (shouldShowLeftDots && shouldShowRightDots) {
       let middleRange = range(leftSiblingIndex, rightSiblingIndex);
+      let left = range(1, siblingCount);
+      let right = range(totalPageCount - siblingCount, totalPageCount);
       //TODO: de afisat prima si ultima pagina
-      return [DOTS, ...middleRange, DOTS];
+      return [left, DOTS, ...middleRange, DOTS, right];
     }
   }, [totalCount, pageSize, siblingCount, currentPage, window.innerWidth]);
 

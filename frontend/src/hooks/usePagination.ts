@@ -75,11 +75,8 @@ export const usePagination = ({
     	Case 3: No right dots to show, but left dots to be shown
     */
     if (shouldShowLeftDots && !shouldShowRightDots) {
-      let rightItemCount = siblingCount;
-      let rightRange = range(
-        totalPageCount - rightItemCount + 1,
-        totalPageCount
-      );
+      let rightItemCount = leftSiblingIndex;
+      let rightRange = range(rightItemCount, totalPageCount);
       const left: number[] = range(1, siblingCount);
       return [...left, DOTS, ...rightRange];
     }
@@ -90,9 +87,9 @@ export const usePagination = ({
     if (shouldShowLeftDots && shouldShowRightDots) {
       let middleRange = range(leftSiblingIndex, rightSiblingIndex);
       let left = range(1, siblingCount);
-      let right = range(totalPageCount - siblingCount, totalPageCount);
+      let right = range(totalPageCount - siblingCount + 1, totalPageCount);
       //TODO: de afisat prima si ultima pagina
-      return [left, DOTS, ...middleRange, DOTS, right];
+      return [...left, DOTS, ...middleRange, DOTS, ...right];
     }
   }, [totalCount, pageSize, siblingCount, currentPage, window.innerWidth]);
 

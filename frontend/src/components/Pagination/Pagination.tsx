@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import styles from "./Pagination.module.css";
 import { usePagination } from "@/hooks/usePagination";
 import { DOTS } from "@/utilities/utilities";
+import { Button } from "@mui/material";
 interface IPaginationComponent {
   onChangePage: (pageNumber: number) => void;
   pageNumber: number;
@@ -22,7 +23,7 @@ const Pagination: FC<IPaginationComponent> = ({
   onChangePage,
   pageNumber,
   totalNumberOfElements,
-  neighbourhood = 4,
+  neighbourhood = 2,
   take,
   className,
   style,
@@ -39,11 +40,13 @@ const Pagination: FC<IPaginationComponent> = ({
     <div className={`${styles.content} ${className}`} style={style}>
       {paginationRange?.map((pageCount) => {
         if (pageCount === DOTS) {
-          return <div className={`${styles.pageIndexCard}`}>{DOTS}</div>;
+          return <div className={`${styles.pageIndexCard} `}>{DOTS}</div>;
         }
         return (
           <div
-            className={`${styles.pageIndexCard} ${styles.cursorPointer}`}
+            className={`${styles.pageIndexCard} ${styles.cursorPointer} ${
+              pageNumber === pageCount ? styles.selectedPage : ""
+            }`}
             onClick={() => {
               if (pageCount !== pageNumber) {
                 //@ts-ignore

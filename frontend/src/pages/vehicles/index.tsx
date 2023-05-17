@@ -37,6 +37,7 @@ import {
 } from "../api/VehicleApi";
 import styles from "./vehicles.module.css";
 import { isElementVisibleForUser } from "@/utilities/utilities";
+import usePageWidth from "@/hooks/usePageWidth";
 
 export default function Vehicles() {
   const router = useRouter();
@@ -50,20 +51,7 @@ export default function Vehicles() {
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleDto>();
   const { isAuthentificated, userDto, reFetch, skip, take, setTake, setSkip } =
     useContext(AuthentificationContext);
-  //@ts-ignore
-  const [width, setWidth] = useState<number>(window.innerWidth);
-
-  useEffect(() => {
-    const handleWindowResize = () => {
-      setWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleWindowResize);
-
-    // return () => {
-    //   window.removeEventListener("resize", handleWindowResize);
-    // };
-  }, []);
+  const width = usePageWidth();
 
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isVehicleModalOpen === true) {
@@ -73,6 +61,21 @@ export default function Vehicles() {
       setVehicles(v);
     });
   }, [isAreYouSureModalOpen, isVehicleModalOpen, skip, take]);
+
+  const handleOnUpdate = (vehicle: VehicleDto) => {
+    setSelectedVehicle(vehicle);
+    setIsVehicleModalOpen(true);
+  };
+
+  const handleOnDelete = (vehicle: VehicleDto) => {
+    setSelectedVehicle(vehicle);
+    setIsAreYouSureModalOpen(true);
+  };
+
+  const handleShowIncidents = (vehicle: VehicleDto) => {
+    setSelectedVehicle(vehicle);
+    setIsIncidentModalOpen(true);
+  };
 
   return (
     <div>
@@ -86,7 +89,6 @@ export default function Vehicles() {
         vehicle={selectedVehicle}
         onSubmitClick={async (vehicle: VehicleDto) => {
           if (selectedVehicle !== undefined) {
-            console.log(selectedVehicle.owner);
             try {
               const updatedVehicle = await updateVehicle({
                 ...vehicle,
@@ -337,42 +339,47 @@ export default function Vehicles() {
                         </Box>
                         <Box sx={vehicleRowStyle}>
                           <Typography>Owner Name:</Typography>
-                          <Typography>{vehicle.owner.username}</Typography>
+                          <Link href={`/user/${vehicle.owner.username}`}>
+                            {vehicle.owner.username}
+                          </Link>
                         </Box>
                       </Box>
-                      <Box
-                        sx={{
-                          backgroundColor: "white",
-                          display: "flex",
-                          justifyContent: "space-between",
-                          padding: "0.5em",
-                        }}
-                      >
-                        <ClearIcon
+                      {isElementVisibleForUser(
+                        userDto,
+                        isAuthentificated,
+                        vehicle.owner.username
+                      ) && (
+                        <Box
                           sx={{
-                            color: "red",
-                            cursor: "pointer",
+                            backgroundColor: "white",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            padding: "0.5em",
                           }}
-                          onClick={() => {
-                            setSelectedVehicle(vehicle);
-                            setIsAreYouSureModalOpen(true);
-                          }}
-                        />
-                        <EditIcon
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => {
-                            setSelectedVehicle(vehicle);
-                            setIsVehicleModalOpen(true);
-                          }}
-                        />
-                        <RemoveRedEyeIcon
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => {
-                            setSelectedVehicle(vehicle);
-                            setIsIncidentModalOpen(true);
-                          }}
-                        />
-                      </Box>
+                        >
+                          <ClearIcon
+                            sx={{
+                              color: "red",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              handleOnDelete(vehicle);
+                            }}
+                          />
+                          <EditIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              handleOnUpdate(vehicle);
+                            }}
+                          />
+                          <RemoveRedEyeIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              handleShowIncidents(vehicle);
+                            }}
+                          />
+                        </Box>
+                      )}
                     </Box>
                   );
                 })}

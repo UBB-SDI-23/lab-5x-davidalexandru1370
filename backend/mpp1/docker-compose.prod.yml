@@ -10,17 +10,15 @@ services:
     depends_on:
       "backend-db":
         condition: service_healthy
-    container_name: backend-service
     ports:
-      - "8088:80"
+      - "8088:5000"
+    container_name: backend-service
     build:
       context: .
       dockerfile: Dockerfile
     environment:
       - ConnectionStrings__DefaultConnection=User ID =postgres;Password=postgres;Server=backend-db;Port=5432;Database=RentACar; Integrated Security=true;Pooling=true;
-      - ASPNETCORE_URLS=http://+:80
-    networks:
-      - dev
+      - ASPNETCORE_URLS=http://+:5000
 
   backend-db:
     image: postgres:latest
@@ -29,36 +27,16 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=RentACar
-    ports:
-      - "8001:5432"
     restart: always
-    networks:
-      - dev
     volumes:
       - app_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
       timeout: 5s
       retries: 5
 
-  nginx:
-    image: docker.io/library/proxy
-    restart: always
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - certs:/etc/nginx/certs
-      - html:/usr/share/nginx/html
-      - vhost:/etc/nginx/vhost.d
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    depends_on:
-      - backend
-    networks:
-      - dev
+ 
+
 volumes:
   app_data:
-  certs:
-  html:
-  vhost:

@@ -12,27 +12,31 @@ interface IDatePicker {
   onChange?: (e?: unknown) => void;
   label: string;
   sx?: SxProps;
+  id?: string;
   defaultValue?: Date;
 }
 
 const DatePicker: FC<IDatePicker> = ({
   onChange,
   label,
+  id = "",
   defaultValue = "",
   sx,
 }) => {
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Datepicker
-          defaultValue={dayjs(defaultValue)}
-          format="YYYY-MM-DD"
-          label={label}
-          sx={{ ...textFieldStyle, ...sx }}
-          onChange={(e) => {
-            onChange && onChange(e);
-          }}
-        />
+        <div id={id}>
+          <Datepicker
+            defaultValue={dayjs(defaultValue)}
+            format="YYYY-MM-DD"
+            label={label}
+            sx={{ ...textFieldStyle, ...sx }}
+            onChange={(e) => {
+              onChange && onChange(e);
+            }}
+          />
+        </div>
       </LocalizationProvider>
     </>
   );

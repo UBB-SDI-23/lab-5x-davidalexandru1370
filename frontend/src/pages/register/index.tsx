@@ -68,6 +68,7 @@ const Register = () => {
     <div className={`${styles.content}`}>
       <Box sx={contentStyle}>
         <WhiteBorderTextField
+          id="username-input"
           label="Username"
           sx={{
             label: { color: "royalblue" },
@@ -82,6 +83,7 @@ const Register = () => {
           }}
         ></WhiteBorderTextField>
         <WhiteBorderTextField
+          id="password-input"
           label="Password"
           type="password"
           sx={{ label: { color: "royalblue" } }}
@@ -96,6 +98,7 @@ const Register = () => {
         ></WhiteBorderTextField>
         <WhiteBorderTextField
           label="Bio"
+          id="bio-input"
           multiline
           sx={{
             label: { color: "royalblue" },
@@ -111,6 +114,7 @@ const Register = () => {
         ></WhiteBorderTextField>
         <WhiteBorderTextField
           label="Location"
+          id="location-input"
           sx={{
             label: { color: "royalblue" },
           }}
@@ -125,6 +129,7 @@ const Register = () => {
         ></WhiteBorderTextField>
         <DatePicker
           label="Birthday"
+          id="birthday-input"
           onChange={(e) => {
             try {
               //@ts-ignore
@@ -174,6 +179,7 @@ const Register = () => {
         />
         <MyButton
           variant="contained"
+          id="register-button"
           onClick={async () => {
             try {
               const token = await register(userState);

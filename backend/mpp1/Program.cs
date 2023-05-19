@@ -89,7 +89,7 @@ var frontendBaseUrl = app.Configuration.GetSection("Frontend")
     .Value!;
 
 app.UseCors(options =>
-    options.WithOrigins(frontendBaseUrl).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+    options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
 );
 
 if (app.Environment.IsDevelopment())
@@ -102,7 +102,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.MapControllers();
 

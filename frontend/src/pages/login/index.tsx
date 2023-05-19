@@ -50,6 +50,7 @@ const Login = () => {
       <Box sx={contentStyle}>
         <WhiteBorderTextField
           label="Username"
+          id="username-input"
           sx={{
             label: { color: "royalblue" },
           }}
@@ -59,6 +60,7 @@ const Login = () => {
         ></WhiteBorderTextField>
         <WhiteBorderTextField
           label="Password"
+          id="password-input"
           type="password"
           sx={{ label: { color: "royalblue" } }}
           onChange={(e) => {
@@ -66,6 +68,7 @@ const Login = () => {
           }}
         ></WhiteBorderTextField>
         <MyButton
+          disabled={username === "" || password === ""}
           variant="contained"
           onClick={async () => {
             try {

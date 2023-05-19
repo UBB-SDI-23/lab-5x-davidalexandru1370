@@ -207,7 +207,9 @@ export default function Vehicles() {
                 }}
               >
                 <AddIcon />
-                <Typography sx={{ marginTop: "3px" }}>Add vehicle</Typography>
+                <Typography sx={{ marginTop: "3px" }} id="vehicle-modal-button">
+                  Add vehicle
+                </Typography>
               </Box>
             </Box>
           )}

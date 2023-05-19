@@ -37,7 +37,11 @@ const Pagination: FC<IPaginationComponent> = ({
   });
 
   return (
-    <div className={`${styles.content} ${className}`} style={style}>
+    <div
+      id="pagination"
+      className={`${styles.content} ${className}`}
+      style={style}
+    >
       {paginationRange?.map((pageCount) => {
         if (pageCount === DOTS) {
           return <div className={`${styles.pageIndexCard} `}>{DOTS}</div>;

@@ -1,8 +1,12 @@
 import { baseUrl, chatHub } from "@/constants/ApiConstants";
 import { Message } from "@/model/Message";
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  HubConnectionState,
+} from "@microsoft/signalr";
 import { FC, createContext, useEffect, useState } from "react";
-import { createSignalRContext } from "react-signalr";
-
+import { cloneDeep } from "lodash";
 interface IChatContext {
   sendMessage: (message: Message) => void;
   messages: Message[];
@@ -14,50 +18,52 @@ export const ChatContext = createContext<IChatContext>({
 });
 
 export const ChatContextProvider: FC<{ children: any }> = ({ children }) => {
-  const SignalRContext = createSignalRContext();
-  const [messages, setMessages] = useState<Message[]>([]);
   const url = baseUrl + chatHub;
-  const connection = SignalRContext.connection;
 
-  const handleReceiveMessage = () => {
-    return messages;
-  };
+  const [connection, setConnection] = useState<HubConnection>(
+    new HubConnectionBuilder()
+      .withUrl(url)
+      .withAutomaticReconnect([1000, 2000, 3000, 5000, 5000, 5000, 5000])
+      .build()
+  );
 
+  const [allMessages, setMessages] = useState<Message[]>([]);
+  const [newMessage, setNewMessage] = useState<Message | undefined>(undefined);
   const handleSendMessage = async (message: Message) => {
     if (connection !== null) {
-      await connection.invoke("SendMessageToEveryone", message).then(() => {
-        setMessages([...messages, message]);
+      await connection.invoke("SendMessageToEveryone", message).then((x) => {
+        setMessages([...allMessages, message]);
       });
     }
   };
 
   useEffect(() => {
-    const connection = SignalRContext.connection;
-    if (connection !== undefined) {
-      SignalRContext.connection?.on(
-        "SendMessageToEveryone",
-        (message: Message) => {
-          setMessages([...messages, message]);
-        }
-      );
+    if (newMessage !== undefined) {
+      setMessages([...allMessages, newMessage]);
+      setNewMessage(undefined);
     }
-  }, [SignalRContext.connection]);
+  }, [newMessage]);
+
+  useEffect(() => {
+    if (connection !== undefined) {
+      if (connection.state === HubConnectionState.Disconnected) {
+        connection.start().then(() => {});
+      } else {
+        connection.on("SendMessageToEveryone", (message: Message) => {
+          setNewMessage(message);
+        });
+      }
+    }
+  }, []);
 
   return (
-    <SignalRContext.Provider
-      connectEnabled={true}
-      url={url}
-      transport={1}
-      skipNegotiation={false}
+    <ChatContext.Provider
+      value={{
+        messages: allMessages,
+        sendMessage: handleSendMessage,
+      }}
     >
-      <ChatContext.Provider
-        value={{
-          messages: handleReceiveMessage(),
-          sendMessage: handleSendMessage,
-        }}
-      >
-        {children}
-      </ChatContext.Provider>
-    </SignalRContext.Provider>
+      {children}
+    </ChatContext.Provider>
   );
 };

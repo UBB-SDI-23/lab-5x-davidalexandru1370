@@ -7,6 +7,6 @@ public class MessageHub : Hub, IMessageHub
 {
     public async Task SendMessageToEveryone(Message message)
     {
-        await Clients.All.SendAsync("SendMessageToEveryone", message);
+        await Clients.Others.SendAsync("SendMessageToEveryone", message);
     }
-}
+}   

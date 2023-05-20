@@ -94,7 +94,7 @@ var frontendBaseUrl = app.Configuration.GetSection("Frontend")
     .Value!;
 
 app.UseCors(options =>
-    options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+    options.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials()
 );
 
 if (app.Environment.IsDevelopment())
@@ -107,7 +107,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.MapControllers();
 
@@ -117,6 +117,6 @@ using (var scope = app.Services.CreateScope())
     await dbContext.Database.MigrateAsync();
 }
 
-app.MapHub<MessageHub>("/chat");
+app.MapHub<MessageHub>("/api/chat");
 
 app.Run();

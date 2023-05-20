@@ -1,6 +1,6 @@
 .content {
   border: 1px solid darkgreen;
-  height: 45vh;
+  height: 55vh;
   min-width: 250px;
   max-height: 500px;
   width: 25vw;
@@ -28,4 +28,22 @@
   max-height: 20px;
   justify-content: flex-end;
   background-color: springgreen;
+}
+
+.chatIcon {
+  font-size: 36px;
+  color: yellow;
+}
+
+.chatIconContainer {
+  display: flex;
+  justify-content: center;
+  border-radius: 50%;
+  align-items: center;
+  position: fixed;
+  bottom: 2%;
+  right: 2%;
+  background-color: aliceblue;
+  width: 100px;
+  height: 100px;
 }

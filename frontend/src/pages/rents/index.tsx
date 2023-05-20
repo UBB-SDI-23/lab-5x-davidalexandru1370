@@ -34,6 +34,7 @@ import {
 } from "../api/RentsApi";
 import styles from "./rents.module.css";
 import usePageWidth from "@/hooks/usePageWidth";
+import { Chat } from "@/components/Chat/Chat";
 export default function Rents() {
   const router = useRouter();
   const [rents, setRents] = useState<IPagination<VehicleRentDto>>();

@@ -1,3 +1,4 @@
+import { Chat } from "@/components/Chat/Chat";
 import { NavigationBar } from "@/components/NavigationBar/NavigationBar";
 import {
   AuthentificationContext,
@@ -14,6 +15,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <AuthentificationContextProvider>
         <>
           <ChatContextProvider>
+            <Chat />
             <NavigationBar
               navigationItems={[
                 { name: "Clients", routeName: "clients" },

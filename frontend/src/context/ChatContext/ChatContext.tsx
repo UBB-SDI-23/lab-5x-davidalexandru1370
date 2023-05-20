@@ -5,11 +5,11 @@ import { createSignalRContext } from "react-signalr";
 
 interface IChatContext {
   sendMessage: (message: Message) => void;
-  receiveMessage: () => Message[];
+  messages: Message[];
 }
 
 export const ChatContext = createContext<IChatContext>({
-  receiveMessage: () => [],
+  messages: [],
   sendMessage: (message) => {},
 });
 
@@ -52,7 +52,7 @@ export const ChatContextProvider: FC<{ children: any }> = ({ children }) => {
     >
       <ChatContext.Provider
         value={{
-          receiveMessage: handleReceiveMessage,
+          messages: handleReceiveMessage(),
           sendMessage: handleSendMessage,
         }}
       >

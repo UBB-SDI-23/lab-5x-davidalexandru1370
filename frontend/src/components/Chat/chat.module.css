@@ -1,0 +1,19 @@
+.content {
+  border: 1px solid darkgreen;
+  height: 45vh;
+  min-width: 200px;
+  max-height: 500px;
+  width: 20vw;
+  max-width: 275px;
+  background-color: silver;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  right: 15%;
+  justify-content: end;
+}
+
+.sendMessageContainer {
+  width: 100%;
+}

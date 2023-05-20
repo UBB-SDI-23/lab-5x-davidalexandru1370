@@ -1,9 +1,0 @@
-@startuml
-interface IClientRepository {
-    + AddClient(client:Client) : Task
-    + RemoveClient(id:Guid) : Task
-    + UpdateClient(client:Client) : Task<Client>
-    + GetAllClients() : Task<IEnumerable<Client>>
-    + GetClientById(id:Guid) : Task<Client>
-}
-@enduml

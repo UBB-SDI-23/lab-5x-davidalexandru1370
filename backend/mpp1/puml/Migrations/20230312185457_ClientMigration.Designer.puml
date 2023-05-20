@@ -1,4 +1,0 @@
-@startuml
-class ClientMigration <<partial>> {
-}
-@enduml

@@ -1,10 +1,10 @@
 .content {
   border: 1px solid darkgreen;
   height: 45vh;
-  min-width: 200px;
+  min-width: 250px;
   max-height: 500px;
-  width: 20vw;
-  max-width: 275px;
+  width: 25vw;
+  max-width: 300px;
   background-color: silver;
   position: fixed;
   bottom: 0;
@@ -15,5 +15,17 @@
 }
 
 .sendMessageContainer {
+  border-top: 1px solid cadetblue;
   width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding-inline: 0.25em;
+  width: 100%;
+  height: 3vh;
+  max-height: 20px;
+  background-color: springgreen;
 }

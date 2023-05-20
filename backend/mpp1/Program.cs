@@ -5,12 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using mpp1.DatabaseContext;
+using mpp1.ExtensionMethods;
 using mpp1.Identity;
 using mpp1.Repository;
 using mpp1.Repository.Interfaces;
 using mpp1.Serialization;
 using mpp1.Service;
 using mpp1.Service.Interfaces;
+using mpp1.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -53,6 +55,7 @@ builder.Services.AddScoped<IVehicleRentService, VehicleRentService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddTransient<IAuthorizationHandler, RolesInDbAuthorizationHandler>();
+builder.Services.AddSignalR();
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
@@ -81,6 +84,8 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+
+
 var app = builder.Build();
 
 var frontendBaseUrl = app.Configuration.GetSection("Frontend")
@@ -89,7 +94,7 @@ var frontendBaseUrl = app.Configuration.GetSection("Frontend")
     .Value!;
 
 app.UseCors(options =>
-    options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+    options.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials()
 );
 
 if (app.Environment.IsDevelopment())
@@ -109,8 +114,9 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<RentACarDbContext>();
-    Console.WriteLine(dbContext.Database.GetConnectionString());
-    dbContext.Database.Migrate();
+    await dbContext.Database.MigrateAsync();
 }
+
+app.MapHub<MessageHub>("/api/chat");
 
 app.Run();

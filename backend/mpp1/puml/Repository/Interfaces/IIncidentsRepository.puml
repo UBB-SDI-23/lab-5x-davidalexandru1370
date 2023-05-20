@@ -1,9 +1,0 @@
-@startuml
-interface IIncidentsRepository {
-    + AddIncident(incident:Incident) : Task
-    + RemoveIncident(id:Guid) : Task
-    + GetAllIncidents() : Task<IEnumerable<Incident>>
-    + GetIncidentById(id:Guid) : Task<Incident>
-    + GetIncidentsByVehicleId(vehicleId:Guid) : Task<IEnumerable<Incident>>
-}
-@enduml

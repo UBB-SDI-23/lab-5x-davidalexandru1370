@@ -1,5 +1,0 @@
-@startuml
-class AddedFabricationDate <<partial>> {
-}
-Migration <|-- AddedFabricationDate
-@enduml

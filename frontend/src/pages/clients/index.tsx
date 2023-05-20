@@ -170,6 +170,7 @@ export default function Clients() {
           {width > 800 ? (
             <>
               <TableContainer
+                key={width}
                 component={Paper}
                 sx={{ paddingInline: "2rem", minHeight: "60vh" }}
               >

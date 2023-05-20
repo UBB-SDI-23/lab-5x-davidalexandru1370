@@ -13,6 +13,7 @@ export const vehicleController = "vehicle/";
 export const incidentController = "incidents/";
 export const rentsController = "vehiclerent/";
 export const userController = "user/";
+export const chatHub = "chat/";
 
 export enum Methods {
   POST = "POST",

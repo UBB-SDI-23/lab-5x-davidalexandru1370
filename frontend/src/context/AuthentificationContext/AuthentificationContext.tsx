@@ -36,7 +36,6 @@ export const AuthentificationContextProvider: FC<{ children: any }> = ({
       authorize(localStorage.getItem("token")!).then((x) => {
         setUser(x);
         setIsAuthentificated(true);
-        console.log(x.numberOfItemsPerPage!);
         setTake(x.numberOfItemsPerPage!);
       });
     }

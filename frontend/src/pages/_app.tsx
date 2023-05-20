@@ -12,8 +12,8 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <div style={{ backgroundColor: "#282828", height: "100vh" }}>
       <AuthentificationContextProvider>
-        <ChatContextProvider>
-          <>
+        <>
+          <ChatContextProvider>
             <NavigationBar
               navigationItems={[
                 { name: "Clients", routeName: "clients" },
@@ -23,8 +23,8 @@ export default function App({ Component, pageProps }: AppProps) {
             />
             <ToastContainer />
             <Component {...pageProps} />
-          </>
-        </ChatContextProvider>
+          </ChatContextProvider>
+        </>
       </AuthentificationContextProvider>
     </div>
   );

@@ -50,6 +50,7 @@ export const ChatContextProvider: FC<{ children: any }> = ({ children }) => {
         connection.start().then(() => {});
       } else {
         connection.on("SendMessageToEveryone", (message: Message) => {
+          //setMessages([...allMessages,message])
           setNewMessage(message);
         });
       }

@@ -1,16 +1,15 @@
 import { baseUrl, chatHub } from "@/constants/ApiConstants";
 import { Message } from "@/model/Message";
-import signalR from "@microsoft/signalr";
-import React, { FC, createContext, useEffect, useState } from "react";
+import { FC, createContext, useEffect, useState } from "react";
 import { createSignalRContext } from "react-signalr";
 
 interface IChatContext {
   sendMessage: (message: Message) => void;
-  receiveMessage: (message: Message) => void;
+  receiveMessage: () => Message[];
 }
 
-export const chatContext = createContext<IChatContext>({
-  receiveMessage: (message) => {},
+export const ChatContext = createContext<IChatContext>({
+  receiveMessage: () => [],
   sendMessage: (message) => {},
 });
 
@@ -18,6 +17,19 @@ export const ChatContextProvider: FC<{ children: any }> = ({ children }) => {
   const SignalRContext = createSignalRContext();
   const [messages, setMessages] = useState<Message[]>([]);
   const url = baseUrl + chatHub;
+  const connection = SignalRContext.connection;
+
+  const handleReceiveMessage = () => {
+    return messages;
+  };
+
+  const handleSendMessage = async (message: Message) => {
+    if (connection !== null) {
+      await connection.invoke("SendMessageToEveryone", message).then(() => {
+        setMessages([...messages, message]);
+      });
+    }
+  };
 
   useEffect(() => {
     const connection = SignalRContext.connection;
@@ -25,7 +37,7 @@ export const ChatContextProvider: FC<{ children: any }> = ({ children }) => {
       SignalRContext.connection?.on(
         "SendMessageToEveryone",
         (message: Message) => {
-          console.log(message);
+          setMessages([...messages, message]);
         }
       );
     }
@@ -34,17 +46,18 @@ export const ChatContextProvider: FC<{ children: any }> = ({ children }) => {
   return (
     <SignalRContext.Provider
       connectEnabled={true}
-      onOpen={() => {
-        SignalRContext.invoke("SendMessageToEveryone", {
-          text: "merge",
-          username: "david",
-        } as Message);
-      }}
       url={url}
       transport={1}
       skipNegotiation={false}
     >
-      {children}
+      <ChatContext.Provider
+        value={{
+          receiveMessage: handleReceiveMessage,
+          sendMessage: handleSendMessage,
+        }}
+      >
+        {children}
+      </ChatContext.Provider>
     </SignalRContext.Provider>
   );
 };

@@ -154,7 +154,7 @@ export const VehicleModal: FC<IVehicleModalProps> = ({
               fabricationDate: fabricationDate!,
               horsePower: horsePower,
               numberOfSeats: numberOfSeats,
-              ownerName: "",
+              owner: { userId: "", username: "" },
             });
             handleOnClose();
           }}
@@ -178,7 +178,10 @@ const style = {
   left: "50%",
   minHeight: "35%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: {
+    xs: 300,
+    md: 400,
+  },
   backgroundImage: "linear-gradient(to bottom right, #0097b9, #8769ae)",
   border: "2px solid #000",
   boxShadow: 24,

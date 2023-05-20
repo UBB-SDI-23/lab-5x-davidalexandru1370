@@ -27,7 +27,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {
   addVehicle,
@@ -37,6 +37,7 @@ import {
 } from "../api/VehicleApi";
 import styles from "./vehicles.module.css";
 import { isElementVisibleForUser } from "@/utilities/utilities";
+import usePageWidth from "@/hooks/usePageWidth";
 
 export default function Vehicles() {
   const router = useRouter();
@@ -50,6 +51,8 @@ export default function Vehicles() {
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleDto>();
   const { isAuthentificated, userDto, reFetch, skip, take, setTake, setSkip } =
     useContext(AuthentificationContext);
+  const width = usePageWidth();
+
   useEffect(() => {
     if (isAreYouSureModalOpen === true || isVehicleModalOpen === true) {
       return;
@@ -58,6 +61,21 @@ export default function Vehicles() {
       setVehicles(v);
     });
   }, [isAreYouSureModalOpen, isVehicleModalOpen, skip, take]);
+
+  const handleOnUpdate = (vehicle: VehicleDto) => {
+    setSelectedVehicle(vehicle);
+    setIsVehicleModalOpen(true);
+  };
+
+  const handleOnDelete = (vehicle: VehicleDto) => {
+    setSelectedVehicle(vehicle);
+    setIsAreYouSureModalOpen(true);
+  };
+
+  const handleShowIncidents = (vehicle: VehicleDto) => {
+    setSelectedVehicle(vehicle);
+    setIsIncidentModalOpen(true);
+  };
 
   return (
     <div>
@@ -74,7 +92,8 @@ export default function Vehicles() {
             try {
               const updatedVehicle = await updateVehicle({
                 ...vehicle,
-                id: selectedVehicle.id,
+                userId: selectedVehicle.owner.userId,
+                id: selectedVehicle!.id!,
               });
 
               const updatedVehicleList =
@@ -121,7 +140,16 @@ export default function Vehicles() {
         }}
         onOkClick={async () => {
           try {
-            await deleteVehicleById(selectedVehicle!.id!);
+            await deleteVehicleById({
+              brand: selectedVehicle!.brand,
+              carPlate: selectedVehicle!.carPlate,
+              engineCapacity: selectedVehicle!.engineCapacity,
+              fabricationDate: selectedVehicle!.fabricationDate,
+              horsePower: selectedVehicle!.horsePower,
+              id: selectedVehicle!.id!,
+              numberOfSeats: selectedVehicle!.numberOfSeats,
+              userId: selectedVehicle!.owner.userId,
+            });
             toast("Deleted succesfully!", {
               type: "success",
             });
@@ -179,89 +207,189 @@ export default function Vehicles() {
                 }}
               >
                 <AddIcon />
-                <Typography sx={{ marginTop: "3px" }}>Add vehicle</Typography>
+                <Typography sx={{ marginTop: "3px" }} id="vehicle-modal-button">
+                  Add vehicle
+                </Typography>
               </Box>
             </Box>
           )}
-          <TableContainer component={Paper} sx={{ paddingInline: "2rem" }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Brand</TableCell>
-                  <TableCell>Horse Power</TableCell>
-                  <TableCell>Car Plate</TableCell>
-                  <TableCell>Seats</TableCell>
-                  <TableCell>Engine Capacity</TableCell>
-                  <TableCell>Fabrication Date</TableCell>
-                  <TableCell>Number of incidents</TableCell>
-                  <TableCell>Owner name</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
+          {width > 800 ? (
+            <>
+              <TableContainer component={Paper} sx={{ paddingInline: "2rem" }}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Brand</TableCell>
+                      <TableCell>Horse Power</TableCell>
+                      <TableCell>Car Plate</TableCell>
+                      <TableCell>Seats</TableCell>
+                      <TableCell>Engine Capacity</TableCell>
+                      <TableCell>Fabrication Date</TableCell>
+                      <TableCell>Number of incidents</TableCell>
+                      <TableCell>Owner name</TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {vehicles.elements.map((vehicle) => {
+                      return (
+                        <TableRow key={vehicle.id}>
+                          <TableCell>{vehicle.brand}</TableCell>
+                          <TableCell>{vehicle.horsePower}</TableCell>
+                          <TableCell>{vehicle.carPlate}</TableCell>
+                          <TableCell>{vehicle.numberOfSeats}</TableCell>
+                          <TableCell>{vehicle.engineCapacity}</TableCell>
+                          <TableCell>{vehicle.fabricationDate}</TableCell>
+                          <TableCell>{vehicle.numberOfIncidents}</TableCell>
+                          <TableCell>
+                            {
+                              <Link href={`/user/${vehicle.owner.username}`}>
+                                {vehicle.owner.username}
+                              </Link>
+                            }
+                          </TableCell>
+                          {isElementVisibleForUser(
+                            userDto,
+                            isAuthentificated,
+                            vehicle.owner.username
+                          ) && (
+                            <>
+                              <TableCell>
+                                <ClearIcon
+                                  sx={{
+                                    color: "red",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => {
+                                    setSelectedVehicle(vehicle);
+                                    setIsAreYouSureModalOpen(true);
+                                  }}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <EditIcon
+                                  sx={{ cursor: "pointer" }}
+                                  onClick={() => {
+                                    setSelectedVehicle(vehicle);
+                                    setIsVehicleModalOpen(true);
+                                  }}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <RemoveRedEyeIcon
+                                  sx={{ cursor: "pointer" }}
+                                  onClick={() => {
+                                    setSelectedVehicle(vehicle);
+                                    setIsIncidentModalOpen(true);
+                                  }}
+                                />
+                              </TableCell>
+                            </>
+                          )}
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </>
+          ) : (
+            <>
+              <Box>
                 {vehicles.elements.map((vehicle) => {
                   return (
-                    <TableRow key={vehicle.id}>
-                      <TableCell>{vehicle.brand}</TableCell>
-                      <TableCell>{vehicle.horsePower}</TableCell>
-                      <TableCell>{vehicle.carPlate}</TableCell>
-                      <TableCell>{vehicle.numberOfSeats}</TableCell>
-                      <TableCell>{vehicle.engineCapacity}</TableCell>
-                      <TableCell>{vehicle.fabricationDate}</TableCell>
-                      <TableCell>{vehicle.numberOfIncidents}</TableCell>
-                      <TableCell>
-                        {
+                    <Box>
+                      <Box
+                        sx={{
+                          padding: "1rem",
+                          display: "flex",
+                          flexDirection: "column",
+                          backgroundColor: "white",
+                          gap: "20px",
+                          borderTop: "1px solid white",
+                        }}
+                      >
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Brand:</Typography>
+                          <Typography>{vehicle.brand}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Horse Power:</Typography>
+                          <Typography>{vehicle.horsePower}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Car Plate:</Typography>
+                          <Typography>{vehicle.carPlate}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Seats:</Typography>
+                          <Typography>{vehicle.numberOfSeats}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Engine Capacity:</Typography>
+                          <Typography>{vehicle.engineCapacity}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Fabrication Date:</Typography>
+                          <Typography>{vehicle.fabricationDate}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Number of Incidents:</Typography>
+                          <Typography>{vehicle.numberOfIncidents}</Typography>
+                        </Box>
+                        <Box sx={vehicleRowStyle}>
+                          <Typography>Owner Name:</Typography>
                           <Link href={`/user/${vehicle.owner.username}`}>
                             {vehicle.owner.username}
                           </Link>
-                        }
-                      </TableCell>
+                        </Box>
+                      </Box>
                       {isElementVisibleForUser(
                         userDto,
                         isAuthentificated,
                         vehicle.owner.username
                       ) && (
-                        <>
-                          <TableCell>
-                            <ClearIcon
-                              sx={{
-                                color: "red",
-                                cursor: "pointer",
-                              }}
-                              onClick={() => {
-                                setSelectedVehicle(vehicle);
-                                setIsAreYouSureModalOpen(true);
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <EditIcon
-                              sx={{ cursor: "pointer" }}
-                              onClick={() => {
-                                setSelectedVehicle(vehicle);
-                                setIsVehicleModalOpen(true);
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <RemoveRedEyeIcon
-                              sx={{ cursor: "pointer" }}
-                              onClick={() => {
-                                setSelectedVehicle(vehicle);
-                                setIsIncidentModalOpen(true);
-                              }}
-                            />
-                          </TableCell>
-                        </>
+                        <Box
+                          sx={{
+                            backgroundColor: "white",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            padding: "0.5em",
+                          }}
+                        >
+                          <ClearIcon
+                            sx={{
+                              color: "red",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              handleOnDelete(vehicle);
+                            }}
+                          />
+                          <EditIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              handleOnUpdate(vehicle);
+                            }}
+                          />
+                          <RemoveRedEyeIcon
+                            sx={{ cursor: "pointer" }}
+                            onClick={() => {
+                              handleShowIncidents(vehicle);
+                            }}
+                          />
+                        </Box>
                       )}
-                    </TableRow>
+                    </Box>
                   );
                 })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                <Box sx={{ borderTop: "1px solid white" }} />
+              </Box>
+            </>
+          )}
+
           <Box component={Paper}>
             <Pagination
               take={take}
@@ -289,4 +417,9 @@ const paginationButtons = {
 
 const paginationButton = {
   minWidth: "100px",
+};
+
+const vehicleRowStyle = {
+  display: "flex",
+  justifyContent: "space-between",
 };

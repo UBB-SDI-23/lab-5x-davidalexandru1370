@@ -202,19 +202,21 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
           filterOptions={(x) => x}
           onInputChange={handleVehicleAutocompleteInputChange}
           onChange={(event, value) => {
-            vehicleRentDispatch({
-              type: VehicleRentActionKind.UPDATE,
-              payload: {
-                vehicleId: value?.id || "",
-              },
-            });
+            if (value) {
+              vehicleRentDispatch({
+                type: VehicleRentActionKind.UPDATE,
+                payload: {
+                  vehicleId: value.id,
+                },
+              });
+            }
           }}
         />
         <DatePicker
           label="Start date"
           defaultValue={new Date(vehicleRent?.startDate || "")}
           sx={textFieldStyle}
-          onChange={() => {
+          onChange={(e) => {
             try {
               //@ts-ignore
               const date: string = (e.$d as Date).toISOString().split("T")[0];
@@ -278,16 +280,17 @@ export const VehicleRentsModal: FC<IVehicleRentsModalProps> = ({
           onClick={async () => {
             try {
               await onSubmitClick(vehicleRentState);
+              handleOnClose();
             } catch (error) {}
           }}
           sx={button}
           disabled={
+            checkIfAllInputFieldsAreValid() === false ||
             vehicleRentState.vehicleId === "" ||
             vehicleRentState.clientId === "" ||
             vehicleRentState.endDate === "" ||
             vehicleRentState.startDate === "" ||
-            vehicleRentState.totalCost === 0 ||
-            checkIfAllInputFieldsAreValid() === false
+            vehicleRentState.totalCost === 0
           }
         >
           {method === VehicleModalMethodsEnum.ADD ? "Add" : "Update"}
@@ -307,7 +310,10 @@ const style = {
   left: "50%",
   minHeight: "35%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: {
+    xs: 300,
+    md: 400,
+  },
   backgroundImage: "linear-gradient(to bottom right, #0097b9, #8769ae)",
   border: "2px solid #000",
   boxShadow: 24,

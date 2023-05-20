@@ -5,6 +5,7 @@ import {
   VehicleRentsModal,
 } from "@/components/VehicleRentsModal/VehicleRentsModal";
 import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
+import usePageWidth from "@/hooks/usePageWidth";
 import IPagination from "@/model/Pagination";
 import VehicleRentDto from "@/model/VehicleRentDto";
 import { isElementVisibleForUser } from "@/utilities/utilities";
@@ -45,6 +46,18 @@ export default function Rents() {
   const parentContainerRef = useRef<HTMLDivElement>(null);
   const { isAuthentificated, userDto, reFetch, skip, take, setSkip, setTake } =
     useContext(AuthentificationContext);
+  const width = usePageWidth();
+
+  const handleOnUpdate = (rent: VehicleRentDto) => {
+    setSelectedVehicleRent(rent);
+    setIsVehicleRentsModalOpen(true);
+  };
+
+  const handleOnDelete = (rent: VehicleRentDto) => {
+    setSelectedVehicleRent(rent);
+    setIsAreYouSureModalOpen(true);
+  };
+
   useEffect(() => {
     if (rents !== undefined) {
       return;
@@ -52,7 +65,7 @@ export default function Rents() {
     getRentsPaginated(skip, take).then((r) => {
       setRents(r);
     });
-  }, [skip]);
+  }, [skip, rents]);
 
   useEffect(() => {
     getRentsPaginated(skip, take).then((r) => {
@@ -71,7 +84,13 @@ export default function Rents() {
           setIsAreYouSureModalOpen(false);
         }}
         onOkClick={async () => {
-          await deleteVehicleRentById(selectedVehicleRent!.id!);
+          await deleteVehicleRentById({
+            endDate: selectedVehicleRent!.endDate,
+            id: selectedVehicleRent!.id!,
+            startDate: selectedVehicleRent!.startDate,
+            totalCost: selectedVehicleRent!.totalCost,
+            userId: selectedVehicleRent!.owner!.userId!,
+          });
           setRents(undefined);
           setIsAreYouSureModalOpen(false);
         }}
@@ -174,69 +193,156 @@ export default function Rents() {
               paddingTop: "2rem",
             }}
           >
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Car Plate</TableCell>
-                  <TableCell>Client Name</TableCell>
-                  <TableCell>Start Date</TableCell>
-                  <TableCell>End Date</TableCell>
-                  <TableCell>Total Cost</TableCell>
-                  <TableCell>Rented times</TableCell>
-                  <TableCell>Owner name</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rents.elements.map((rent) => {
-                  return (
-                    <TableRow key={rent.id}>
-                      <TableCell>{rent.vehicle?.carPlate}</TableCell>
-                      <TableCell>{rent.client?.name}</TableCell>
-                      <TableCell>{rent.startDate.toString()}</TableCell>
-                      <TableCell>{rent.endDate.toString()}</TableCell>
-                      <TableCell>{rent.totalCost}</TableCell>
-                      <TableCell>{rent.numberOfTimesRented}</TableCell>
-                      <TableCell>
-                        <Link href={`/user/${rent.owner.username}`}>
-                          {rent.owner.username}
-                        </Link>
-                      </TableCell>
-                      {isElementVisibleForUser(
-                        userDto,
-                        isAuthentificated,
-                        rent.owner.username
-                      ) && (
-                        <>
+            {width > 800 ? (
+              <>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Car Plate</TableCell>
+                      <TableCell>Client Name</TableCell>
+                      <TableCell>Start Date</TableCell>
+                      <TableCell>End Date</TableCell>
+                      <TableCell>Total Cost</TableCell>
+                      <TableCell>Rented times</TableCell>
+                      <TableCell>Owner name</TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {rents.elements.map((rent) => {
+                      return (
+                        <TableRow key={rent.id}>
+                          <TableCell>{rent.vehicle?.carPlate}</TableCell>
+                          <TableCell>{rent.client?.name}</TableCell>
+                          <TableCell>{rent.startDate.toString()}</TableCell>
+                          <TableCell>{rent.endDate.toString()}</TableCell>
+                          <TableCell>{rent.totalCost}</TableCell>
+                          <TableCell>{rent.numberOfTimesRented}</TableCell>
                           <TableCell>
+                            <Link href={`/user/${rent.owner.username}`}>
+                              {rent.owner.username}
+                            </Link>
+                          </TableCell>
+                          {isElementVisibleForUser(
+                            userDto,
+                            isAuthentificated,
+                            rent.owner.username
+                          ) && (
+                            <>
+                              <TableCell>
+                                <ClearIcon
+                                  sx={{
+                                    color: "red",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => {
+                                    setSelectedVehicleRent(rent);
+                                    setIsAreYouSureModalOpen(true);
+                                  }}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <EditIcon
+                                  sx={{ cursor: "pointer" }}
+                                  onClick={() => {
+                                    setSelectedVehicleRent(rent);
+                                    setIsVehicleRentsModalOpen(true);
+                                  }}
+                                />
+                              </TableCell>
+                            </>
+                          )}
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </>
+            ) : (
+              <>
+                <Box sx={{ width: "100%" }}>
+                  {rents.elements.map((rent) => {
+                    return (
+                      <Box>
+                        <Box
+                          sx={{
+                            padding: "1rem",
+                            display: "flex",
+                            flexDirection: "column",
+                            backgroundColor: "white",
+                            gap: "20px",
+                            borderTop: "1px solid white",
+                          }}
+                        >
+                          <Box sx={vehicleRowStyle}>
+                            <Typography>Car Plate:</Typography>
+                            <Typography>{rent.vehicle?.carPlate}</Typography>
+                          </Box>
+                          <Box sx={vehicleRowStyle}>
+                            <Typography>Client Name:</Typography>
+                            <Typography>{rent.client?.name}</Typography>
+                          </Box>
+                          <Box sx={vehicleRowStyle}>
+                            <Typography>Start Date:</Typography>
+                            <Typography>{rent.startDate.toString()}</Typography>
+                          </Box>
+                          <Box sx={vehicleRowStyle}>
+                            <Typography>End Date:</Typography>
+                            <Typography>{rent.endDate.toString()}</Typography>
+                          </Box>
+                          <Box sx={vehicleRowStyle}>
+                            <Typography>Total Cost:</Typography>
+                            <Typography>{rent.totalCost}</Typography>
+                          </Box>
+                          <Box sx={vehicleRowStyle}>
+                            <Typography>Rented times:</Typography>
+                            <Typography>{rent.numberOfTimesRented}</Typography>
+                          </Box>
+                          <Box sx={vehicleRowStyle}>
+                            <Typography>Owner name:</Typography>
+                            <Link href={`/user/${rent.owner.username}`}>
+                              {rent.owner.username}
+                            </Link>
+                          </Box>
+                        </Box>
+                        {isElementVisibleForUser(
+                          userDto,
+                          isAuthentificated,
+                          rent.owner.username
+                        ) && (
+                          <Box
+                            sx={{
+                              backgroundColor: "white",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              padding: "0.5em",
+                            }}
+                          >
                             <ClearIcon
                               sx={{
                                 color: "red",
                                 cursor: "pointer",
                               }}
                               onClick={() => {
-                                setSelectedVehicleRent(rent);
-                                setIsAreYouSureModalOpen(true);
+                                handleOnDelete(rent);
                               }}
                             />
-                          </TableCell>
-                          <TableCell>
                             <EditIcon
                               sx={{ cursor: "pointer" }}
                               onClick={() => {
-                                setSelectedVehicleRent(rent);
-                                setIsVehicleRentsModalOpen(true);
+                                handleOnUpdate(rent);
                               }}
                             />
-                          </TableCell>
-                        </>
-                      )}
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                          </Box>
+                        )}
+                      </Box>
+                    );
+                  })}
+                  <Box sx={{ borderTop: "1px solid white" }} />
+                </Box>
+              </>
+            )}
             <Box component={Paper}>
               <Pagination
                 totalNumberOfElements={rents.totalNumberOfElements}
@@ -255,3 +361,8 @@ export default function Rents() {
     </div>
   );
 }
+
+const vehicleRowStyle = {
+  display: "flex",
+  justifyContent: "space-between",
+};

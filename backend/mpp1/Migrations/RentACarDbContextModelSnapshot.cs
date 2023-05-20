@@ -92,6 +92,20 @@ namespace mpp1.Migrations
                     b.ToTable("Incidents");
                 });
 
+            modelBuilder.Entity("mpp1.Model.Preferences", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("NumberOfItemsPerPage")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Preferences");
+                });
+
             modelBuilder.Entity("mpp1.Model.TokenValidationUser", b =>
                 {
                     b.Property<Guid>("Id")
@@ -125,6 +139,9 @@ namespace mpp1.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.ToTable("User");
@@ -150,9 +167,6 @@ namespace mpp1.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("MaritalStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Role")
                         .HasColumnType("integer");
 
                     b.HasKey("UserId");

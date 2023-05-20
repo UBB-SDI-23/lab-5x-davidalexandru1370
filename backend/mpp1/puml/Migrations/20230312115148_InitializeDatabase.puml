@@ -1,5 +1,0 @@
-@startuml
-class InitializeDatabase <<partial>> {
-}
-Migration <|-- InitializeDatabase
-@enduml

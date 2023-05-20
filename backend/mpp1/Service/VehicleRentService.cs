@@ -22,9 +22,9 @@ public class VehicleRentService : IVehicleRentService
         await _vehicleRentRepository.AddVehicleRent(vehicleRent);
     }
 
-    public async Task DeleteVehicleRent(Guid vehicleRentId)
+    public async Task DeleteVehicleRent(VehicleRent vehicleRent)
     {
-        await _vehicleRentRepository.DeleteVehicleRent(vehicleRentId);
+        await _vehicleRentRepository.DeleteVehicleRent(vehicleRent);
     }
 
     public async Task<VehicleRent> UpdateVehicleRent(VehicleRent vehicleRent)

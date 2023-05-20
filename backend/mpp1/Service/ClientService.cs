@@ -20,9 +20,9 @@ public class ClientService : IClientService
         await _clientRepository.AddClient(client);
     }
 
-    public async Task RemoveClient(Guid id)
+    public async Task RemoveClient(Client client)
     {
-        await _clientRepository.RemoveClient(id);
+        await _clientRepository.RemoveClient(client);
     }
 
     public async Task<Client> UpdateClient(Client client)

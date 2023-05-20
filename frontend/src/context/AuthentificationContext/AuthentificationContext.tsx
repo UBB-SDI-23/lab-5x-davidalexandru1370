@@ -1,5 +1,5 @@
 import { UserDto } from "@/model/UserDto";
-import { authorize } from "@/pages/api/UserApi";
+import { authorize, changeNumberOfItemsPerPage } from "@/pages/api/UserApi";
 import { FC, createContext, useEffect, useState } from "react";
 
 interface IAuthentificationContext {
@@ -16,8 +16,8 @@ export const AuthentificationContext = createContext<IAuthentificationContext>({
   isAuthentificated: false,
   userDto: undefined,
   reFetch: () => {},
-  skip: 12,
-  take: 0,
+  skip: 0,
+  take: 12,
   setTake: (value) => {},
   setSkip: (value) => {},
 });
@@ -36,6 +36,7 @@ export const AuthentificationContextProvider: FC<{ children: any }> = ({
       authorize(localStorage.getItem("token")!).then((x) => {
         setUser(x);
         setIsAuthentificated(true);
+        setTake(x.numberOfItemsPerPage!);
       });
     }
   }, [rerender]);
@@ -53,8 +54,9 @@ export const AuthentificationContextProvider: FC<{ children: any }> = ({
         setSkip: (value) => {
           setSkip(value);
         },
-        setTake: (value) => {
+        setTake: async (value) => {
           setTake(value);
+          await changeNumberOfItemsPerPage(value);
         },
       }}
     >

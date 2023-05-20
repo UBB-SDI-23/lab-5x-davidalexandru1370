@@ -1,12 +1,18 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using mpp1.DatabaseContext;
+using mpp1.ExtensionMethods;
+using mpp1.Identity;
 using mpp1.Repository;
 using mpp1.Repository.Interfaces;
 using mpp1.Serialization;
 using mpp1.Service;
 using mpp1.Service.Interfaces;
+using mpp1.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -32,8 +38,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<RentACarDbContext>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseNpgsql(connectionString);
+});
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
-builder.Services.AddDbContext<RentACarDbContext>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
@@ -43,15 +54,47 @@ builder.Services.AddScoped<IVehicleRentRepository, VehicleRentRepository>();
 builder.Services.AddScoped<IVehicleRentService, VehicleRentService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddTransient<IAuthorizationHandler, RolesInDbAuthorizationHandler>();
+builder.Services.AddSignalR();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        In = ParameterLocation.Header,
+        Description = "JWT",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme()
+            {
+                Reference = new OpenApiReference()
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new List<string>()
+        }
+    });
+});
+
+
 
 var app = builder.Build();
+
 var frontendBaseUrl = app.Configuration.GetSection("Frontend")
     .GetSection(app.Environment.EnvironmentName)
     .GetSection("BaseUrl")
     .Value!;
 
 app.UseCors(options =>
-    options.WithOrigins(frontendBaseUrl).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+    options.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials()
 );
 
 if (app.Environment.IsDevelopment())
@@ -63,9 +106,17 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 
 app.UseAuthorization();
- 
-app.UseHttpsRedirection();
+
+//app.UseHttpsRedirection();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<RentACarDbContext>();
+    await dbContext.Database.MigrateAsync();
+}
+
+app.MapHub<MessageHub>("/api/chat");
 
 app.Run();

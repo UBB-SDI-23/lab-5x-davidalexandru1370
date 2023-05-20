@@ -1,7 +1,0 @@
-@startuml
-class RepositoryException {
-    + RepositoryException(message:string)
-    + RepositoryException()
-}
-Exception <|-- RepositoryException
-@enduml

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using mpp1.DatabaseContext;
+using mpp1.Enums;
 using mpp1.Exceptions;
 using mpp1.Model;
 using mpp1.Model.DTO;
@@ -140,7 +141,9 @@ public class UserRepository : IUserRepository
 
     public async Task<UserDto> GetUserDataByUsername(string username)
     {
-        var user = await _rentACarDbContext.Set<UserProfile>().Where(u => u.User.Name == username).Include(x => x.User)
+        var user = await _rentACarDbContext.Set<UserProfile>()
+            .Where(u => u.User.Name == username)
+            .Include(x => x.User)
             .FirstOrDefaultAsync();
 
         if (user is null)
@@ -156,7 +159,7 @@ public class UserRepository : IUserRepository
             Location = user.Location,
             Username = user.User.Name,
             MaritalStatus = user.MaritalStatus,
-            Role = user.Role
+            Role = user.User.Role
         };
 
         return userDto;
@@ -164,12 +167,21 @@ public class UserRepository : IUserRepository
 
     public Task<UserDto> GetUserDataByIdAsync(Guid userId)
     {
-        var user = _rentACarDbContext.Set<UserProfile>().Where(u => u.UserId == userId).Include(u => u.User)
+        var user = _rentACarDbContext.Set<UserProfile>()
+            .Where(u => u.UserId == userId)
+            .Include(u => u.User)
             .FirstOrDefault();
 
         if (user is null)
         {
             throw new RepositoryException("Invalid user");
+        }
+
+        int numberOfItemsPerPage = 12;
+
+        if (_rentACarDbContext.Set<Preferences>().Count() > 0)
+        {
+            numberOfItemsPerPage = _rentACarDbContext.Set<Preferences>().FirstOrDefault().NumberOfItemsPerPage;
         }
 
         var result = new UserDto()
@@ -178,12 +190,39 @@ public class UserRepository : IUserRepository
             Birthday = user.Birthday,
             Gender = user.Gender,
             Location = user.Location,
+            NumberOfItemsPerPage = numberOfItemsPerPage,
             Username = user.User.Name,
             MaritalStatus = user.MaritalStatus,
-            Role = user.Role
+            Role = user.User.Role
         };
 
 
         return Task.FromResult(result);
+    }
+
+    public async Task ChangeUserRole(string userName, RolesEnum newRole)
+    {
+        var user = await GetUserByNameAsync(userName);
+
+        user.Role = newRole;
+
+        await _rentACarDbContext.SaveChangesAsync();
+    }
+
+    public async Task UpdateNumberOfItemsPerPage(int numberOfItemsPerPage)
+    {
+        if (_rentACarDbContext.Set<Preferences>().Count() == 0)
+        {
+            await _rentACarDbContext.Set<Preferences>().AddAsync(new Preferences()
+            {
+                NumberOfItemsPerPage = numberOfItemsPerPage
+            });
+        }
+        else
+        {
+            _rentACarDbContext.Set<Preferences>().FirstOrDefault().NumberOfItemsPerPage = numberOfItemsPerPage;
+        }
+
+        await _rentACarDbContext.SaveChangesAsync();
     }
 }

@@ -37,9 +37,9 @@ export const filterVehiclesByEngineCapacity = async (capacity: number) => {
   return data;
 };
 
-export const deleteVehicleById = async (vehicleId: string) => {
-  let url = baseUrl + VehicleEndpoints.deleteVehicle(vehicleId);
-  let header = createHeader(Methods.DELETE);
+export const deleteVehicleById = async (vehicle: Vehicle) => {
+  let url = baseUrl + VehicleEndpoints.deleteVehicle;
+  let header = createHeader(Methods.DELETE, vehicle);
   let data = await fetch(url, header).then(async (response: Response) => {
     if (response.status >= 400) {
       return response.text().then((x) => {
@@ -96,7 +96,7 @@ export const getVehiclesByCarPlate = async (carPlate: string) => {
   return data;
 };
 
-export const updateVehicle = async (vehicle: VehicleDto) => {
+export const updateVehicle = async (vehicle: Vehicle) => {
   let url: string = baseUrl + VehicleEndpoints.updateVehicle;
   let header = createHeader(Methods.PUT, vehicle);
   let data: VehicleDto = await fetch(url, header)

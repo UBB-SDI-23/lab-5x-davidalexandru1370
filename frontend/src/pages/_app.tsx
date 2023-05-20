@@ -1,8 +1,10 @@
+import { Chat } from "@/components/Chat/Chat";
 import { NavigationBar } from "@/components/NavigationBar/NavigationBar";
 import {
   AuthentificationContext,
   AuthentificationContextProvider,
 } from "@/context/AuthentificationContext/AuthentificationContext";
+import { ChatContextProvider } from "@/context/ChatContext/ChatContext";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { ToastContainer } from "react-toastify";
@@ -12,16 +14,18 @@ export default function App({ Component, pageProps }: AppProps) {
     <div style={{ backgroundColor: "#282828", height: "100vh" }}>
       <AuthentificationContextProvider>
         <>
-          <NavigationBar
-            navigationItems={[
-              { name: "Clients", routeName: "clients" },
-              { name: "Vehicles", routeName: "vehicles" },
-              { name: "Rents", routeName: "rents" },
-            ]}
-          />
-          <ToastContainer />
-
-          <Component {...pageProps} />
+          <ChatContextProvider>
+            <Chat />
+            <NavigationBar
+              navigationItems={[
+                { name: "Clients", routeName: "clients" },
+                { name: "Vehicles", routeName: "vehicles" },
+                { name: "Rents", routeName: "rents" },
+              ]}
+            />
+            <ToastContainer />
+            <Component {...pageProps} />
+          </ChatContextProvider>
         </>
       </AuthentificationContextProvider>
     </div>

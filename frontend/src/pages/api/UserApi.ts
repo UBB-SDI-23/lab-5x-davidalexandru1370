@@ -1,4 +1,5 @@
 import { Methods, UserEndpoints, baseUrl } from "@/constants/ApiConstants";
+import { RolesEnum } from "@/enums/RolesEnum";
 import { AuthResult } from "@/model/AuthResult";
 import { LoginCredentials } from "@/model/LoginCredentials";
 import { RegisterCredentials } from "@/model/RegisterCredentials";
@@ -106,4 +107,31 @@ export const getUserDataWithStatistcs = async (username: string) => {
     });
 
   return data;
+};
+
+export const changeUserRole = async (username: string, role: RolesEnum) => {
+  let url = baseUrl + UserEndpoints.changeUserRole(username, role);
+  let header = createHeader(Methods.PUT);
+  await fetch(url, header)
+    .then(async (response: Response) => {
+      if (response.status >= 400) {
+        return await response.json();
+      }
+      return;
+    })
+    .then((x: string) => {
+      throw new Error(x);
+    });
+};
+
+export const refreshData = async () => {
+  let url = baseUrl + UserEndpoints.runDataGenerationScripts;
+  let header = createHeader(Methods.POST);
+  await fetch(url, header);
+};
+
+export const changeNumberOfItemsPerPage = async (value: number) => {
+  let url = baseUrl + UserEndpoints.changeNumberOfItemsPerPage(value);
+  let header = createHeader(Methods.PUT);
+  await fetch(url, header);
 };

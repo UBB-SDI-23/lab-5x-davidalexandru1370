@@ -1,27 +1,32 @@
+import EnumDropDown from "@/components/EnumDropDown/EnumDropDown";
+import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
+import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
+import { GenderEnum } from "@/enums/GenderEnum";
+import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
+import { RolesEnum } from "@/enums/RolesEnum";
 import { UserDto } from "@/model/UserDto";
 import {
-  getUserDataByUsername,
+  changeNumberOfItemsPerPage,
+  changeUserRole,
   getUserDataWithStatistcs,
+  refreshData,
 } from "@/pages/api/UserApi";
 import {
   Box,
+  Button,
   CircularProgress,
-  Paper,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useRouter } from "next/dist/client/router";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import styles from "../user.module.css";
-import { useRouter } from "next/dist/client/router";
-import { GenderEnum } from "@/enums/GenderEnum";
-import { MaritalStatusEnum } from "@/enums/MaritalStatusEnum";
-import { AuthentificationContext } from "@/context/AuthentificationContext/AuthentificationContext";
-import PaginationDropDown from "@/components/PaginationDropDown/PaginationDropDown";
 const User = () => {
   const router = useRouter();
   //const username = router.query.username;
-  const [user, setUser] = useState<UserDto | null>(null);
+  const [user, setUser] = useState<UserDto | undefined>(undefined);
+  const [role, setRole] = useState<RolesEnum>();
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const { isAuthentificated, userDto, reFetch, skip, take, setSkip, setTake } =
     useContext(AuthentificationContext);
@@ -41,6 +46,7 @@ const User = () => {
           router.push("/login");
         } else {
           setUser(x);
+          setRole(x.role);
           setIsFetching(false);
         }
       });
@@ -65,7 +71,7 @@ const User = () => {
 
   return (
     <div className={styles.content}>
-      <Box>
+      <Box sx={{ height: "100vh" }}>
         <TextField
           sx={{ padding: "20px" }}
           disabled
@@ -138,16 +144,59 @@ const User = () => {
           defaultValue={user!.numberOfRents}
           autoFocus
         ></TextField>
-        {isAuthentificated === true &&
-          userDto !== null &&
-          userDto?.username === user?.username && (
-            <PaginationDropDown
-              take={take.toString()}
-              handleOnChange={(e) => {
-                setTake(e);
-              }}
-            />
-          )}
+        {isAuthentificated === true && userDto !== null && (
+          <>
+            {userDto?.role === RolesEnum.Admin && user !== undefined && (
+              <>
+                <EnumDropDown
+                  dataEnum={RolesEnum}
+                  label={"Role"}
+                  defaultValue={user!.role.toString()}
+                  style={{ width: "200px" }}
+                  onChange={(value) => {
+                    setRole(value);
+                  }}
+                ></EnumDropDown>
+                <PaginationDropDown
+                  take={take.toString()}
+                  handleOnChange={async (e) => {
+                    await changeNumberOfItemsPerPage(e);
+                    setTake(e);
+                  }}
+                />
+                <Button
+                  variant="contained"
+                  onClick={async () => {
+                    await refreshData();
+                  }}
+                >
+                  Bulk delete and update
+                </Button>
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <Button
+                    variant="contained"
+                    disabled={user.role === role}
+                    onClick={async () => {
+                      try {
+                        await changeUserRole(user!.username, role!);
+                        toast("Role changed succesfully!", {
+                          type: "success",
+                        });
+                        setUser({ ...user, role: role! });
+                      } catch (error) {
+                        toast((error as Error).message, {
+                          type: "error",
+                        });
+                      }
+                    }}
+                  >
+                    Update profile
+                  </Button>
+                </Box>
+              </>
+            )}
+          </>
+        )}
       </Box>
     </div>
   );

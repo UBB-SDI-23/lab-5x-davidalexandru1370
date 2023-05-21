@@ -47,7 +47,11 @@ export const ChatContextProvider: FC<{ children: any }> = ({ children }) => {
   useEffect(() => {
     if (connection !== undefined) {
       if (connection.state === HubConnectionState.Disconnected) {
-        connection.start().then(() => {});
+        connection.start().then(() => {
+          connection.on("SendMessageToEveryone", (message: Message) => {
+            setNewMessage(message);
+          });
+        });
       } else {
         connection.on("SendMessageToEveryone", (message: Message) => {
           //setMessages([...allMessages,message])
@@ -55,7 +59,7 @@ export const ChatContextProvider: FC<{ children: any }> = ({ children }) => {
         });
       }
     }
-  }, []);
+  }, [connection]);
 
   return (
     <ChatContext.Provider

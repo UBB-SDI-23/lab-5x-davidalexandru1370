@@ -6,10 +6,10 @@ networks:
 
 services:
   backend:
-    image: docker.io/library/productionbackend
+    image: davidalexandru1370/mppbackend:v2
     depends_on:
-      "backend-db":
-        condition: service_healthy
+      - backend-db
+        
     ports:
       - "8088:5000"
     container_name: backend-service
@@ -31,12 +31,10 @@ services:
     volumes:
       - app_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
-
- 
 
 volumes:
   app_data:

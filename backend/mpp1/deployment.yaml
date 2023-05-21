@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-mpp
+  annotations:
+    kubernetes.io/change-cause: "Change from v1 to v2"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend-app
+  template:
+    metadata:
+      name: backendk8s
+      labels:
+        env: prod
+        app: backend-app
+        app.kubernetes.io/name: backend-app
+    spec:
+      containers:
+        - name: backend-app
+          image: davidalexandru1370/mppbackend:v2
+          ports:
+            - containerPort: 80
+              name: http-web-api
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 200m
+              memory: 200Mi
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+                
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-loadbalancer-service
+spec:
+  selector:
+    app.kubernetes.io/name: backend-app
+  ports:
+    - name: backend-app-port
+      protocol: TCP
+      port: 8080
+      targetPort: 80
+  type: LoadBalancer

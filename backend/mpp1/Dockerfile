@@ -14,8 +14,5 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS final-env
 WORKDIR /backend
 COPY --from=build-env /backend/out .
-RUN ls
-COPY ./entrypoint.sh  .
-RUN sed -i 's/\r$//g' entrypoint.sh
-RUN chmod +x entrypoint.sh
-ENTRYPOINT [ "./entrypoint.sh", "dotnet", "mpp1.dll" ]
+
+ENTRYPOINT [ "dotnet", "mpp1.dll" ]

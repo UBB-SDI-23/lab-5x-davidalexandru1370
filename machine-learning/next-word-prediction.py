@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from nltk.tokenize import RegexpTokenizer
-
+from flask import *
 import tensorflow as tf
 from keras.models import Sequential, load_model
 from keras.layers import LSTM, Dense, Activation
@@ -47,18 +47,18 @@ for i, words in enumerate(input_words):
         X[i, j, unique_token_index[word]] = 1
     y[i, unique_token_index[next_words[i]]] = 1
 
-model = Sequential()
-model.add(LSTM(128, input_shape=(n_words, len(
-    unique_tokens)), return_sequences=True))
-model.add(LSTM(128))
-model.add(Dense(len(unique_tokens)))
-model.add(Activation("softmax"))
+# model = Sequential()
+# model.add(LSTM(128, input_shape=(n_words, len(
+#     unique_tokens)), return_sequences=True))
+# model.add(LSTM(128))
+# model.add(Dense(len(unique_tokens)))
+# model.add(Activation("softmax"))
 
-model.compile(loss="categorical_crossentropy", optimizer=RMSprop(
-    learning_rate=0.01), metrics=["accuracy"])
-model.fit(X, y, batch_size=128, epochs=30, shuffle=True)
+# model.compile(loss="categorical_crossentropy", optimizer=RMSprop(
+#     learning_rate=0.01), metrics=["accuracy"])
+# model.fit(X, y, batch_size=128, epochs=30, shuffle=True)
 
-model.save("mymodel.h5")
+# model.save("mymodel.h5")
 model = load_model("mymodel.h5")
 
 
@@ -81,7 +81,6 @@ possible = predict_next_word("I dont know if I ", 5)
 possible2 = predict_next_word("What are you", 5)
 
 print(possible)
-print(possible2)
 
 
 def generate_text(input_text, n_words, creativity=3):
@@ -98,3 +97,12 @@ def generate_text(input_text, n_words, creativity=3):
         word_sequence.append(choice)
         current += 1
     return " ".join(word_sequence)
+
+
+app = Flask(__name__)
+
+
+@app.route('/predict-next-word')
+def get_results():
+    sentence = request.args.get('sentence')
+    return predict_next_word(sentence, 5)

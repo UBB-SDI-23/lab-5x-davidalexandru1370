@@ -20,4 +20,9 @@ public class MessageHub : Hub, IMessageHub
         await _userService.AddMessageForUser(message);
         await Clients.Others.SendAsync("SendMessageToEveryone", message);
     }
+
+    public async Task<string> SuggerateMessage(MessageDTO message)
+    {
+        
+    }
 }   

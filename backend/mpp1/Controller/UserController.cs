@@ -173,4 +173,12 @@ public class UserController : ControllerBase
         await _userService.ChangeNumberOfItemsPerPage(numberOfItemsPerPage);
         return Ok();
     }
+
+    [HttpGet]
+    [Route("get-messages-by-user/{username}")]
+    public async Task<ActionResult<IEnumerable<MessageDTO>>> GetMessagesByUser([FromRoute]string username)
+    {
+        var result = await  _userService.GetMessageByUsername(username);
+        return Ok(result);
+    }
 }

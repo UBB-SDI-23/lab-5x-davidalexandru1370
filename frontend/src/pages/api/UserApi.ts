@@ -5,7 +5,7 @@ import { LoginCredentials } from "@/model/LoginCredentials";
 import { RegisterCredentials } from "@/model/RegisterCredentials";
 import { UserDto } from "@/model/UserDto";
 import { createHeader } from "@/utilities/utilities";
-
+import { Message } from "../../model/Message";
 export const login = async (loginCredentials: LoginCredentials) => {
   let url = baseUrl + UserEndpoints.login;
   let header = createHeader(Methods.POST, loginCredentials);
@@ -134,4 +134,18 @@ export const changeNumberOfItemsPerPage = async (value: number) => {
   let url = baseUrl + UserEndpoints.changeNumberOfItemsPerPage(value);
   let header = createHeader(Methods.PUT);
   await fetch(url, header);
+};
+
+export const getMessagesByUsername = async (username: string) => {
+  let url = baseUrl + UserEndpoints.getMessagesByUser(username);
+  let header = createHeader(Methods.GET);
+  let messages = await fetch(url, header)
+    .then(async (response: Response) => {
+      return await response.json();
+    })
+    .then((messags: Message[]) => {
+      return messags;
+    });
+
+  return messages;
 };

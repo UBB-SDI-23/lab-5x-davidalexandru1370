@@ -18,4 +18,6 @@ public interface IUserRepository
     public Task<UserDto> GetUserDataByIdAsync(Guid userId);
     public Task ChangeUserRole(string userName, RolesEnum newRole);
     public Task UpdateNumberOfItemsPerPage(int numberOfItemsPerPage);
+    public Task AddMessage(MessageDTO message);
+    public Task<IEnumerable<MessageDTO>> GetMessagesByUsername(string username);
 }

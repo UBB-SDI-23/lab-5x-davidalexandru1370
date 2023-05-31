@@ -149,3 +149,18 @@ export const getMessagesByUsername = async (username: string) => {
 
   return messages;
 };
+
+export const getSuggestedMessages = async (message: string) => {
+  let url = baseUrl + UserEndpoints.getSuggestedMessages;
+  let header = createHeader(Methods.POST, message);
+
+  let suggestions = await fetch(url, header)
+    .then(async (response: Response) => {
+      return await response.json();
+    })
+    .then((suggestions: string[]) => {
+      return suggestions;
+    });
+
+  return suggestions;
+};

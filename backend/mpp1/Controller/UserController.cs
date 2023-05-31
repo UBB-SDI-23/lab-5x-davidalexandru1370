@@ -181,4 +181,14 @@ public class UserController : ControllerBase
         var result = await  _userService.GetMessageByUsername(username);
         return Ok(result);
     }
+    
+    [AllowAnonymous]
+    [HttpPost("get-suggestions-message")]
+    public async Task<IEnumerable<String>?> SuggestsMessage([FromBody] string message)
+    {
+        HttpClient httpClient = new HttpClient();
+        var response = await httpClient.GetAsync($"http://localhost:5001/predict-next-word?sentence={message}");
+        var suggestedMessages = await response.Content.ReadFromJsonAsync<IEnumerable<String>>();
+        return suggestedMessages;
+    }
 }

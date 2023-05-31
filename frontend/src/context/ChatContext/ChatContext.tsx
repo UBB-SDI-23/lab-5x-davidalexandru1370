@@ -29,6 +29,7 @@ export const ChatContextProvider: FC<{ children: any }> = ({ children }) => {
   );
 
   const [allMessages, setMessages] = useState<Message[]>([]);
+  const [suggestedMessages, setSuggestedMessages] = useState<string[]>([]);
   const { userDto } = useContext(AuthentificationContext);
   const [newMessage, setNewMessage] = useState<Message | undefined>(undefined);
   const handleSendMessage = async (message: Message) => {

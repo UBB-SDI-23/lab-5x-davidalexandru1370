@@ -8,7 +8,6 @@ namespace mpp1.SignalR;
 public class MessageHub : Hub, IMessageHub
 {
     private IUserService _userService;
-    private static HttpClient _httpClient = new HttpClient();
 
     public MessageHub(IUserService userService)
     {
@@ -21,10 +20,4 @@ public class MessageHub : Hub, IMessageHub
         await Clients.Others.SendAsync("SendMessageToEveryone", message);
     }
 
-    public async Task<IEnumerable<String>?> SuggestsMessage(MessageDTO message)
-    {
-        var response = await _httpClient.GetAsync($"http://localhost:5001/predict-next-word?sentence={message.Text}");
-        var suggestedMessages = await response.Content.ReadFromJsonAsync<IEnumerable<String>>();
-        return suggestedMessages;
-    }
 }

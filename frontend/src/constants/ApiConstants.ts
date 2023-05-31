@@ -67,6 +67,7 @@ interface UserEndpoint {
   runDataGenerationScripts: string;
   changeNumberOfItemsPerPage: (value: number) => string;
   getMessagesByUser: (username: string) => string;
+  getSuggestedMessages: string;
 }
 
 export const ClientEndpoints: ClientEndpoint = {
@@ -133,4 +134,5 @@ export const UserEndpoints: UserEndpoint = {
   getMessagesByUser: (username) => {
     return userController + "get-messages-by-user/" + username;
   },
+  getSuggestedMessages: userController + "get-suggestions-message",
 };

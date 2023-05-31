@@ -1,12 +1,13 @@
 import { baseUrl, chatHub } from "@/constants/ApiConstants";
 import { Message } from "@/model/Message";
+import { getMessagesByUsername } from "@/pages/api/UserApi";
 import {
   HubConnection,
   HubConnectionBuilder,
   HubConnectionState,
 } from "@microsoft/signalr";
-import { FC, createContext, useEffect, useState } from "react";
-import { cloneDeep } from "lodash";
+import { FC, createContext, useContext, useEffect, useState } from "react";
+import { AuthentificationContext } from "../AuthentificationContext/AuthentificationContext";
 interface IChatContext {
   sendMessage: (message: Message) => void;
   messages: Message[];
@@ -28,6 +29,8 @@ export const ChatContextProvider: FC<{ children: any }> = ({ children }) => {
   );
 
   const [allMessages, setMessages] = useState<Message[]>([]);
+  const [suggestedMessages, setSuggestedMessages] = useState<string[]>([]);
+  const { userDto } = useContext(AuthentificationContext);
   const [newMessage, setNewMessage] = useState<Message | undefined>(undefined);
   const handleSendMessage = async (message: Message) => {
     if (connection !== null) {
@@ -36,6 +39,19 @@ export const ChatContextProvider: FC<{ children: any }> = ({ children }) => {
       });
     }
   };
+
+  useEffect(() => {
+    if (userDto && userDto.username !== "") {
+      getMessagesByUsername(userDto.username).then((x) => {
+        console.log(x);
+        if (x.length === 0) {
+          setMessages([]);
+        } else {
+          setMessages(x);
+        }
+      });
+    }
+  }, [userDto]);
 
   useEffect(() => {
     if (newMessage !== undefined) {

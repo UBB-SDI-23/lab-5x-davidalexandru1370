@@ -254,4 +254,15 @@ public class UserService : IUserService
     {
         await _userRepository.UpdateNumberOfItemsPerPage(numberOfItemsPerPage);
     }
+
+    public async Task AddMessageForUser(MessageDTO message)
+    {
+        await _userRepository.AddMessage(message);
+    }
+
+    public async Task<IEnumerable<MessageDTO>> GetMessageByUsername(string username)
+    {
+        var result = await _userRepository.GetMessagesByUsername(username);
+        return result;
+    }
 }

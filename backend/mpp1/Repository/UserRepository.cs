@@ -225,4 +225,24 @@ public class UserRepository : IUserRepository
 
         await _rentACarDbContext.SaveChangesAsync();
     }
+
+    public async Task AddMessage(MessageDTO message)
+    {
+        await _rentACarDbContext.Set<Message>().AddAsync(new Message
+        {
+            Username = message.Username,
+            Text = message.Text
+        });
+        await _rentACarDbContext.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<MessageDTO>> GetMessagesByUsername(string username)
+    {
+        var result = _rentACarDbContext.Set<Message>().Where(m => m.Username == username).Select(x => new MessageDTO()
+        {
+            Text = x.Text,
+            Username = x.Username,
+        }) as IEnumerable<MessageDTO>;
+        return result;
+    }
 }

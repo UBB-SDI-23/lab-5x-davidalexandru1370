@@ -66,6 +66,8 @@ interface UserEndpoint {
   changeUserRole: (username: string, role: RolesEnum) => string;
   runDataGenerationScripts: string;
   changeNumberOfItemsPerPage: (value: number) => string;
+  getMessagesByUser: (username: string) => string;
+  getSuggestedMessages: string;
 }
 
 export const ClientEndpoints: ClientEndpoint = {
@@ -128,4 +130,9 @@ export const UserEndpoints: UserEndpoint = {
   changeNumberOfItemsPerPage: (value: number) => {
     return userController + "change-number-of-items-per-page/" + value;
   },
+
+  getMessagesByUser: (username) => {
+    return userController + "get-messages-by-user/" + username;
+  },
+  getSuggestedMessages: userController + "get-suggestions-message",
 };

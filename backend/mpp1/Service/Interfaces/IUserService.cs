@@ -16,4 +16,6 @@ public interface IUserService
     public Task ChangeUserRole(string userName, RolesEnum newRole);
     public Task RunDataGenerationScripts();
     public Task ChangeNumberOfItemsPerPage(int numberOfItemsPerPage);
+    public Task AddMessageForUser(MessageDTO message);
+    public Task<IEnumerable<MessageDTO>>  GetMessageByUsername(string username);
 }

@@ -4,11 +4,21 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ClearIcon from "@mui/icons-material/Clear";
 import ForumIcon from "@mui/icons-material/Forum";
 import SendIcon from "@mui/icons-material/Send";
-import { Box, Button, List, Paper, TextField, Typography } from "@mui/material";
+import {
+  Autocomplete,
+  Box,
+  Button,
+  List,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useCallback, useContext, useEffect, useId, useState } from "react";
 import styles from "./chat.module.css";
 import { useRef } from "react";
 import { toast } from "react-toastify";
+import { getSuggestedMessages } from "@/pages/api/UserApi";
+import { debounce } from "lodash";
 
 export const Chat = () => {
   const { messages, sendMessage } = useContext(ChatContext);
@@ -20,6 +30,16 @@ export const Chat = () => {
   );
   const [isChatVisible, setIsChatVisible] = useState<boolean>(false);
   const [isScrollDown, setIsScrollDown] = useState<boolean>(false);
+  const [suggestedMessages, setSuggestedMessages] = useState<string[]>([]);
+
+  const debouncedSuggestedMessagesFetch = useCallback(
+    debounce(async (name: string) => {
+      const data = await getSuggestedMessages(name);
+      console.log(suggestedMessages);
+      setSuggestedMessages(data);
+    }, 300),
+    []
+  );
 
   if (username === undefined) {
     if (
@@ -76,6 +96,7 @@ export const Chat = () => {
         username: username!,
       });
       setText("");
+      setSuggestedMessages([]);
     }
   };
 
@@ -144,34 +165,48 @@ export const Chat = () => {
                 </List>
               </Paper>
               <div className={styles.sendMessageContainer}>
-                <TextField
-                  multiline
+                <Autocomplete
                   value={text}
-                  placeholder="Write your thoughts"
-                  sx={{ width: "100%" }}
-                  onKeyDown={async (event) => {
-                    if (event.key === "Enter") {
-                      event.preventDefault();
-                      await handleSendMessage();
+                  options={suggestedMessages}
+                  sx={{
+                    zIndex: "100",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                  getOptionLabel={(option: string) => {
+                    return option;
+                  }}
+                  defaultValue={text}
+                  filterOptions={(x) => x}
+                  onInputChange={(event, value, reason) => {
+                    if (reason === "input" && value.length > 0) {
+                      debouncedSuggestedMessagesFetch(value);
+                      setText(value);
                     }
                   }}
-                  onChange={(value) => {
-                    setText(value.currentTarget.value);
+                  onChange={(event, value) => {
+                    if (value) {
+                      setText(text + " " + value);
+                    }
                   }}
-                  InputProps={{
-                    endAdornment: (
-                      <SendIcon
-                        onClick={async () => {
+                  renderInput={(params) => (
+                    <TextField
+                      value={text}
+                      {...params}
+                      onKeyDown={async (event) => {
+                        if (event.key === "Enter") {
+                          event.preventDefault();
                           await handleSendMessage();
-                        }}
-                        sx={{
-                          color: `${text === "" ? "" : "blue"}`,
-                          cursor: `${text === "" ? "default" : "pointer"}`,
-                        }}
-                      />
-                    ),
-                  }}
-                ></TextField>
+                        }
+                      }}
+                      placeholder="Write your thoughts"
+                      variant="outlined"
+                      multiline
+                      sx={{ width: "100%" }}
+                      onChange={(e) => {}}
+                    />
+                  )}
+                />
               </div>
             </>
           ) : (

@@ -1,6 +1,6 @@
 import { RolesEnum } from "@/enums/RolesEnum";
 
-const PRODUCTION_RentAVehicleApi_URL = "https://35.228.61.243/";
+const PRODUCTION_RentAVehicleApi_URL = "https://mpp-docker.crabdance.com/";
 const DEVELOPMENT_RentAVehicleApi_URL = "http://localhost:5000/";
 
 export const baseUrl =

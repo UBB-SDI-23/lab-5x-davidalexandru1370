@@ -2,8 +2,24 @@
 
 ---
 
-**Clone the repository**
-**Frontend**:
+**Technologies Used:**
+
+- Frontend: React Nextjs 18.0 with Typescript support
+- Backend: ASP .NET Core 6 with C# 11
+- Database: Postgres
+- Machine learning: Python 3.0 with tensorflow, keras, pandas, numpy
+- Containers: Docker and docker-compose
+- Scripts: Python
+- Stress Tests: Apache JMeter
+- Unit Tests: NUnit, Moq
+- E2E Tests: Cypress
+- Websockets: SignalR
+- Reverse Proxy: NGINX
+- TLS: Let's Encrypt with Certbot
+- ***
+
+  **Clone the repository**
+  **Frontend**:
 
 - Change directory to /frontend/src/
 - Type npm install in terminal
@@ -20,6 +36,14 @@
 - Install the _Entity Framework_ cli in order to run migrations using **dotnet tool install --global dotnet-ef**.
 - Run _dotnet ef database update_ to update database running migrations.
 - Run dotnet start to start the backend.
+
+**Machine Learning**:
+
+- change directory to /machine-learning/
+- run _export FLASK_APP=next-word-prediction.py_ in terminal
+- run flask run -p 5001 --host=0.0.0.0
+
+---
 
 # Lab 5x requirements
 

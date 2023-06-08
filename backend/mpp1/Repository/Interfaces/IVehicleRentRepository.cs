@@ -25,6 +25,7 @@ public interface IVehicleRentRepository
     /// <param name="vehicleRent">vehicle rent with updated fields</param>
     /// <returns>Updated vehicle rent if updated successfully, otherwise throw repository exception</returns>
     public Task<VehicleRent> UpdateVehicleRent(VehicleRent vehicleRent);
+    
     /// <summary>
     /// This method get all rents from database
     /// </summary>

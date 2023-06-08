@@ -62,8 +62,8 @@ public interface IVehicleRepository
     /// <summary>
     /// This method get vehicles by car plate
     /// </summary>
-    /// <param name="carPlate">string repsenting vehicle car plate</param>
-    /// <returns>A list with vehicles by carplate</returns>
+    /// <param name="carPlate">string representing vehicle car plate</param>
+    /// <returns>A list with vehicles by carPlate</returns>
     public Task<IEnumerable<Vehicle>> GetVehiclesByCarPlate(string carPlate);
     /// <summary>
     /// This method get number of vehicles by owner

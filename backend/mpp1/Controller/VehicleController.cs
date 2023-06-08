@@ -24,6 +24,11 @@ public class VehicleController : ControllerBase
         _incidentService = incidentService;
     }
 
+    /// <summary>
+    /// This method add a vehicle in the database
+    /// </summary>
+    /// <param name="vehicle">Vehicle model</param>
+    /// <returns>Ok with added vehicle if user is authentificated, otherwise unauthorized</returns>
     [HttpPost]
     [Route("add-vehicle")]
     public async Task<ActionResult<Vehicle>> AddVehicle([FromBody] Vehicle vehicle)
@@ -40,6 +45,10 @@ public class VehicleController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// This method get all vehicles
+    /// </summary>
+    /// <returns>A list with all vehicles in database</returns>
     [HttpGet]
     [Route("get-all")]
     public async Task<ActionResult<IEnumerable<Vehicle>>> GetAllVehicles()
@@ -55,6 +64,11 @@ public class VehicleController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// This method get vehicle by its associated id
+    /// </summary>
+    /// <param name="vehicleId">vehicle id guid</param>
+    /// <returns>Ok with found vehicle, otherwise bad request with associated error message</returns>
     [HttpGet]
     [Route("get/{vehicleId}")]
     public async Task<ActionResult<Vehicle>> GetVehicleById([FromRoute] Guid vehicleId)
@@ -70,6 +84,11 @@ public class VehicleController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// This function get vehicle with its associated data by vehicle id
+    /// </summary>
+    /// <param name="vehicleId">vehicle id guid</param>
+    /// <returns>Ok with the found vehicle otherwise bad request with error message</returns>
     [HttpGet]
     [Route("get-with-data/{vehicleId}")]
     public async Task<ActionResult<Vehicle>> GetVehicleWithAllData([FromRoute] Guid vehicleId)
@@ -85,6 +104,12 @@ public class VehicleController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Delete vehicle 
+    /// </summary>
+    /// <param name="vehicle">vehicle model</param>
+    /// <returns>Forbid if the vehicle's user owner is different than request user, otherwise Ok if the vehicle was
+    /// deleted successfully, else bad request with associated error message</returns>
     [HttpDelete]
     [Route("delete")]
     public async Task<IActionResult> DeleteVehicle([FromBody] Vehicle vehicle)
@@ -112,6 +137,12 @@ public class VehicleController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// The method update a vehicle
+    /// </summary>
+    /// <param name="vehicle">vehicle model</param>
+    /// <returns>Forbid if the vehicle's user owner is different than request user, otherwise Ok if the vehicle was
+    /// updated successfully, else bad request with associated error message</returns>
     [HttpPut]
     [Route("update")]
     public async Task<ActionResult<VehicleDTO>> UpdateVehicle([FromBody] Vehicle vehicle)
@@ -140,6 +171,11 @@ public class VehicleController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// This method get a list of vehicle with engine capacity greater than capacity parameter
+    /// </summary>
+    /// <param name="capacity">int greater than 0</param>
+    /// <returns>Ok with the list of vehicles having capacity greater than capacity parameter</returns>
     [HttpGet("get-vehicles-filtered/{capacity}")]
     public async Task<ActionResult<IEnumerable<Vehicle>>> GetVehiclesWithCapacityGreater([FromRoute] int capacity)
     {
@@ -147,6 +183,10 @@ public class VehicleController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// This method get all vehicles with their associated data
+    /// </summary>
+    /// <returns>A list with all vehicles and their associated data</returns>
     [HttpGet("get-all-vehicles-with-data")]
     public ActionResult<IEnumerable<Vehicle>> GetAllVehiclesWithAllData()
     {
@@ -154,6 +194,10 @@ public class VehicleController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// This method get vehicles by their number of incidents
+    /// </summary>
+    /// <returns>A list with vehicles ordered by their number of incidents</returns>
     [HttpGet("get-by-incidents")]
     public async Task<ActionResult<IEnumerable<VehicleDTO>>> GetVehiclesByNumberOfIncidents()
     {
@@ -161,6 +205,12 @@ public class VehicleController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// This method update the Incidents ids to new vehicle
+    /// </summary>
+    /// <param name="vehicleId"></param>
+    /// <param name="incidentIds"></param>
+    /// <returns></returns>
     [HttpPost("bulk-update/vehicle/{vehicleId}/incidents")]
     public async Task<IActionResult> UpdateBulkOfIncidentsByVehicleId([FromRoute] Guid vehicleId,
         [FromBody] IEnumerable<Guid> incidentIds)
@@ -176,6 +226,12 @@ public class VehicleController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// This method get all vehicles paginated
+    /// </summary>
+    /// <param name="skip">number of items to skip</param>
+    /// <param name="take">number of items to take</param>
+    /// <returns>Ok with a list with vehicles paginated</returns>
     [AllowAnonymous]
     [HttpGet("get-vehicles-paginated/{skip}/{take}")]
     public async Task<ActionResult<Pagination<VehicleDTO>>> GetVehiclesPaginated([FromRoute] int skip,
@@ -185,6 +241,11 @@ public class VehicleController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// This method get vehicles by carplate
+    /// </summary>
+    /// <param name="carPlate">string respecting the format XXYYVVV where X and V are capital letters and Y is number 0-9</param>
+    /// <returns></returns>
     [HttpGet("get-vehicles-by-carPlate/{carPlate}")]
     public async Task<ActionResult<IEnumerable<Vehicle>>> GetVehiclesByCarPlate([FromRoute] string carPlate)
     {

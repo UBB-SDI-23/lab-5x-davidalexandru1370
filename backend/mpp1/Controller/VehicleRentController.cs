@@ -21,6 +21,10 @@ public class VehicleRentController : ControllerBase
         _vehicleRentService = vehicleRentService;
     }
 
+    /// <summary>
+    /// This method returns all the rents from database
+    /// </summary>
+    /// <returns>Ok with a list containing all rents from database</returns>
     [HttpGet]
     [Route("get-all")]
     public ActionResult<IEnumerable<VehicleRent>> GetAllRents()
@@ -29,6 +33,14 @@ public class VehicleRentController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// This method add a rent into database
+    /// </summary>
+    /// <param name="vehicleRent">vehicle rent model</param>
+    /// <returns>Unauthorized if the user is not authorized,
+    /// Ok if the vehicle rent was added successfully, otherwise
+    /// Bad request with associated error message
+    /// </returns>
     [HttpPost]
     [Route("add-rent")]
     public async Task<IActionResult> AddRent([FromBody] VehicleRent vehicleRent)
@@ -49,6 +61,11 @@ public class VehicleRentController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// The method get vehicle rent by their client associated id
+    /// </summary>
+    /// <param name="clientId">client id guid</param>
+    /// <returns>a list with all the vehicle rents having given client id</returns>
     [HttpGet]
     [Route("get-by-clientId/{clientId}")]
     public ActionResult<IEnumerable<Vehicle>> GetVehiclesByClientId([FromRoute] Guid clientId)
@@ -57,6 +74,11 @@ public class VehicleRentController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// The method get clients by their vehicle associated id
+    /// </summary>
+    /// <param name="vehicleId">vehicle id guid</param>
+    /// <returns>A list with clients having as rent a vehicle with vehicle id given as parameter</returns>
     [HttpGet]
     [Route("get-by-vehicleId/{vehicleId}")]
     public ActionResult<IEnumerable<Client>> GetClientsByVehicleId([FromRoute] Guid vehicleId)
@@ -65,6 +87,12 @@ public class VehicleRentController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// This method delete vehicle rent
+    /// </summary>
+    /// <param name="vehicleRent">vehicle rent</param>
+    /// <returns>Ok if vehicle rent was deleted successfully, forbid if the owner of the rent is not the same as
+    /// user having the request, otherwise ok</returns>
     [HttpDelete]
     [Route("delete-rent")]
     public async Task<IActionResult> DeleteVehicleRent([FromBody] VehicleRent vehicleRent)
@@ -92,6 +120,11 @@ public class VehicleRentController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// This method get vehicle rent by its associated id
+    /// </summary>
+    /// <param name="vehicleRentId">vehicle rent id guid</param>
+    /// <returns>Ok with vehicle rent if the vehicle rent id exists, otherwise bad request</returns>
     [HttpGet]
     [Route("get-by-id/{vehicleRentId}")]
     public async Task<ActionResult<VehicleRent>> GetVehicleRentById([FromRoute] Guid vehicleRentId)
@@ -107,6 +140,12 @@ public class VehicleRentController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// This method update vehicle rent
+    /// </summary>
+    /// <param name="vehicleRent">vehicle rent model</param>
+    /// <returns>Ok if vehicle rent was updated successfully, forbid if the owner of the rent is not the same as
+    /// user having the request, otherwise ok</returns>
     [HttpPut]
     [Route("update-vehicleRent")]
     public async Task<ActionResult<VehicleRent>> UpdateVehicleRent([FromBody] VehicleRent vehicleRent)
@@ -134,6 +173,10 @@ public class VehicleRentController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// This method gets the most active clients having the most rents
+    /// </summary>
+    /// <returns>A list with clients having the most rents sorted by number of rents descending</returns>
     [HttpGet]
     [Route("get-active-clients")]
     public async Task<ActionResult<IEnumerable<ClientDTO>>> GetMostActiveClients()
@@ -149,6 +192,11 @@ public class VehicleRentController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// This method get rents by their client id
+    /// </summary>
+    /// <param name="clientId">client id guid</param>
+    /// <returns>Ok with a list of rents by their client id, otherwise bad request with error message</returns>
     [HttpGet("get-rents-by-clientId/{clientId}")]
     public async Task<ActionResult<int>> GetNumberOfRentsByClientId([FromRoute] Guid clientId)
     {
@@ -163,6 +211,12 @@ public class VehicleRentController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// This method return a list with vehicle rents paginated
+    /// </summary>
+    /// <param name="skip">number for elements to skip</param>
+    /// <param name="take">number for elements to take</param>
+    /// <returns></returns>
     [AllowAnonymous]
     [HttpGet("get-vehicleRents-paginated/{skip}/{take}")]
     public async Task<ActionResult<Pagination<VehicleRentDto>>> GetVehicleRentsPaginated(int skip, int take)
@@ -171,6 +225,10 @@ public class VehicleRentController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// This method returns the number of rents in vehicle rents database
+    /// </summary>
+    /// <returns>Integer number with number of rents</returns>
     [HttpGet("get-number-of-rents")]
     public ActionResult<int> GetNumberOfRents()
     {

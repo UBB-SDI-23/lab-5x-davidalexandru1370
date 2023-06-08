@@ -18,7 +18,8 @@
 - TLS: Let's Encrypt with Certbot
 - ***
 
-  **Clone the repository**
+  ## **Clone the repository**
+
   **Frontend**:
 
 - Change directory to /frontend/src/
@@ -32,10 +33,12 @@
 **Backend**:
 
 - Change directory to /backend/mpp1/
-- Install dotnet 6.0 sdk using sudo apt-get install dotnet-sdk-6.0 in terminal.
+- Install dotnet 6.0 sdk using **sudo apt-get install dotnet-sdk-6.0** in terminal.
 - Install the _Entity Framework_ cli in order to run migrations using **dotnet tool install --global dotnet-ef**.
 - Run _dotnet ef database update_ to update database running migrations.
-- Run dotnet start to start the backend.
+- Run **dotnet start** to start the backend.
+
+---
 
 **Machine Learning**:
 

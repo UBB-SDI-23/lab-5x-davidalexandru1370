@@ -37,17 +37,39 @@
 - Install the _Entity Framework_ cli in order to run migrations using **dotnet tool install --global dotnet-ef**.
 - Run _dotnet ef database update_ to update database running migrations.
 - Run **dotnet start** to start the backend.
-
 ---
 
 **Machine Learning**:
 
 - change directory to /machine-learning/
-- run _export FLASK_APP=next-word-prediction.py_ in terminal
+- run _export FLASK_APP=next-word-prediction.py in terminal
 - run flask run -p 5001 --host=0.0.0.0
 
 ---
 
+**DEPLOYMENT**:
+
+---
+Backend:
+- clone the repository
+- change folder to ./backend/mpp1/
+- you have to configure the certbot settings for TLS 
+- follow this tutorial: https://mindsers.blog/post/https-using-nginx-certbot-docker/
+- type ./up.sh in order to start the backend
+- open new terminal session
+- change folder to machine-learning
+- run _export FLASK_APP=next-word-prediction.py in terminal
+- run flask run -p 5001 --host=0.0.0.0
+
+---
+Frontend:
+- create an account on netlify
+- link the github repository with netlify
+- add as run command npx next
+- change branch to development
+- change source folder to /src
+- deploy
+---
 # Lab 5x requirements
 
 A new assignment requirement will appear here every week, so check back regularly. Commit and push everything to your **Lab-5x** repository.

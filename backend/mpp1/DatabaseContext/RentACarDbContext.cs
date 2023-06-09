@@ -19,5 +19,9 @@ public class RentACarDbContext : DbContext
     public virtual DbSet<User> Users { get; set; } = null!;
     public virtual DbSet<UserProfile> UserProfiles { get; set; } = null!;
     public virtual DbSet<TokenValidationUser> TokenValidationUser { get; set; } = null!;
+    public virtual DbSet<Message> Messages { get; set; } = null!;
     public virtual DbSet<Preferences> Preferences { get; set; } = null!;
+    
+    
+    
 }
